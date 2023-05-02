@@ -2,12 +2,8 @@
 using CosmicFishingBuddies.PlayerSync;
 using kcp2k;
 using Mirror;
-using Mirror.SimpleWeb;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using UnityEngine;
 
 namespace CosmicFishingBuddies
@@ -21,13 +17,13 @@ namespace CosmicFishingBuddies
 				gameObject.SetActive(false);
 
 				var kcpTransport = gameObject.AddComponent<KcpTransport>();
-				gameObject.AddComponent<NetworkManagerHUD>();
 				transport = kcpTransport;
 
-				playerPrefab = new GameObject("PlayerPrefab");
-				var netID = playerPrefab.AddComponent<NetworkIdentity>();
-				netID.SetValue("_assetId", (uint)1);
+				gameObject.AddComponent<NetworkManagerHUD>();
+
+				playerPrefab = MakeNewNetworkObject(1, "PlayerPrefab");
 				playerPrefab.AddComponent<PlayerTransformSync>();
+				playerPrefab.AddComponent<NetworkTransform>().syncDirection = SyncDirection.ClientToServer;
 
 				gameObject.SetActive(true);
 
@@ -39,12 +35,25 @@ namespace CosmicFishingBuddies
 			}
 		}
 
+		private GameObject MakeNewNetworkObject(uint assetId, string name)
+		{
+			var assetBundle = AssetBundle.LoadFromFile(Path.Combine(CFBCore.GetModFolder(), "Assets", "qsb_empty"));
+			var template = assetBundle.LoadAsset<GameObject>("Assets/Prefabs/Empty.prefab");
+			assetBundle.Unload(false);
+
+			template.name = name;
+			var netID = template.AddComponent<NetworkIdentity>();
+			netID.SetValue("_assetId", assetId);
+
+			return template;
+		}
+
 		public override void OnServerReady(NetworkConnectionToClient conn)
 		{
-			CFBCore.Log($"Server ready {conn.identity}");
-
 			try
 			{
+				CFBCore.LogInfo($"Server ready {conn.connectionId}");
+
 				base.OnServerReady(conn);
 			}
 			catch (Exception e)
@@ -55,10 +64,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnServerConnect(NetworkConnectionToClient conn)
 		{
-			CFBCore.Log($"Server connect {conn.identity}");
-
 			try
 			{
+				CFBCore.LogInfo($"[{conn.connectionId}] connecting to server");
+
 				base.OnServerConnect(conn);
 			}
 			catch (Exception e)
@@ -69,10 +78,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnStartServer()
 		{
-			CFBCore.Log("Server start");
-
 			try
 			{
+				CFBCore.LogInfo("Server start");
+
 				base.OnStartServer();
 			}
 			catch (Exception e)
@@ -83,10 +92,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnStopServer()
 		{
-			CFBCore.Log("Server stop");
-
 			try
 			{
+				CFBCore.LogInfo("Server stop");
+
 				base.OnStopServer();
 			}
 			catch (Exception e)
@@ -97,10 +106,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnStartHost()
 		{
-			CFBCore.Log("Now hosting");
-
 			try
 			{
+				CFBCore.LogInfo($"Now hosting. NetworkServer active [{NetworkServer.active}] NetworkClient active [{NetworkClient.active}]");
+
 				base.OnStartHost();
 			}
 			catch (Exception e)
@@ -111,10 +120,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnStopHost()
 		{
-			CFBCore.Log("Stopped hosting");
-
 			try
 			{
+				CFBCore.LogInfo("Stopped hosting");
+
 				base.OnStopHost();
 			}
 			catch (Exception e)
@@ -125,10 +134,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnClientConnect()
 		{
-			CFBCore.Log("Client connected");
-
 			try
 			{
+				CFBCore.LogInfo("Client connected");
+
 				base.OnClientConnect();
 			}
 			catch (Exception e)
@@ -139,10 +148,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnClientDisconnect()
 		{
-			CFBCore.Log("Client disconnected");
-
 			try
 			{
+				CFBCore.LogInfo("Client disconnected");
+
 				base.OnClientDisconnect();
 			}
 			catch (Exception e)
@@ -153,10 +162,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnClientError(TransportError error, string reason)
 		{
-			CFBCore.LogError($"TRANSPORT ERROR: {error} - {reason}");
-
 			try
 			{
+				CFBCore.LogError($"TRANSPORT ERROR: {error} - {reason}");
+
 				base.OnClientError(error, reason);
 			}
 			catch (Exception e)
@@ -167,10 +176,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnStartClient()
 		{
-			CFBCore.Log("Started client");
-
 			try
 			{
+				CFBCore.LogInfo($"Started client. NetworkServer active [{NetworkServer.active}] NetworkClient active [{NetworkClient.active}]");
+
 				base.OnStartClient();
 			}
 			catch (Exception e)
@@ -181,10 +190,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnClientNotReady()
 		{
-			CFBCore.Log("Client is not ready");
-
 			try
 			{
+				CFBCore.LogInfo("Client is not ready");
+
 				base.OnClientNotReady();
 			}
 			catch (Exception e)
@@ -195,10 +204,10 @@ namespace CosmicFishingBuddies
 
 		public override void OnStopClient()
 		{
-			CFBCore.Log("Stop client");
-
 			try
 			{
+				CFBCore.LogInfo("Stop client");
+
 				base.OnStopClient();
 			}
 			catch(Exception e)

@@ -1,4 +1,5 @@
 ﻿using CosmicFishingBuddies.BaseSync;
+using FluffyUnderware.DevTools.Extensions;
 using System;
 using UnityEngine;
 
@@ -15,10 +16,13 @@ namespace CosmicFishingBuddies.PlayerSync
 			try
 			{
 				PlayerPrefab = new GameObject("PlayerPrefab");
-				var boatModel = GameManager.Instance.Player.transform.Find("Boat1");
+
+				var boatModel = GameObject.Instantiate(GameManager.Instance.Player.transform.Find("Boat1"));
 				boatModel.transform.parent = PlayerPrefab.transform;
 				boatModel.transform.localPosition = Vector3.zero;
+				boatModel.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
 
+				PlayerPrefab.SetActive(false);
 				GameObject.DontDestroyOnLoad(PlayerPrefab);
 			}
 			catch (Exception e)
@@ -29,7 +33,7 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		protected override Transform InitLocalTransform()
 		{
-			CFBCore.Log($"Creating local {nameof(PlayerTransformSync)}");
+			CFBCore.LogInfo($"Creating local {nameof(PlayerTransformSync)}");
 
 			LocalInstance = this;
 			return GameManager.Instance.Player.transform;
@@ -37,10 +41,16 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		protected override Transform InitRemoteTransform()
 		{
-			CFBCore.Log($"Creating remote {nameof(PlayerTransformSync)}");
+			CFBCore.LogInfo($"Creating remote {nameof(PlayerTransformSync)}");
 
 			if (PlayerPrefab == null) CreatePrefab();
-			return Instantiate(PlayerPrefab).transform;
+			var remotePlayer = Instantiate(PlayerPrefab).transform;
+			remotePlayer.gameObject.SetActive(true);
+			remotePlayer.name = "RemotePlayer";
+			remotePlayer.transform.parent = transform;
+			remotePlayer.transform.localPosition = Vector3.zero;
+			remotePlayer.transform.localRotation = Quaternion.identity;
+			return remotePlayer;
 		}
 	}
 }
