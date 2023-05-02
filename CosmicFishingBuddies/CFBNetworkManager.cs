@@ -25,6 +25,16 @@ namespace CosmicFishingBuddies
 				playerPrefab.AddComponent<PlayerTransformSync>();
 				playerPrefab.AddComponent<NetworkTransform>().syncDirection = SyncDirection.ClientToServer;
 
+				var networkPlayer = playerPrefab.AddComponent<NetworkPlayer>();
+				networkPlayer.syncDirection = SyncDirection.ClientToServer;
+
+				// REMOTE PLAYER ABILITIES
+				// Foghorn
+				networkPlayer.foghornEndSource = playerPrefab.AddComponent<AudioSource>();
+				networkPlayer.foghornEndSource.spatialBlend = 1;
+				networkPlayer.foghornMidSource = playerPrefab.AddComponent<AudioSource>();
+				networkPlayer.foghornMidSource.spatialBlend = 1;
+
 				gameObject.SetActive(true);
 
 				base.Awake();

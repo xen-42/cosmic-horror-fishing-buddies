@@ -53,6 +53,7 @@ namespace CosmicFishingBuddies
 		private static void InitAssemblies()
 		{
 			// JohnCorby is a hero
+			// Stolen from QSB
 
 			static void Init(Assembly assembly)
 			{

@@ -61,7 +61,15 @@
     <Reference Include="UnityEngine.PhysicsModule">
       <HintPath>$(GameInstall)\DREDGE_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
       <Private>false</Private>
+    </Reference> 
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>$(GameInstall)\DREDGE_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <ProjectReference Include="..\MirrorWeaver\MirrorWeaver.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Messaging\" />
   </ItemGroup>
 </Project>
