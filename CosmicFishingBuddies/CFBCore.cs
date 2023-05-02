@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using HarmonyLib;
+using kcp2k;
 using System.Reflection;
 using UnityEngine;
 
@@ -24,13 +25,14 @@ namespace CosmicFishingBuddies
 			Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
 			Application.runInBackground = true;
-
+		
 			var networkManagerObj = new GameObject("NetworkManager");
 			networkManagerObj.AddComponent<CFBNetworkManager>();
 			GameObject.DontDestroyOnLoad(networkManagerObj);
 		}
 
-		public static void Log(string msg) => Instance.Logger.LogInfo(msg);
-		public static void LogError(string msg) => Instance.Logger.LogError(msg);
+		public static void Log(object msg) => Instance.Logger.LogInfo(msg);
+		public static void LogError(object msg) => Instance.Logger.LogError(msg);
+		public static void LogWarning(object msg) => Instance.Logger.LogWarning(msg);
 	}
 }
