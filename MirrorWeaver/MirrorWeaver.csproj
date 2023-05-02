@@ -7,10 +7,8 @@
     <Company>Unity Technologies, vis2k, Paul and Contributors, William Corby</Company>
     <Copyright></Copyright>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="../Mirror/*.dll" />
-  </ItemGroup>
   <ItemGroup>
     <None Update="License.md">
       <Pack>True</Pack>
@@ -23,37 +21,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HarmonyX" Version="2.7.0">
-      <IncludeAssets>all</IncludeAssets>
-    </PackageReference>
     <Reference Include="..\Mirror\*.dll" />
-    <Reference Include="..\BepInEx\*.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(GameInstall)\DREDGE_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>$(GameInstall)\DREDGE_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(GameInstall)\DREDGE_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>$(GameInstall)\DREDGE_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>$(GameInstall)\DREDGE_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>$(GameInstall)\DREDGE_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>$(GameInstall)\DREDGE_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>   
-    <Reference Include="UnityEngine.AudioModule">
-      <HintPath>$(GameInstall)\DREDGE_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    <PackageReference Include="HarmonyX" Version="2.10.1" />
+    <PackageReference Include="DredgeGameLibs" Version="1.0.4.1" />
+    <Reference Include="Winch">
+      <HintPath>$(GameInstall)\Winch.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

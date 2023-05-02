@@ -1,21 +1,18 @@
-﻿using BepInEx;
-using BepInEx.Logging;
-using FluffyUnderware.DevTools.Extensions;
-using HarmonyLib;
+﻿using HarmonyLib;
+using Sirenix.Utilities;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using Winch.Core;
 
 namespace CosmicFishingBuddies
 {
-	[BepInPlugin("com.xen-42.dredge.cosmic-fishing-buddies", "Cosmic Fishing Buddies", "0.0.1")]
-	[BepInProcess("DREDGE.exe")]
 	[HarmonyPatch]
-	public class CFBCore : BaseUnityPlugin
+	public class CFBCore : MonoBehaviour
 	{
-		private static string _guid = "com.xen-42.dredge.cosmic-fishing-buddies";
+		private static string _modName = "CosmicFishingBuddies";
 
 		public static CFBCore Instance { get; private set; }
 
@@ -23,32 +20,40 @@ namespace CosmicFishingBuddies
 
 		private void Awake()
 		{
-			Instance = this;
+			try
+			{
+				Instance = this;
 
-			// Plugin startup logic
-			Logger.LogInfo($"Cosmic Fishing Buddies is loaded!");
+				// Plugin startup logic
+				LogInfo($"Cosmic Fishing Buddies is loaded!");
 
-			// [RunTimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)] Attribute methods just never get called since this is a mod not Unity
-			// we have to manually initialize them
-			InitAssemblies();
+				// [RunTimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)] Attribute methods just never get called since this is a mod not Unity
+				// we have to manually initialize them
+				InitAssemblies();
 
-			Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+				// Winch loads the mod too late for this to work for the SteamAPI patch, have to rely on Winch's patching instead
+				// Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
-			Application.runInBackground = true;
-		
-			var networkManagerObj = new GameObject("NetworkManager");
-			networkManagerObj.AddComponent<CFBNetworkManager>();
-			GameObject.DontDestroyOnLoad(networkManagerObj);
+				Application.runInBackground = true;
 
-			Application.logMessageReceived += Application_logMessageReceived;
+				var networkManagerObj = new GameObject("NetworkManager");
+				networkManagerObj.AddComponent<CFBNetworkManager>();
+				GameObject.DontDestroyOnLoad(networkManagerObj);
+
+				Application.logMessageReceived += Application_logMessageReceived;
+			}
+			catch (Exception e)
+			{
+				LogError($"Failed to load Cosmic Fishing Buddies: {e}");
+			}
 		}
 
 		private void Application_logMessageReceived(string condition, string stackTrace, LogType type)
 		{
-			Log(type, $"{condition} : {stackTrace}");
+			LogInfo($"{condition} : {stackTrace}");
 		}
 
-		public static string GetModFolder() => Path.Combine(Paths.PluginPath, _guid);
+		public static string GetModFolder() => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
 		private static void InitAssemblies()
 		{
@@ -75,16 +80,8 @@ namespace CosmicFishingBuddies
 			LogInfo("Assemblies initialized");
 		}
 
-		public static void Log(LogType type, object msg) => Instance.Logger.Log(ConvertLogType(type), msg);
-		public static void LogInfo(object msg) => Instance.Logger.LogInfo(msg);
-		public static void LogError(object msg) => Instance.Logger.LogError(msg);
-		public static void LogWarning(object msg) => Instance.Logger.LogWarning(msg);
-
-		private static LogLevel ConvertLogType(LogType type) => type switch
-		{
-			LogType.Exception or LogType.Assert or LogType.Error => LogLevel.Error,
-			LogType.Warning => LogLevel.Warning,
-			_ => LogLevel.Info,
-		};
+		public static void LogInfo(object msg) => WinchCore.Log.Info(msg);
+		public static void LogError(object msg) => WinchCore.Log.Error(msg);
+		public static void LogWarning(object msg) => WinchCore.Log.Warn(msg);
 	}
 }
