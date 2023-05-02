@@ -23,8 +23,8 @@ namespace CosmicFishingBuddies.PlayerSync
 			else
 			{
 				var existingFoghorn = GameObject.FindObjectOfType<FoghornAbility>();
-				foghornEndSource.clip = existingFoghorn.GetValue<AudioSource>("foghornEndSource").clip;
-				foghornMidSource.clip = existingFoghorn.GetValue<AudioSource>("foghornMidSource").clip;
+				foghornEndSource.clip = existingFoghorn.foghornEndSource.clip;
+				foghornMidSource.clip = existingFoghorn.foghornMidSource.clip;
 			}
 		}
 

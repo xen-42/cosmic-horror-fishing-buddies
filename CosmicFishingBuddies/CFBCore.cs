@@ -12,13 +12,11 @@ namespace CosmicFishingBuddies
 	[HarmonyPatch]
 	public class CFBCore : MonoBehaviour
 	{
-		private static string _modName = "CosmicFishingBuddies";
-
 		public static CFBCore Instance { get; private set; }
 
 		public static GameObject terminal;
 
-		private void Awake()
+		public void Awake()
 		{
 			try
 			{

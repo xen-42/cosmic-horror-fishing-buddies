@@ -81,7 +81,7 @@ namespace Mirror.Weaver
 
             // process this and base classes from parent to child order
 
-            List<TypeDefinition> behaviourClasses = new List<TypeDefinition>();
+            var behaviourClasses = new List<TypeDefinition>();
 
             TypeDefinition parent = td;
             while (parent != null)
