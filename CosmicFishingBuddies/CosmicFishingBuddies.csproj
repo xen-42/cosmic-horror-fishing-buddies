@@ -1,14 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
     <AssemblyName>CosmicFishingBuddies</AssemblyName>
     <Description>Cosmic Fishing Buddies</Description>
     <Version>0.0.1</Version>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
@@ -16,13 +11,18 @@
     <None Include="CosmicFishingBuddies.csproj.user" />
   </ItemGroup>
 
+  <Target Name="Weave CFB" AfterTargets="PostBuildEvent">
+    <Exec Command=".\MirrorWeaver &quot;$(TargetPath)&quot;" WorkingDirectory="..\MirrorWeaver\bin\$(Configuration)\" />
+  </Target>
+
   <ItemGroup>
-    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Core" Version="5.*" />
-    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
     <PackageReference Include="HarmonyX" Version="2.7.0" />
+    <Reference Include="..\Mirror\*.dll" />
+    <Reference Include="..\BepInEx\*.dll">
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
-  
+
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
@@ -48,5 +48,6 @@
       <HintPath>$(GameInstall)\DREDGE_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <ProjectReference Include="..\MirrorWeaver\MirrorWeaver.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>
