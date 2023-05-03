@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Mono.Cecil;
+using System.Security;
 
 namespace Mirror.Weaver
 {
@@ -181,7 +182,7 @@ namespace Mirror.Weaver
                     return true;
                 }
 
-                weaverTypes = new WeaverTypes(CurrentAssembly, Log, ref WeavingFailed);
+				weaverTypes = new WeaverTypes(CurrentAssembly, Log, ref WeavingFailed);
 
                 // weaverTypes are needed for CreateGeneratedCodeClass
                 CreateGeneratedCodeClass();
@@ -236,7 +237,7 @@ namespace Mirror.Weaver
             }
             catch (Exception e)
             {
-                Log.Error($"Exception :{e}");
+				Log.Error($"Couldn't weave assembly {CurrentAssembly.Name} : {e}");
                 WeavingFailed = true;
                 return false;
             }
