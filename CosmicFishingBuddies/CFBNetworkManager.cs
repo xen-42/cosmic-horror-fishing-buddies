@@ -1,5 +1,6 @@
 ﻿using CosmicFishingBuddies.Extensions;
 using CosmicFishingBuddies.PlayerSync;
+using CosmicFishingBuddies.TimeSync;
 using kcp2k;
 using Mirror;
 using System;
@@ -10,6 +11,8 @@ namespace CosmicFishingBuddies
 {
 	internal class CFBNetworkManager : NetworkManager
 	{
+		public static GameObject TimeSyncManagerPrefab { get; private set; }
+
 		public override void Awake()
 		{
 			try
@@ -56,6 +59,11 @@ namespace CosmicFishingBuddies
 				networkPlayer.remotePlayerEngineAudio.engineSource.maxDistance = 40;
 				networkPlayer.remotePlayerEngineAudio.engineSource.loop = true;
 				networkPlayer.remotePlayerEngineAudio.engineSource.playOnAwake = true;
+
+				// 2 - TimeSyncManager
+				TimeSyncManagerPrefab = MakeNewNetworkObject(2, nameof(TimeSyncManagerPrefab));
+				TimeSyncManagerPrefab.AddComponent<TimeSyncManager>();
+				spawnPrefabs.Add(TimeSyncManagerPrefab);
 
 				gameObject.SetActive(true);
 
@@ -141,6 +149,8 @@ namespace CosmicFishingBuddies
 			try
 			{
 				CFBCore.LogInfo($"Now hosting. NetworkServer active [{NetworkServer.active}] NetworkClient active [{NetworkClient.active}]");
+
+				TimeSyncManagerPrefab.SpawnWithServerAuthority();
 
 				base.OnStartHost();
 			}
