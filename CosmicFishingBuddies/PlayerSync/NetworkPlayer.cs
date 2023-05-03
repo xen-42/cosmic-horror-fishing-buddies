@@ -7,7 +7,13 @@ namespace CosmicFishingBuddies.PlayerSync
 	internal class NetworkPlayer : NetworkBehaviour
 	{
 		[SyncVar(hook = nameof(FoghornHook))]
-		public bool fogHornActive;
+		private bool _fogHornActive;
+
+		[Command]
+		public void SetFogHornActive(bool active)
+		{
+			_fogHornActive = active;
+		}
 
 		public static NetworkPlayer LocalPlayer { get; private set; }
 
