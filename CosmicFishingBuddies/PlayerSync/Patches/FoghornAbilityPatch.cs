@@ -7,10 +7,22 @@ namespace CosmicFishingBuddies.PlayerSync.Patches
 	{
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(FoghornAbility.Activate))]
-		public static void FoghornAbility_Activate() => NetworkPlayer.LocalPlayer.fogHornActive = true;
+		public static void FoghornAbility_Activate()
+		{
+			if (NetworkPlayer.LocalPlayer != null)
+			{
+				NetworkPlayer.LocalPlayer.fogHornActive = true;
+			}
+		}
 
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(FoghornAbility.Deactivate))]
-		public static void FoghornAbility_Deactivate() => NetworkPlayer.LocalPlayer.fogHornActive = false;
+		public static void FoghornAbility_Deactivate()
+		{
+			if (NetworkPlayer.LocalPlayer != null)
+			{
+				NetworkPlayer.LocalPlayer.fogHornActive = false;
+			}
+		}
 	}
 }

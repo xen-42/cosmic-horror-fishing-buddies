@@ -9,7 +9,6 @@ using Winch.Core;
 
 namespace CosmicFishingBuddies
 {
-	[HarmonyPatch]
 	public class CFBCore : MonoBehaviour
 	{
 		public static CFBCore Instance { get; private set; }
@@ -30,7 +29,7 @@ namespace CosmicFishingBuddies
 				InitAssemblies();
 
 				// Winch loads the mod too late for this to work for the SteamAPI patch, have to rely on Winch's patching instead
-				// Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+				new Harmony(nameof(CFBCore)).PatchAll();
 
 				Application.runInBackground = true;
 
