@@ -8,11 +8,17 @@ Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-ou
 
 What is synced:
 - Player movement
-- Foghorn
+- Player foghorn
+- Player light
 
 What is not synced (roadmap):
+- Engine sounds
 - Time
+- Sleeping
+  - All players must be in port to sleep
+- Collisions?
 - Ship appearance
 - Events
 - Enemies
-- Fishing spot depletion 
+- Fishing spots 
+- Waves
