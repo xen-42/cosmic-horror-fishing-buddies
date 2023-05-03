@@ -20,6 +20,8 @@ namespace CosmicFishingBuddies.PlayerSync
 				var boatModel = GameObject.Instantiate(GameManager.Instance.Player.transform.Find("Boat1"));
 				boatModel.transform.parent = PlayerPrefab.transform;
 				boatModel.transform.localPosition = Vector3.zero;
+
+				// TODO: Fix the tyres
 				boatModel.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
 
 				PlayerPrefab.SetActive(false);
@@ -50,6 +52,10 @@ namespace CosmicFishingBuddies.PlayerSync
 			remotePlayer.transform.parent = transform;
 			remotePlayer.transform.localPosition = Vector3.zero;
 			remotePlayer.transform.localRotation = Quaternion.identity;
+
+			var networkPlayer = GetComponent<NetworkPlayer>();
+			networkPlayer.boatModelProxy = remotePlayer.GetComponentInChildren<BoatModelProxy>();
+
 			return remotePlayer;
 		}
 	}

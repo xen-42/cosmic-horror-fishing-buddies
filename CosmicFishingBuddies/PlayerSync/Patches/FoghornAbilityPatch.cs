@@ -3,7 +3,7 @@
 namespace CosmicFishingBuddies.PlayerSync.Patches
 {
 	[HarmonyPatch(typeof(FoghornAbility))]
-	internal class FoghornAbilityPatch
+	internal static class FoghornAbilityPatch
 	{
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(FoghornAbility.Activate))]

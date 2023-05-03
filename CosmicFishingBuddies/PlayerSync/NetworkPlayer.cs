@@ -6,33 +6,12 @@ namespace CosmicFishingBuddies.PlayerSync
 {
 	internal class NetworkPlayer : NetworkBehaviour
 	{
+		#region Foghorn
 		[SyncVar(hook = nameof(FoghornHook))]
 		private bool _fogHornActive;
 
 		[Command]
-		public void SetFogHornActive(bool active)
-		{
-			_fogHornActive = active;
-		}
-
-		public static NetworkPlayer LocalPlayer { get; private set; }
-
-		public AudioSource foghornEndSource;
-		public AudioSource foghornMidSource;
-
-		public void Start()
-		{
-			if (isOwned)
-			{
-				LocalPlayer = this;
-			}
-			else
-			{
-				var existingFoghorn = GameObject.FindObjectOfType<FoghornAbility>();
-				foghornEndSource.clip = existingFoghorn.foghornEndSource.clip;
-				foghornMidSource.clip = existingFoghorn.foghornMidSource.clip;
-			}
-		}
+		public void SetFogHornActive(bool active) => _fogHornActive = active;
 
 		public void FoghornHook(bool prev, bool current)
 		{
@@ -51,7 +30,60 @@ namespace CosmicFishingBuddies.PlayerSync
 					foghornEndSource.PlayOneShot(foghornEndSource.clip);
 				}
 			}
-
 		}
+		#endregion
+
+		#region Light
+		[SyncVar(hook = nameof(LightHook))]
+		private bool _lightActive;
+
+		[Command]
+		public void SetLightActive(bool active) => _lightActive = active;
+
+		public void LightHook(bool _, bool current)
+		{
+			if (!isOwned)
+			{
+				CFBCore.LogInfo($"Remote player foghorn {current}");
+				if (current)
+				{
+					boatModelProxy.SetLightStrength(5f);
+				}
+				else
+				{
+					boatModelProxy.SetLightStrength(0f);
+				}
+			}
+		}
+		#endregion
+
+		public static NetworkPlayer LocalPlayer { get; private set; }
+
+		public AudioSource foghornEndSource;
+		public AudioSource foghornMidSource;
+
+		public BoatModelProxy boatModelProxy;
+
+		public void Start()
+		{
+			if (isOwned)
+			{
+				LocalPlayer = this;
+			}
+			else
+			{
+				// Fog horns
+				var existingFoghorn = GameObject.FindObjectOfType<FoghornAbility>();
+				foghornEndSource.clip = existingFoghorn.foghornEndSource.clip;
+				foghornEndSource.minDistance = 20f;
+				foghornMidSource.clip = existingFoghorn.foghornMidSource.clip;
+				foghornMidSource.minDistance = 20f;
+
+				// Lights
+				boatModelProxy.SetLightStrength(0f);
+			}
+		}
+
+
 	}
 }
