@@ -20,6 +20,13 @@ namespace CosmicFishingBuddies.PlayerSync
 				var boatModel = GameObject.Instantiate(GameManager.Instance.Player.transform.Find("Boat1"));
 				boatModel.transform.parent = PlayerPrefab.transform;
 				boatModel.transform.localPosition = Vector3.zero;
+				boatModel.transform.localRotation = Quaternion.identity;
+				boatModel.gameObject.SetActive(true);
+
+				var wake = GameObject.Instantiate(GameManager.Instance.Player.transform.Find("BoatTrailParticles"));
+				wake.transform.parent = PlayerPrefab.transform;
+				wake.transform.localPosition = Vector3.zero;
+				wake.transform.localRotation = Quaternion.identity;
 
 				// TODO: Fix the tyres
 				boatModel.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
