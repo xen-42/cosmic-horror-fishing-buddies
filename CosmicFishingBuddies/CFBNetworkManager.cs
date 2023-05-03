@@ -32,8 +32,15 @@ namespace CosmicFishingBuddies
 				// Foghorn
 				networkPlayer.foghornEndSource = playerPrefab.AddComponent<AudioSource>();
 				networkPlayer.foghornEndSource.spatialBlend = 1;
+				networkPlayer.foghornEndSource.minDistance = 15;
 				networkPlayer.foghornMidSource = playerPrefab.AddComponent<AudioSource>();
 				networkPlayer.foghornMidSource.spatialBlend = 1;
+				networkPlayer.foghornMidSource.minDistance = 15;
+
+				// PlaySFX
+				networkPlayer.oneShotSource = playerPrefab.AddComponent<AudioSource>();
+				networkPlayer.oneShotSource.spatialBlend = 1;
+				networkPlayer.oneShotSource.minDistance = 10;
 
 				gameObject.SetActive(true);
 

@@ -1,4 +1,5 @@
-﻿using CosmicFishingBuddies.Extensions;
+﻿using CosmicFishingBuddies.AudioSync;
+using CosmicFishingBuddies.Extensions;
 using Mirror;
 using UnityEngine;
 
@@ -48,10 +49,33 @@ namespace CosmicFishingBuddies.PlayerSync
 				if (current)
 				{
 					boatModelProxy.SetLightStrength(5f);
+					PlayOneShot(AudioEnum.LIGHT_ON, 0.3f, 1f);
 				}
 				else
 				{
 					boatModelProxy.SetLightStrength(0f);
+					PlayOneShot(AudioEnum.LIGHT_OFF, 0.3f, 1f);
+				}
+			}
+		}
+		#endregion
+
+		#region OneShot
+		[Command]
+		public void CmdPlayOneShot(AudioEnum audio, float volume, float pitch) => RpcPlayOneShot(audio, volume, pitch);
+
+		[ClientRpc(includeOwner = false)]
+		private void RpcPlayOneShot(AudioEnum audio, float volume, float pitch) => PlayOneShot(audio, volume, pitch);
+
+		private void PlayOneShot(AudioEnum audio, float volume, float pitch)
+		{
+			if (!isOwned)
+			{
+				var clip = AudioClipManager.GetClip(audio);
+				if (clip != null)
+				{
+					oneShotSource.pitch = pitch;
+					oneShotSource.PlayOneShot(clip, volume);
 				}
 			}
 		}
@@ -61,6 +85,8 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		public AudioSource foghornEndSource;
 		public AudioSource foghornMidSource;
+
+		public AudioSource oneShotSource;
 
 		public BoatModelProxy boatModelProxy;
 
@@ -75,9 +101,7 @@ namespace CosmicFishingBuddies.PlayerSync
 				// Fog horns
 				var existingFoghorn = GameObject.FindObjectOfType<FoghornAbility>();
 				foghornEndSource.clip = existingFoghorn.foghornEndSource.clip;
-				foghornEndSource.minDistance = 20f;
 				foghornMidSource.clip = existingFoghorn.foghornMidSource.clip;
-				foghornMidSource.minDistance = 20f;
 
 				// Lights
 				boatModelProxy.SetLightStrength(0f);
