@@ -88,6 +88,8 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		public AudioSource oneShotSource;
 
+		public RemotePlayerEngineAudio remotePlayerEngineAudio;
+
 		public BoatModelProxy boatModelProxy;
 
 		public void Start()
@@ -107,7 +109,6 @@ namespace CosmicFishingBuddies.PlayerSync
 				boatModelProxy.SetLightStrength(0f);
 			}
 		}
-
 
 	}
 }

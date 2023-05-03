@@ -40,7 +40,22 @@ namespace CosmicFishingBuddies
 				// PlaySFX
 				networkPlayer.oneShotSource = playerPrefab.AddComponent<AudioSource>();
 				networkPlayer.oneShotSource.spatialBlend = 1;
-				networkPlayer.oneShotSource.minDistance = 10;
+				networkPlayer.oneShotSource.minDistance = 1;
+				networkPlayer.oneShotSource.maxDistance = 20;
+
+				// Engine audio
+				// All NetworkBehaviours have to be on root object to share its netid
+				networkPlayer.remotePlayerEngineAudio = playerPrefab.AddComponent<RemotePlayerEngineAudio>();
+
+				var engineAudioObj = new GameObject("RemotePlayerEngineAudio");
+				engineAudioObj.transform.parent = playerPrefab.transform;
+				engineAudioObj.transform.localPosition = Vector3.zero;
+				networkPlayer.remotePlayerEngineAudio.engineSource = engineAudioObj.AddComponent<AudioSource>();
+				networkPlayer.remotePlayerEngineAudio.engineSource.spatialBlend = 1;
+				networkPlayer.remotePlayerEngineAudio.engineSource.minDistance = 10;
+				networkPlayer.remotePlayerEngineAudio.engineSource.maxDistance = 40;
+				networkPlayer.remotePlayerEngineAudio.engineSource.loop = true;
+				networkPlayer.remotePlayerEngineAudio.engineSource.playOnAwake = true;
 
 				gameObject.SetActive(true);
 
