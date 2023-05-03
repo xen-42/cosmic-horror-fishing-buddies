@@ -10,9 +10,9 @@ What is synced:
 - Player movement
 - Player foghorn
 - Player light
+- Engine sounds
 
 What is not synced (roadmap):
-- Engine sounds
 - Time
 - Sleeping
   - All players must be in port to sleep
