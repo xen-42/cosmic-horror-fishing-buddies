@@ -11,9 +11,9 @@ What is synced:
 - Player foghorn
 - Player light
 - Engine sounds
+- Time
 
 What is not synced (roadmap):
-- Time
 - Sleeping
   - All players must be in port to sleep
 - Collisions?
