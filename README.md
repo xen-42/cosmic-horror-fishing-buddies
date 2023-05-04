@@ -12,12 +12,13 @@ What is synced:
 - Player light
 - Engine sounds
 - Time
-
-What is not synced (roadmap):
 - Sleeping
   - All players must be in port to sleep
-- Collisions?
+
+What is not synced (roadmap):
+- Abilities
 - Ship appearance
+- Collisions?
 - Events
 - Enemies
 - Fishing spots 
