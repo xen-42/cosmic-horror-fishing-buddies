@@ -47,15 +47,16 @@ namespace CosmicFishingBuddies.PlayerSync
 			if (!isOwned)
 			{
 				CFBCore.LogInfo($"Remote player foghorn {current}");
-				if (current)
+
+				boatModelProxy.SetLightStrength(current ? 4f : 0f);
+				PlayOneShot(current ? AudioEnum.LIGHT_ON : AudioEnum.LIGHT_OFF, 0.3f, 1f);
+				foreach (var light in boatModelProxy.Lights)
 				{
-					boatModelProxy.SetLightStrength(5f);
-					PlayOneShot(AudioEnum.LIGHT_ON, 0.3f, 1f);
+					light.SetActive(current);
 				}
-				else
+				foreach (var lightBeam in boatModelProxy.LightBeams)
 				{
-					boatModelProxy.SetLightStrength(0f);
-					PlayOneShot(AudioEnum.LIGHT_OFF, 0.3f, 1f);
+					lightBeam.SetActive(current);
 				}
 			}
 		}
