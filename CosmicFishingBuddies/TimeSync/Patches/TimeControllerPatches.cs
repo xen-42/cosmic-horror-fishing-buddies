@@ -41,7 +41,7 @@ namespace CosmicFishingBuddies.TimeSync.Patches
 			{
 				// Never let them freeze time
 				__instance._freezeTime = false;
-				NetworkPlayer.LocalPlayer?.CmdSetTimeMode(__instance.currentTimePassageMode);
+				NetworkPlayer.LocalPlayer?.SetTimeMode(__instance.currentTimePassageMode);
 			}
 		}
 	}

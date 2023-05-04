@@ -2,6 +2,7 @@
 using CosmicFishingBuddies.Extensions;
 using CosmicFishingBuddies.TimeSync;
 using Mirror;
+using System;
 using UnityEngine;
 
 namespace CosmicFishingBuddies.PlayerSync
@@ -42,22 +43,28 @@ namespace CosmicFishingBuddies.PlayerSync
 		[Command]
 		public void SetLightActive(bool active) => _lightActive = active;
 
-		public void LightHook(bool _, bool current)
+		public void LightHook(bool prev, bool current)
 		{
 			if (!isOwned)
 			{
-				CFBCore.LogInfo($"Remote player foghorn {current}");
+				CFBCore.LogInfo($"Remote player light {_lightActive}");
 
-				boatModelProxy.SetLightStrength(current ? 4f : 0f);
-				PlayOneShot(current ? AudioEnum.LIGHT_ON : AudioEnum.LIGHT_OFF, 0.3f, 1f);
-				foreach (var light in boatModelProxy.Lights)
-				{
-					light.SetActive(current);
-				}
-				foreach (var lightBeam in boatModelProxy.LightBeams)
-				{
-					lightBeam.SetActive(current);
-				}
+				PlayOneShot(_lightActive ? AudioEnum.LIGHT_ON : AudioEnum.LIGHT_OFF, 0.3f, 1f);
+				RefreshLights();
+			}
+		}
+
+		private void RefreshLights()
+		{
+			_currentBoatModelProxy.SetLightStrength(_lightActive ? 4f : 0f);
+
+			foreach (var light in _currentBoatModelProxy.Lights)
+			{
+				light.SetActive(_lightActive);
+			}
+			foreach (var lightBeam in _currentBoatModelProxy.LightBeams)
+			{
+				lightBeam.SetActive(_lightActive);
 			}
 		}
 		#endregion
@@ -80,7 +87,7 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		#region Time mode
 		[Command]
-		public void CmdSetTimeMode(TimePassageMode mode)
+		public void SetTimeMode(TimePassageMode mode)
 		{
 			var prevMode = _timeMode;
 			_timeMode = mode;
@@ -97,7 +104,7 @@ namespace CosmicFishingBuddies.PlayerSync
 		public TimePassageMode TimeMode => _timeMode;
 
 		[Command]
-		public void CmdSetIsDocked(bool isDocked)
+		public void SetIsDocked(bool isDocked)
 		{
 			var wasDocked = _isDocked;
 			_isDocked = isDocked;
@@ -114,6 +121,40 @@ namespace CosmicFishingBuddies.PlayerSync
 		public bool IsDocked => _isDocked;
 		#endregion
 
+		#region	Upgrade tiers
+		[SyncVar(hook = nameof(UpgradeTierHook))]
+		private int _upgradeTier;
+
+		[Command]
+		public void SetUpgradeTier(int upgradeTier) => _upgradeTier = upgradeTier;
+
+		public void UpgradeTierHook(int prev, int current) => RefreshUpgradeTier();
+
+		public void RefreshUpgradeTier()
+		{
+			if (!isOwned)
+			{
+				try
+				{
+					CFBCore.LogInfo($"Player {netId} has ship hull upgrade tier {_upgradeTier}");
+
+					foreach (var boatModel in boatModelProxies)
+					{
+						boatModel.gameObject.SetActive(false);
+					}
+					_currentBoatModelProxy = boatModelProxies[_upgradeTier];
+					_currentBoatModelProxy.gameObject.SetActive(true);
+
+					RefreshLights();
+				}
+				catch (Exception e)
+				{
+					CFBCore.LogError($"Failed to refresh upgrade tier {e}");
+				}
+			}
+		}
+		#endregion
+
 		public static NetworkPlayer LocalPlayer { get; private set; }
 
 		public AudioSource foghornEndSource;
@@ -123,7 +164,8 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		public RemotePlayerEngineAudio remotePlayerEngineAudio;
 
-		public BoatModelProxy boatModelProxy;
+		public BoatModelProxy[] boatModelProxies;
+		private BoatModelProxy _currentBoatModelProxy;
 
 		public void Start()
 		{
@@ -131,28 +173,52 @@ namespace CosmicFishingBuddies.PlayerSync
 			{
 				LocalPlayer = this;
 
+				GameEvents.Instance.OnUpgradesChanged += OnUpgradesChanged;
+
 				// Initial state
-				CmdSetIsDocked(GameManager.Instance.Player.IsDocked);
-				CmdSetTimeMode(GameManager.Instance.Time.CurrentTimePassageMode);
+				SetUpgradeTier(GetUpgradeTier());
+				SetIsDocked(GameManager.Instance.Player.IsDocked);
+				SetTimeMode(GameManager.Instance.Time.CurrentTimePassageMode);
 				TimeSyncManager.Instance.RefreshTimePassageModifier();
 			}
 			else
 			{
-				// Fog horns
-				var existingFoghorn = GameObject.FindObjectOfType<FoghornAbility>();
-				foghornEndSource.clip = existingFoghorn.foghornEndSource.clip;
-				foghornMidSource.clip = existingFoghorn.foghornMidSource.clip;
+				try
+				{
+					// Fog horns
+					var existingFoghorn = GameObject.FindObjectOfType<FoghornAbility>();
+					foghornEndSource.clip = existingFoghorn.foghornEndSource.clip;
+					foghornMidSource.clip = existingFoghorn.foghornMidSource.clip;
 
-				// Lights
-				boatModelProxy.SetLightStrength(0f);
+					RefreshUpgradeTier();
+				}
+				catch (Exception e)
+				{
+					CFBCore.LogError($"Failed to make remote player {e}");
+				}
 			}
 
 			PlayerManager.Players.Add(this);
 		}
 
+		private int GetUpgradeTier() => Math.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 3);
+
 		public void OnDestroy()
 		{
 			PlayerManager.Players.Remove(this);
+
+			if (isOwned)
+			{
+				GameEvents.Instance.OnUpgradesChanged -= OnUpgradesChanged;
+			}
+		}
+
+		private void OnUpgradesChanged(UpgradeData upgradeData)
+		{
+			if (upgradeData is HullUpgradeData)
+			{
+				SetUpgradeTier(upgradeData.tier);
+			}
 		}
 	}
 }

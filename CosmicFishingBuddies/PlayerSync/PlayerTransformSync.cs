@@ -11,25 +11,34 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		public static GameObject PlayerPrefab { get; private set; }
 
+		private static Transform CopyDetail(GameObject parent, Transform detail)
+		{
+			var newDetail = GameObject.Instantiate(detail);
+			newDetail.transform.parent = PlayerPrefab.transform;
+			newDetail.transform.localPosition = Vector3.zero;
+			newDetail.transform.localRotation = Quaternion.identity;
+			newDetail.gameObject.SetActive(true);
+			return newDetail;
+		}
+
 		private static void CreatePrefab()
 		{
 			try
 			{
 				PlayerPrefab = new GameObject("PlayerPrefab");
 
-				var boatModel = GameObject.Instantiate(GameManager.Instance.Player.transform.Find("Boat1"));
-				boatModel.transform.parent = PlayerPrefab.transform;
-				boatModel.transform.localPosition = Vector3.zero;
-				boatModel.transform.localRotation = Quaternion.identity;
-				boatModel.gameObject.SetActive(true);
-
-				var wake = GameObject.Instantiate(GameManager.Instance.Player.transform.Find("BoatTrailParticles"));
-				wake.transform.parent = PlayerPrefab.transform;
-				wake.transform.localPosition = Vector3.zero;
-				wake.transform.localRotation = Quaternion.identity;
+				var boat1 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat1"));
+				var boat2 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat2"));
+				var boat3 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat3"));
+				var boat4 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat4"));
 
 				// TODO: Fix the tyres
-				boatModel.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
+				boat1.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
+				boat2.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
+				boat3.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
+				boat4.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
+
+				var wake = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("BoatTrailParticles"));
 
 				PlayerPrefab.SetActive(false);
 				GameObject.DontDestroyOnLoad(PlayerPrefab);
@@ -61,7 +70,7 @@ namespace CosmicFishingBuddies.PlayerSync
 			remotePlayer.transform.localRotation = Quaternion.identity;
 
 			var networkPlayer = GetComponent<NetworkPlayer>();
-			networkPlayer.boatModelProxy = remotePlayer.GetComponentInChildren<BoatModelProxy>();
+			networkPlayer.boatModelProxies = remotePlayer.GetComponentsInChildren<BoatModelProxy>();
 
 			return remotePlayer;
 		}

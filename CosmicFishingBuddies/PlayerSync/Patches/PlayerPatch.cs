@@ -20,10 +20,10 @@ namespace CosmicFishingBuddies.PlayerSync.Patches
 
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(Player.Dock))]
-		public static void Player_Dock() => NetworkPlayer.LocalPlayer?.CmdSetIsDocked(true);
+		public static void Player_Dock() => NetworkPlayer.LocalPlayer?.SetIsDocked(true);
 
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(Player.Undock))]
-		public static void Player_Undock() => NetworkPlayer.LocalPlayer?.CmdSetIsDocked(false);
+		public static void Player_Undock() => NetworkPlayer.LocalPlayer?.SetIsDocked(false);
 	}
 }
