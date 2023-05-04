@@ -1,5 +1,6 @@
 ﻿using CosmicFishingBuddies.AudioSync;
 using CosmicFishingBuddies.Extensions;
+using CosmicFishingBuddies.TimeSync;
 using Mirror;
 using UnityEngine;
 
@@ -76,6 +77,42 @@ namespace CosmicFishingBuddies.PlayerSync
 		}
 		#endregion
 
+		#region Time mode
+		[Command]
+		public void CmdSetTimeMode(TimePassageMode mode)
+		{
+			var prevMode = _timeMode;
+			_timeMode = mode;
+
+			if (prevMode != mode)
+			{
+				TimeSyncManager.Instance.RefreshTimePassageModifier();
+			}
+		}
+
+		[SyncVar]
+		private TimePassageMode _timeMode;
+
+		public TimePassageMode TimeMode => _timeMode;
+
+		[Command]
+		public void CmdSetIsDocked(bool isDocked)
+		{
+			var wasDocked = _isDocked;
+			_isDocked = isDocked;
+
+			if (wasDocked != isDocked)
+			{
+				TimeSyncManager.Instance.RefreshTimePassageModifier();
+			}
+		}
+
+		[SyncVar]
+		private bool _isDocked;
+
+		public bool IsDocked => _isDocked;
+		#endregion
+
 		public static NetworkPlayer LocalPlayer { get; private set; }
 
 		public AudioSource foghornEndSource;
@@ -92,6 +129,11 @@ namespace CosmicFishingBuddies.PlayerSync
 			if (isOwned)
 			{
 				LocalPlayer = this;
+
+				// Initial state
+				CmdSetIsDocked(GameManager.Instance.Player.IsDocked);
+				CmdSetTimeMode(GameManager.Instance.Time.CurrentTimePassageMode);
+				TimeSyncManager.Instance.RefreshTimePassageModifier();
 			}
 			else
 			{
@@ -103,7 +145,13 @@ namespace CosmicFishingBuddies.PlayerSync
 				// Lights
 				boatModelProxy.SetLightStrength(0f);
 			}
+
+			PlayerManager.Players.Add(this);
 		}
 
+		public void OnDestroy()
+		{
+			PlayerManager.Players.Remove(this);
+		}
 	}
 }

@@ -13,11 +13,11 @@ namespace CosmicFishingBuddies.TimeSync.Patches
 			{
 				if (TimeSyncManager.Instance.isServer)
 				{
-					TimeSyncManager.Instance.timeAndDay = __result;
+					TimeSyncManager.Instance.TimeAndDay = __result;
 				}
 				else
 				{
-					__result = TimeSyncManager.Instance.timeAndDay;
+					__result = TimeSyncManager.Instance.TimeAndDay;
 				}
 			}
 		}

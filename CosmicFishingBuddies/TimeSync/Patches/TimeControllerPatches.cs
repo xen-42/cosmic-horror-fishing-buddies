@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using CosmicFishingBuddies.PlayerSync;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace CosmicFishingBuddies.TimeSync.Patches
 			if (TimeSyncManager.Instance != null)
 			{
 				// While connected, have time pass constantly at the movement rate
-				__result = 1f;
+				__result = TimeSyncManager.Instance.TimePassageModifier;
 			}
 		}
 
@@ -40,6 +41,7 @@ namespace CosmicFishingBuddies.TimeSync.Patches
 			{
 				// Never let them freeze time
 				__instance._freezeTime = false;
+				NetworkPlayer.LocalPlayer?.CmdSetTimeMode(__instance.currentTimePassageMode);
 			}
 		}
 	}

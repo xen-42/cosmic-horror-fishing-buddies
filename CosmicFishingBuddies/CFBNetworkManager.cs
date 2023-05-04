@@ -4,6 +4,7 @@ using CosmicFishingBuddies.TimeSync;
 using kcp2k;
 using Mirror;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -257,7 +258,5 @@ namespace CosmicFishingBuddies
 				CFBCore.LogError($"{e}");
 			}
 		}
-
-
 	}
 }
