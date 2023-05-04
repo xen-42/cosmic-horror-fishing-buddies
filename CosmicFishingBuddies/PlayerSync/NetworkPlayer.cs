@@ -71,12 +71,7 @@ namespace CosmicFishingBuddies.PlayerSync
 		{
 			if (!isOwned)
 			{
-				var clip = AudioClipManager.GetClip(audio);
-				if (clip != null)
-				{
-					oneShotSource.pitch = pitch;
-					oneShotSource.PlayOneShot(clip, volume);
-				}
+				AudioClipManager.PlayClip(audio, oneShotSource, volume, pitch);
 			}
 		}
 		#endregion

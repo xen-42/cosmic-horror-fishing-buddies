@@ -55,7 +55,7 @@ namespace CosmicFishingBuddies
 				engineAudioObj.transform.localPosition = Vector3.zero;
 				networkPlayer.remotePlayerEngineAudio.engineSource = engineAudioObj.AddComponent<AudioSource>();
 				networkPlayer.remotePlayerEngineAudio.engineSource.spatialBlend = 1;
-				networkPlayer.remotePlayerEngineAudio.engineSource.minDistance = 10;
+				networkPlayer.remotePlayerEngineAudio.engineSource.minDistance = 1;
 				networkPlayer.remotePlayerEngineAudio.engineSource.maxDistance = 40;
 				networkPlayer.remotePlayerEngineAudio.engineSource.loop = true;
 				networkPlayer.remotePlayerEngineAudio.engineSource.playOnAwake = true;

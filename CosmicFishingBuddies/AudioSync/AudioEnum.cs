@@ -9,6 +9,7 @@ namespace CosmicFishingBuddies.AudioSync
 	public enum AudioEnum
 	{
 		LIGHT_ON,
-		LIGHT_OFF
+		LIGHT_OFF,
+		PLAYER_COLLISION
 	}
 }

@@ -1,10 +1,13 @@
-﻿using HarmonyLib;
+﻿using CosmicFishingBuddies.AudioSync;
+using HarmonyLib;
 using Sirenix.Utilities;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using Winch.Core;
 
 namespace CosmicFishingBuddies
@@ -14,6 +17,8 @@ namespace CosmicFishingBuddies
 		public static CFBCore Instance { get; private set; }
 
 		public static GameObject terminal;
+
+		public UnityEvent PlayerLoaded = new();
 
 		public void Awake()
 		{
@@ -33,9 +38,10 @@ namespace CosmicFishingBuddies
 
 				Application.runInBackground = true;
 
-				var networkManagerObj = new GameObject("NetworkManager");
-				networkManagerObj.AddComponent<CFBNetworkManager>();
-				GameObject.DontDestroyOnLoad(networkManagerObj);
+				var managerObj = new GameObject("CFBManager");
+				managerObj.AddComponent<CFBNetworkManager>();
+				managerObj.AddComponent<AudioClipManager>();
+				GameObject.DontDestroyOnLoad(managerObj);
 
 				Application.logMessageReceived += Application_logMessageReceived;
 			}
