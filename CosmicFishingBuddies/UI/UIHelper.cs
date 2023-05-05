@@ -19,6 +19,7 @@ namespace CosmicFishingBuddies.UI
 		private static GameObject _windowPrefab;
 		private static GameObject _buttonPrefab;
 		private static GameObject _dropDownPrefab;
+		private static GameObject _labelPrefab;
 
 		private static GameObject _buttonContainer;
 		private static GameObject _menuCanvas;
@@ -81,6 +82,10 @@ namespace CosmicFishingBuddies.UI
 				var dropdownSettingInput = _dropDownPrefab.GetComponent<DropdownSettingInput>();
 				dropdownSettingInput.settingType = SettingType.NONE;
 
+				// LABEL
+				_labelPrefab = GameObject.Find("Canvases/SettingsDialog/TabbedPanelContainer/Panels/AccessibilityPanel/Container/PopupDuration/LabelContainer/DropdownLabel");
+				GameObject.DestroyImmediate(_labelPrefab.GetComponent<LocalizeStringEvent>());
+				_labelPrefab.name = "LabelPrefab";
 			}
 			catch (Exception e)
 			{
@@ -171,7 +176,6 @@ namespace CosmicFishingBuddies.UI
 			newDropdown.transform.localScale = Vector2.one;
 
 			var dropdownElement = newDropdown.GetComponentInChildren<TMP_Dropdown>();
-			dropdownElement.transform.localPosition = new Vector2(-50, -50);
 			dropdownElement.ClearOptions();
 			dropdownElement.AddOptions(options.Select(x => x.text).ToList());
 			dropdownElement.onValueChanged.RemoveAllListeners();
@@ -187,6 +191,21 @@ namespace CosmicFishingBuddies.UI
 			newDropdown.SetActive(true);
 
 			return newDropdown;
+		}
+
+		public static GameObject AddLabel(Transform parent, string text, TextAlignmentOptions alignment)
+		{
+			var newLabel = _labelPrefab.InstantiateInactive();
+			newLabel.name = $"{text}Label";
+			newLabel.transform.parent = parent;
+			newLabel.transform.localScale = Vector2.one;
+			var tmp = newLabel.GetComponent<TextMeshProUGUI>();
+			tmp.text = text;
+			tmp.alignment = alignment;
+
+			newLabel.SetActive(true);
+
+			return newLabel;
 		}
 	}
 }

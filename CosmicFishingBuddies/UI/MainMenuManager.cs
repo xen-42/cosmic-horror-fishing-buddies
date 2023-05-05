@@ -1,5 +1,7 @@
-﻿using CosmicFishingBuddies.Util;
+﻿using Coffee.UIExtensions;
+using CosmicFishingBuddies.Util;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,8 +10,14 @@ namespace CosmicFishingBuddies.UI
 {
 	internal class MainMenuManager : MonoBehaviour
 	{
-		private SaveSlotWindow _saveSlotWindow;
 		private PopupWindow _popupWindow;
+		private SaveSlotWindow _saveSlotWindow;
+
+		private bool _isHost;
+		private CFBNetworkManager.TransportType _transportType;
+		private string _address = "localhost";
+
+		private TextMeshProUGUI _connectionText;
 
 		public void Awake()
 		{
@@ -35,7 +43,12 @@ namespace CosmicFishingBuddies.UI
 					var options = new GameObject("OptionsList");
 					options.SetActive(false);
 					var rectTransform = options.AddComponent<RectTransform>();
-					options.AddComponent<VerticalLayoutGroup>();
+					var grid = options.AddComponent<GridLayoutGroup>();
+					grid.cellSize = new Vector2(300, 100);
+					grid.spacing = new Vector2(100, 50);
+					grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+					grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
+					grid.childAlignment = TextAnchor.MiddleCenter;
 					options.AddComponent<CanvasRenderer>();
 					options.transform.parent = panel;
 					options.transform.localPosition = Vector2.zero;
@@ -45,19 +58,24 @@ namespace CosmicFishingBuddies.UI
 					rectTransform.sizeDelta = new Vector2(400, 400);
 					options.SetActive(true);
 
-					var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick epic", new(string, Action)[]
+					_connectionText = UIHelper.AddLabel(options.transform, "Multiplayer", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
+
+					var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Epic", new(string, Action)[]
 					{
-						("KCP", () => OnSelectOption("KCP")),
-						("Epic", () => OnSelectOption("Epic"))
+						//("Epic", () => OnSelectOption(CFBNetworkManager.TransportType.EPIC))),
+						//("Steam", () => OnSelectOption(CFBNetworkManager.TransportType.STEAM))),
+						("IP Address", () => OnSelectTransportOption(CFBNetworkManager.TransportType.KCP))
 					});
 
-					var startButton = UIHelper.AddButton(options.transform, "Begin", OnClickBegin);
+					var startButton = UIHelper.AddButton(options.transform, "Start", OnClickStart);
+					startButton.GetComponent<UITransitionEffect>().enabled = false;
+					startButton.GetComponent<Button>().colors = _saveSlotWindow.saveSlots[0].selectSlotButton.GetComponent<Button>().colors;
 
 					UIHelper.AddMainMenuButton("Host Game", OnClickHost, 0);
 					UIHelper.AddMainMenuButton("Join Game", OnClickJoin, 1);
 
-					//GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.CONTINUE));
-					//GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.LOAD));
+					GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.CONTINUE));
+					GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.LOAD));
 				}
 			}
 			catch (Exception e)
@@ -70,6 +88,10 @@ namespace CosmicFishingBuddies.UI
 		{
 			CFBCore.LogInfo("Hosting!");
 
+			_isHost = true;
+
+			_connectionText.text = "You will host a server!";
+
 			_popupWindow.Show();
 		}
 
@@ -77,19 +99,29 @@ namespace CosmicFishingBuddies.UI
 		{
 			CFBCore.LogInfo("Connecting!");
 
+			_isHost = false;
+
+			_connectionText.text = "You're joining a server!\nWARNING: Your save data will be overwritten.";
+
 			_popupWindow.Show();
 		}
 
-		private void OnClickBegin()
+		private void OnClickStart()
 		{
 			CFBCore.LogInfo("Begin!");
 
+			_popupWindow.Hide();
 
+			CFBNetworkManager.Instance.SetConnection(_isHost, _address, _transportType);
+
+			_saveSlotWindow.Show();
 		}
 
-		private void OnSelectOption(string option)
+		private void OnSelectTransportOption(CFBNetworkManager.TransportType type)
 		{
-			CFBCore.LogInfo($"Selected server hosting option {option}");
+			CFBCore.LogInfo($"Selected server hosting option {type}");
+
+
 		}
 	}
 }

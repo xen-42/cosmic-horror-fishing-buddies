@@ -41,7 +41,7 @@ namespace CosmicFishingBuddies
 				gameObject.AddComponent<CFBNetworkManager>();
 				gameObject.AddComponent<AudioClipManager>();
 				gameObject.AddComponent<UIHelper>();
-				//gameObject.AddComponent<MainMenuManager>();
+				gameObject.AddComponent<MainMenuManager>();
 
 				Application.logMessageReceived += Application_logMessageReceived;
 			}

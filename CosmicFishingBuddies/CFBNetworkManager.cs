@@ -1,29 +1,46 @@
 ﻿using CosmicFishingBuddies.Extensions;
 using CosmicFishingBuddies.PlayerSync;
 using CosmicFishingBuddies.TimeSync;
+using CosmicFishingBuddies.Util;
 using kcp2k;
 using Mirror;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace CosmicFishingBuddies
 {
 	internal class CFBNetworkManager : NetworkManager
 	{
+		public static CFBNetworkManager Instance { get; private set; }
+
+		private bool _isConnecting;
+		private bool _isHost;
+
+		private KcpTransport _kcpTransport;
+
+		public enum TransportType
+		{
+			KCP,
+			EPIC,
+			STEAM
+		}
+
 		public static GameObject TimeSyncManagerPrefab { get; private set; }
 
 		public override void Awake()
 		{
 			try
 			{
+				Instance = this;
+
 				gameObject.SetActive(false);
 
-				var kcpTransport = gameObject.AddComponent<KcpTransport>();
-				transport = kcpTransport;
+				_kcpTransport = gameObject.AddComponent<KcpTransport>();
 
-				gameObject.AddComponent<NetworkManagerHUD>();
+				// gameObject.AddComponent<NetworkManagerHUD>();
 
 				playerPrefab = MakeNewNetworkObject(1, "PlayerPrefab");
 				playerPrefab.AddComponent<PlayerTransformSync>();
@@ -68,11 +85,60 @@ namespace CosmicFishingBuddies
 
 				gameObject.SetActive(true);
 
+				CFBCore.Instance.PlayerLoaded.AddListener(OnPlayerLoaded);
+				SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+
 				base.Awake();
 			}
 			catch (Exception e)
 			{
 				CFBCore.LogError($"{e}");
+			}
+		}
+
+		private void SceneManager_activeSceneChanged(Scene prev, Scene current)
+		{
+			if (current.name != Scenes.Game)
+			{
+				if (NetworkServer.activeHost)
+				{
+					StopHost();
+				}
+				if (NetworkClient.isConnected)
+				{
+					StopClient();
+				}
+			}
+		}
+
+		public void SetConnection(bool isHost, string address, TransportType transportType)
+		{
+			networkAddress = address;
+			_isHost = isHost;
+			_isConnecting = true;
+
+			switch(transportType)
+			{
+				case TransportType.KCP:
+					transport = _kcpTransport;
+					break;
+				default:
+					throw new Exception($"Unsupported transport {transportType}");
+			}
+		}
+
+		private void OnPlayerLoaded()
+		{
+			if (_isConnecting)
+			{
+				if (_isHost)
+				{
+					StartHost();
+				}
+				else
+				{
+					StartClient();
+				}
 			}
 		}
 
