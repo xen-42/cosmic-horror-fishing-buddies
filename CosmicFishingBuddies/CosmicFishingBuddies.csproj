@@ -36,6 +36,7 @@
       <HintPath>$(GameInstall)\Winch.dll</HintPath>
       <Private>false</Private>
     </Reference>
+		<ProjectReference Include="..\FizzyFacepunch\FizzySteamworks.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@ using CosmicFishingBuddies.TimeSync;
 using CosmicFishingBuddies.Util;
 using kcp2k;
 using Mirror;
+using Mirror.FizzySteam;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -121,6 +122,10 @@ namespace CosmicFishingBuddies
 			{
 				case TransportType.KCP:
 					transport = _kcpTransport;
+					break;
+				case TransportType.STEAM:
+					var fizzy = gameObject.GetAddComponent<FizzySteamworks>();
+					transport = fizzy;
 					break;
 				default:
 					throw new Exception($"Unsupported transport {transportType}");

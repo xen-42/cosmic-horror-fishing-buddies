@@ -18,5 +18,11 @@ namespace CosmicFishingBuddies.Extensions
 			GameObject.DontDestroyOnLoad(gameObject);
 			return gameObject;
 		}
+
+		public static T GetAddComponent<T>(this GameObject gameObject) where T : Component
+		{
+			var component = gameObject.GetComponent<T>() ?? gameObject.AddComponent<T>();
+			return component;
+		}
 	}
 }
