@@ -179,7 +179,6 @@ namespace CosmicFishingBuddies.PlayerSync
 				SetUpgradeTier(GetUpgradeTier());
 				SetIsDocked(GameManager.Instance.Player.IsDocked);
 				SetTimeMode(GameManager.Instance.Time.CurrentTimePassageMode);
-				TimeSyncManager.Instance.RefreshTimePassageModifier();
 			}
 			else
 			{

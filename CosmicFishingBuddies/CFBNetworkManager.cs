@@ -317,6 +317,11 @@ namespace CosmicFishingBuddies
 			{
 				CFBCore.LogInfo("Stop client");
 
+				if (SceneManager.GetActiveScene().name == Scenes.Game)
+				{
+					GameManager.Instance.Loader.LoadTitleFromGame();
+				}
+
 				base.OnStopClient();
 			}
 			catch(Exception e)

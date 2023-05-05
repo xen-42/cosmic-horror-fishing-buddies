@@ -34,7 +34,9 @@ namespace CosmicFishingBuddies.TimeSync
 					else anyPlayerSkippingFlag = true;
 					if (!player.IsDocked) allPlayersDockedFlag = false;
 				}
-				var canSkipTime = allPlayersSkippingFlag || (anyPlayerSkippingFlag && allPlayersDockedFlag);
+
+				// Think this is getting called before there are even players in the list, making it fast-forward time
+				var canSkipTime = PlayerManager.Players.Count > 0 && (allPlayersSkippingFlag || (anyPlayerSkippingFlag && allPlayersDockedFlag));
 
 				TimePassageModifier = canSkipTime ? 10 : 0.5f;
 			}
