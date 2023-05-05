@@ -1,4 +1,5 @@
 ﻿using CosmicFishingBuddies.BaseSync;
+using CosmicFishingBuddies.Extensions;
 using FluffyUnderware.DevTools.Extensions;
 using System;
 using UnityEngine;
@@ -13,12 +14,13 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		private static Transform CopyDetail(GameObject parent, Transform detail)
 		{
-			var newDetail = GameObject.Instantiate(detail);
-			newDetail.transform.parent = PlayerPrefab.transform;
+			var newDetail = detail.gameObject.InstantiateInactive();
+			newDetail.name = detail.name;
+			newDetail.transform.parent = parent.transform;
 			newDetail.transform.localPosition = Vector3.zero;
 			newDetail.transform.localRotation = Quaternion.identity;
 			newDetail.gameObject.SetActive(true);
-			return newDetail;
+			return newDetail.transform;
 		}
 
 		private static void CreatePrefab()
@@ -41,9 +43,14 @@ namespace CosmicFishingBuddies.PlayerSync
 				var wake = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("BoatTrailParticles"));
 
 				var teleportEffect = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Abilities/TeleportAbility/TeleportEffect"));
-				teleportEffect.name = "TeleportEffect";
 				teleportEffect.gameObject.SetActive(false);
 
+				var banishAbility = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Abilities/BanishAbility"));
+				GameObject.DestroyImmediate(banishAbility.GetComponent<BanishAbility>());
+				var banishAudio = banishAbility.GetComponentInChildren<AudioSource>();
+				banishAudio.spatialBlend = 1;
+				banishAudio.maxDistance = 20;
+				banishAudio.minDistance = 5;
 
 				PlayerPrefab.SetActive(false);
 				GameObject.DontDestroyOnLoad(PlayerPrefab);
@@ -77,6 +84,8 @@ namespace CosmicFishingBuddies.PlayerSync
 			var networkPlayer = GetComponent<NetworkPlayer>();
 			networkPlayer.boatModelProxies = remotePlayer.GetComponentsInChildren<BoatModelProxy>();
 			networkPlayer.remoteTeleportAbility.teleportEffect = remotePlayer.Find("TeleportEffect").gameObject;
+			networkPlayer.remoteBanishAbility.banishEffect = remotePlayer.Find("BanishAbility/BanishEffect").gameObject;
+			networkPlayer.remoteBanishAbility.banishAudioSource = remotePlayer.Find("BanishAbility/BanishLoopSFX").GetComponent<AudioSource>();
 
 			networkPlayer.wake = remotePlayer.Find("BoatTrailParticles").gameObject;
 

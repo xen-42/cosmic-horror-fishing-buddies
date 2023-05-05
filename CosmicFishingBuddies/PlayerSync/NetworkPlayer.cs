@@ -1,5 +1,6 @@
 ﻿using CosmicFishingBuddies.AudioSync;
 using CosmicFishingBuddies.Extensions;
+using CosmicFishingBuddies.PlayerSync.Abilities;
 using CosmicFishingBuddies.TimeSync;
 using Mirror;
 using System;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace CosmicFishingBuddies.PlayerSync
 {
-	internal class NetworkPlayer : NetworkBehaviour
+    internal class NetworkPlayer : NetworkBehaviour
 	{
 		#region Foghorn
 		[SyncVar(hook = nameof(FoghornHook))]
@@ -164,6 +165,7 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		public RemotePlayerEngineAudio remotePlayerEngineAudio;
 		public RemoteTeleportAbility remoteTeleportAbility;
+		public RemoteBanishAbility remoteBanishAbility;
 
 		public BoatModelProxy[] boatModelProxies;
 		public BoatModelProxy CurrentBoatModelProxy { get; private set; }

@@ -1,5 +1,6 @@
 ﻿using CosmicFishingBuddies.Extensions;
 using CosmicFishingBuddies.PlayerSync;
+using CosmicFishingBuddies.PlayerSync.Abilities;
 using CosmicFishingBuddies.TimeSync;
 using CosmicFishingBuddies.Util;
 using kcp2k;
@@ -12,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 namespace CosmicFishingBuddies
 {
-	internal class CFBNetworkManager : NetworkManager
+    internal class CFBNetworkManager : NetworkManager
 	{
 		public static CFBNetworkManager Instance { get; private set; }
 
@@ -80,6 +81,7 @@ namespace CosmicFishingBuddies
 
 				// Teleport ability
 				networkPlayer.remoteTeleportAbility = playerPrefab.AddComponent<RemoteTeleportAbility>();
+				networkPlayer.remoteBanishAbility = playerPrefab.AddComponent<RemoteBanishAbility>();
 
 				// 2 - TimeSyncManager
 				TimeSyncManagerPrefab = MakeNewNetworkObject(2, nameof(TimeSyncManagerPrefab));
