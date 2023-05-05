@@ -18,8 +18,9 @@ What is synced:
 What is not synced (roadmap):
 - Abilities
 - Ship appearance
-- Collisions?
+- Fishing spots 
+- Crab pots
 - Events
 - Enemies
-- Fishing spots 
 - Waves
+- Collisions?
