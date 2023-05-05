@@ -1,4 +1,5 @@
 ﻿using CosmicFishingBuddies.AudioSync;
+using CosmicFishingBuddies.UI;
 using HarmonyLib;
 using Sirenix.Utilities;
 using System;
@@ -33,15 +34,14 @@ namespace CosmicFishingBuddies
 				// we have to manually initialize them
 				InitAssemblies();
 
-				// Winch loads the mod too late for this to work for the SteamAPI patch, have to rely on Winch's patching instead
 				new Harmony(nameof(CFBCore)).PatchAll();
 
 				Application.runInBackground = true;
 
-				var managerObj = new GameObject("CFBManager");
-				managerObj.AddComponent<CFBNetworkManager>();
-				managerObj.AddComponent<AudioClipManager>();
-				GameObject.DontDestroyOnLoad(managerObj);
+				gameObject.AddComponent<CFBNetworkManager>();
+				gameObject.AddComponent<AudioClipManager>();
+				gameObject.AddComponent<UIHelper>();
+				//gameObject.AddComponent<MainMenuManager>();
 
 				Application.logMessageReceived += Application_logMessageReceived;
 			}
