@@ -6,26 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace CosmicFishingBuddies.PlayerSync.Abilities
+namespace CosmicFishingBuddies.PlayerSync.AbilitySync
 {
-	[RequireComponent(typeof(NetworkPlayer))]
-	internal class RemoteBanishAbility : NetworkBehaviour
+	internal class RemoteBanishAbility : RemoteRPCAbility
 	{
 		public GameObject banishEffect;
 		public AudioSource banishAudioSource;
 
-		private NetworkPlayer _networkPlayer;
-
-		public void Awake()
-		{
-			_networkPlayer = GetComponent<NetworkPlayer>();
-		}
-
-		[Command]
-		public void ToggleAbility(bool active) => RpcTriggerAbility(active);
-
 		[ClientRpc(includeOwner = false)]
-		private void RpcTriggerAbility(bool active)
+		protected override void OnTriggerAbility(bool active)
 		{
 			banishEffect.SetActive(active);
 			if (active)

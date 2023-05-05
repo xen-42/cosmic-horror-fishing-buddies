@@ -1,6 +1,6 @@
 ﻿using CosmicFishingBuddies.Extensions;
 using CosmicFishingBuddies.PlayerSync;
-using CosmicFishingBuddies.PlayerSync.Abilities;
+using CosmicFishingBuddies.PlayerSync.AbilitySync;
 using CosmicFishingBuddies.TimeSync;
 using CosmicFishingBuddies.Util;
 using kcp2k;
@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 namespace CosmicFishingBuddies
 {
-    internal class CFBNetworkManager : NetworkManager
+	internal class CFBNetworkManager : NetworkManager
 	{
 		public static CFBNetworkManager Instance { get; private set; }
 
@@ -41,8 +41,6 @@ namespace CosmicFishingBuddies
 
 				_kcpTransport = gameObject.AddComponent<KcpTransport>();
 
-				// gameObject.AddComponent<NetworkManagerHUD>();
-
 				playerPrefab = MakeNewNetworkObject(1, "PlayerPrefab");
 				playerPrefab.AddComponent<PlayerTransformSync>();
 				playerPrefab.AddComponent<NetworkTransform>().syncDirection = SyncDirection.ClientToServer;
@@ -52,12 +50,16 @@ namespace CosmicFishingBuddies
 
 				// REMOTE PLAYER ABILITIES
 				// Foghorn
-				networkPlayer.foghornEndSource = playerPrefab.AddComponent<AudioSource>();
-				networkPlayer.foghornEndSource.spatialBlend = 1;
-				networkPlayer.foghornEndSource.minDistance = 15;
-				networkPlayer.foghornMidSource = playerPrefab.AddComponent<AudioSource>();
-				networkPlayer.foghornMidSource.spatialBlend = 1;
-				networkPlayer.foghornMidSource.minDistance = 15;
+				networkPlayer.remoteFoghornAbility = playerPrefab.AddComponent<RemoteFoghornAbility>();
+				var remoteFoghornObj = new GameObject(nameof(RemoteFoghornAbility));
+				remoteFoghornObj.transform.parent = playerPrefab.transform;
+				remoteFoghornObj.transform.localPosition = Vector3.zero;
+				networkPlayer.remoteFoghornAbility.foghornEndSource = remoteFoghornObj.AddComponent<AudioSource>();
+				networkPlayer.remoteFoghornAbility.foghornEndSource.spatialBlend = 1;
+				networkPlayer.remoteFoghornAbility.foghornEndSource.minDistance = 15;
+				networkPlayer.remoteFoghornAbility.foghornMidSource = remoteFoghornObj.AddComponent<AudioSource>();
+				networkPlayer.remoteFoghornAbility.foghornMidSource.spatialBlend = 1;
+				networkPlayer.remoteFoghornAbility.foghornMidSource.minDistance = 15;
 
 				// PlaySFX
 				networkPlayer.oneShotSource = playerPrefab.AddComponent<AudioSource>();
@@ -69,7 +71,7 @@ namespace CosmicFishingBuddies
 				// All NetworkBehaviours have to be on root object to share its netid
 				networkPlayer.remotePlayerEngineAudio = playerPrefab.AddComponent<RemotePlayerEngineAudio>();
 
-				var engineAudioObj = new GameObject("RemotePlayerEngineAudio");
+				var engineAudioObj = new GameObject(nameof(RemotePlayerEngineAudio));
 				engineAudioObj.transform.parent = playerPrefab.transform;
 				engineAudioObj.transform.localPosition = Vector3.zero;
 				networkPlayer.remotePlayerEngineAudio.engineSource = engineAudioObj.AddComponent<AudioSource>();
@@ -82,6 +84,7 @@ namespace CosmicFishingBuddies
 				// Teleport ability
 				networkPlayer.remoteTeleportAbility = playerPrefab.AddComponent<RemoteTeleportAbility>();
 				networkPlayer.remoteBanishAbility = playerPrefab.AddComponent<RemoteBanishAbility>();
+				networkPlayer.remoteLightAbility = playerPrefab.AddComponent<RemoteLightAbility>();
 
 				// 2 - TimeSyncManager
 				TimeSyncManagerPrefab = MakeNewNetworkObject(2, nameof(TimeSyncManagerPrefab));
@@ -92,6 +95,9 @@ namespace CosmicFishingBuddies
 
 				CFBCore.Instance.PlayerLoaded.AddListener(OnPlayerLoaded);
 				SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+
+				PlayerManager.RemotePlayerJoined.AddListener(OnRemotePlayerJoined);
+				PlayerManager.RemotePlayerLeft.AddListener(OnRemotePlayerLeft);
 
 				base.Awake();
 			}
@@ -114,6 +120,16 @@ namespace CosmicFishingBuddies
 					StopClient();
 				}
 			}
+		}
+
+		private void OnRemotePlayerJoined()
+		{
+			NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "A player has joined the game!", DredgeColorTypeEnum.POSITIVE);
+		}
+
+		private void OnRemotePlayerLeft()
+		{
+			NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "A player has left the game.", DredgeColorTypeEnum.NEGATIVE);
 		}
 
 		public void SetConnection(bool isHost, string address, TransportType transportType)
@@ -251,6 +267,11 @@ namespace CosmicFishingBuddies
 			try
 			{
 				CFBCore.LogInfo("Client connected");
+
+				if (_isHost)
+				{
+					NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "You are hosting the server", DredgeColorTypeEnum.POSITIVE);
+				}
 
 				base.OnClientConnect();
 			}
