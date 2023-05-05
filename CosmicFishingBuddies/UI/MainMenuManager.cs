@@ -62,9 +62,9 @@ namespace CosmicFishingBuddies.UI
 
 					var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Epic", new(string, Action)[]
 					{
-						//("Epic", () => OnSelectOption(CFBNetworkManager.TransportType.EPIC))),
-						//("Steam", () => OnSelectOption(CFBNetworkManager.TransportType.STEAM))),
-						("IP Address", () => OnSelectTransportOption(CFBNetworkManager.TransportType.KCP))
+						//("Epic", () => OnSelectTransportOption(CFBNetworkManager.TransportType.EPIC)),
+						("IP Address", () => OnSelectTransportOption(CFBNetworkManager.TransportType.KCP)),
+						("Steam", () => OnSelectTransportOption(CFBNetworkManager.TransportType.STEAM))
 					});
 
 					var startButton = UIHelper.AddButton(options.transform, "Start", OnClickStart);

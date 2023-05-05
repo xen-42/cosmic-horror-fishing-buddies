@@ -126,6 +126,7 @@ namespace CosmicFishingBuddies
 				case TransportType.STEAM:
 					var fizzy = gameObject.GetAddComponent<FizzySteamworks>();
 					transport = fizzy;
+					FizzyLogger.LogEvent += (string msg, FizzyMessageType sev) => CFBCore.LogInfo($"[FIZZYSTEAMWORKS] {msg}");
 					break;
 				default:
 					throw new Exception($"Unsupported transport {transportType}");
