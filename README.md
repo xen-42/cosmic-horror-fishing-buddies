@@ -18,8 +18,8 @@ What is synced:
 What is not synced (roadmap):
 - Abilities
 - Ship appearance
-- Fishing spots 
-- Crab pots
+- Fishing spots (depletion and creation using bait)
+- Crab pots (including inventories)
 - Events
 - Enemies
 - Waves
