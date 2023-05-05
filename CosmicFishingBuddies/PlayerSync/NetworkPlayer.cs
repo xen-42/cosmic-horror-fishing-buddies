@@ -56,13 +56,13 @@ namespace CosmicFishingBuddies.PlayerSync
 
 		private void RefreshLights()
 		{
-			_currentBoatModelProxy.SetLightStrength(_lightActive ? 4f : 0f);
+			CurrentBoatModelProxy.SetLightStrength(_lightActive ? 4f : 0f);
 
-			foreach (var light in _currentBoatModelProxy.Lights)
+			foreach (var light in CurrentBoatModelProxy.Lights)
 			{
 				light.SetActive(_lightActive);
 			}
-			foreach (var lightBeam in _currentBoatModelProxy.LightBeams)
+			foreach (var lightBeam in CurrentBoatModelProxy.LightBeams)
 			{
 				lightBeam.SetActive(_lightActive);
 			}
@@ -142,8 +142,8 @@ namespace CosmicFishingBuddies.PlayerSync
 					{
 						boatModel.gameObject.SetActive(false);
 					}
-					_currentBoatModelProxy = boatModelProxies[_upgradeTier];
-					_currentBoatModelProxy.gameObject.SetActive(true);
+					CurrentBoatModelProxy = boatModelProxies[_upgradeTier];
+					CurrentBoatModelProxy.gameObject.SetActive(true);
 
 					RefreshLights();
 				}
@@ -163,9 +163,11 @@ namespace CosmicFishingBuddies.PlayerSync
 		public AudioSource oneShotSource;
 
 		public RemotePlayerEngineAudio remotePlayerEngineAudio;
+		public RemoteTeleportAbility remoteTeleportAbility;
 
 		public BoatModelProxy[] boatModelProxies;
-		private BoatModelProxy _currentBoatModelProxy;
+		public BoatModelProxy CurrentBoatModelProxy { get; private set; }
+		public GameObject wake;
 
 		public void Start()
 		{

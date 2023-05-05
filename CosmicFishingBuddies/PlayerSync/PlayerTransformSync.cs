@@ -40,6 +40,11 @@ namespace CosmicFishingBuddies.PlayerSync
 
 				var wake = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("BoatTrailParticles"));
 
+				var teleportEffect = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Abilities/TeleportAbility/TeleportEffect"));
+				teleportEffect.name = "TeleportEffect";
+				teleportEffect.gameObject.SetActive(false);
+
+
 				PlayerPrefab.SetActive(false);
 				GameObject.DontDestroyOnLoad(PlayerPrefab);
 			}
@@ -71,6 +76,9 @@ namespace CosmicFishingBuddies.PlayerSync
 
 			var networkPlayer = GetComponent<NetworkPlayer>();
 			networkPlayer.boatModelProxies = remotePlayer.GetComponentsInChildren<BoatModelProxy>();
+			networkPlayer.remoteTeleportAbility.teleportEffect = remotePlayer.Find("TeleportEffect").gameObject;
+
+			networkPlayer.wake = remotePlayer.Find("BoatTrailParticles").gameObject;
 
 			return remotePlayer;
 		}

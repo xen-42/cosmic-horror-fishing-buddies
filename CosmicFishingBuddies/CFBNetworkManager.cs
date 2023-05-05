@@ -78,6 +78,9 @@ namespace CosmicFishingBuddies
 				networkPlayer.remotePlayerEngineAudio.engineSource.loop = true;
 				networkPlayer.remotePlayerEngineAudio.engineSource.playOnAwake = true;
 
+				// Teleport ability
+				networkPlayer.remoteTeleportAbility = playerPrefab.AddComponent<RemoteTeleportAbility>();
+
 				// 2 - TimeSyncManager
 				TimeSyncManagerPrefab = MakeNewNetworkObject(2, nameof(TimeSyncManagerPrefab));
 				TimeSyncManagerPrefab.AddComponent<TimeSyncManager>();
