@@ -83,8 +83,29 @@ namespace CosmicFishingBuddies
 			LogInfo("Assemblies initialized");
 		}
 
-		public static void LogInfo(object msg) => WinchCore.Log.Info(msg);
-		public static void LogError(object msg) => WinchCore.Log.Error(msg);
-		public static void LogWarning(object msg) => WinchCore.Log.Warn(msg);
+		public static void LogInfo(object msg)
+		{
+			try
+			{
+				WinchCore.Log.Info(msg);
+			}
+			catch { }
+		}
+		public static void LogError(object msg)
+		{
+			try
+			{
+				WinchCore.Log.Error(msg);
+			}
+			catch { }
+		}
+		public static void LogWarning(object msg)
+		{
+			try
+			{
+				WinchCore.Log.Warn(msg);
+			}
+			catch { }
+		}
 	}
 }

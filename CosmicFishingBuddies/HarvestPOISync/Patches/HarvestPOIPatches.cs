@@ -15,8 +15,30 @@ namespace CosmicFishingBuddies.HarvestPOISync.Patches
 		{
 			if (!disabled)
 			{
-				NetworkHarvestPOIManager.Instance?.GetNetworkObject(__instance)?.SetStockCount(__instance.harvestable.GetStockCount(false), NetworkPlayer.LocalPlayer.netId);
+				var localID = NetworkClient.connection.identity.netId;
+				NetworkHarvestPOIManager.Instance?.GetNetworkObject(__instance)?.SetStockCount(__instance.harvestable.GetStockCount(false), localID);
 			}
 		}
+
+		[HarmonyPostfix]
+		[HarmonyPatch(typeof(HarvestPOI), nameof(HarvestPOI.Update))]
+		public static void HarvestPOI_Update(HarvestPOI __instance)
+		{
+			if (!disabled && NetworkClient.activeHost)
+			{
+				var networkObj = NetworkHarvestPOIManager.Instance?.GetNetworkObject(__instance);
+
+				if (networkObj != null && networkObj.IsCurrentlySpecial != __instance.IsCurrentlySpecial)
+				{
+					networkObj.SetIsCurrentlySpecial(__instance.isCurrentlySpecial);
+				}
+			}
+		}
+
+		[HarmonyPrefix]
+		[HarmonyPatch(typeof(HarvestPOI), nameof(HarvestPOI.Update))]
+		[HarmonyPatch(typeof(HarvestPOI), nameof(HarvestPOI.OnDayNightChanged))]
+		[HarmonyPatch(typeof(HarvestPOI), nameof(HarvestPOI.SetIsCurrentlySpecial))]
+		public static bool DisableOnClient() => disabled || NetworkClient.activeHost;
 	}
 }

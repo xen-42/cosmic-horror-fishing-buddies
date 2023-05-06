@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using CosmicFishingBuddies.HarvestPOISync;
+using Mirror;
 using UnityEngine;
 
 namespace CosmicFishingBuddies.PlayerSync.AbilitySync
@@ -18,7 +19,7 @@ namespace CosmicFishingBuddies.PlayerSync.AbilitySync
 		protected void OnActivate(NetworkIdentity harvestID)
 		{
 			_playerVfx = GameObject.Instantiate(playerVfxPrefab, transform.position, Quaternion.identity);
-			_harvestVfx = GameObject.Instantiate(playerVfxPrefab, harvestID.transform.position, Quaternion.identity);
+			_harvestVfx = GameObject.Instantiate(harvestVfxPrefab, (harvestID.GetComponent<NetworkHarvestPOI>()).Target.transform.position, Quaternion.identity);
 			loopAudio.Play();
 		}
 
