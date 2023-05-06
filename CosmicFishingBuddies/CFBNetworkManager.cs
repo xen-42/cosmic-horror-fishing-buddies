@@ -44,7 +44,7 @@ namespace CosmicFishingBuddies
 
 				// EPIC
 				_epicApiKey = ScriptableObject.CreateInstance<EosApiKey>();
-				_epicApiKey.epicProductName = "CHFB";
+				_epicApiKey.epicProductName = "chfb";
 				_epicApiKey.epicProductVersion = "1.0";
 				_epicApiKey.epicProductId = "353d318b07cc42a6b571e853b56d5d29";
 				_epicApiKey.epicSandboxId = "e6b038c4475241b39ad45efd711dfe92";
@@ -53,7 +53,7 @@ namespace CosmicFishingBuddies
 				_epicApiKey.epicClientSecret = "4rTbIfqZlTzvQmpkJuU/HqMfYECkETCeBEbfo13DC+g";
 
 				var eosSdkComponent = gameObject.AddComponent<EOSSDKComponent>();
-				eosSdkComponent.apiKeys = _epicApiKey;
+				eosSdkComponent.SetValue("apiKeys", _epicApiKey);
 				eosSdkComponent.epicLoggerLevel = Epic.OnlineServices.Logging.LogLevel.VeryVerbose;
 
 				var eosTransport = gameObject.AddComponent<EosTransport>();

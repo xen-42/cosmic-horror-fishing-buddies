@@ -1,5 +1,6 @@
 ﻿using CosmicFishingBuddies.AudioSync;
 using CosmicFishingBuddies.UI;
+using Epic.OnlineServices;
 using HarmonyLib;
 using Sirenix.Utilities;
 using System;
@@ -61,11 +62,33 @@ namespace CosmicFishingBuddies
 
 		private static void InitAssemblies()
 		{
-			[DllImport("kernel32.dll")]
+			[DllImport("Kernel32.dll", SetLastError = true)]
 			static extern IntPtr LoadLibrary(string dllToLoad);
-			var eossdkPath = Path.Combine(GetModFolder(), "lib\\x86_64\\EOSSDK-Win64-Shipping.dll");
-			LogInfo($"EOS SDK path {eossdkPath}");
-			LoadLibrary(eossdkPath);
+
+			var libPath = Path.Combine(GetModFolder(), "lib\\x86_64\\EOSSDK-Win32-Shipping.dll");
+			var libraryPointer = LoadLibrary(libPath);
+
+			if (libraryPointer == IntPtr.Zero)
+			{
+				LogError($"Failed to load EOS SDK library {libPath} - error code: {Marshal.GetLastWin32Error()}");
+			}
+			else
+			{
+				LogInfo($"Loaded EOS SDK library");
+			}
+
+			/*
+			[DllImport("Kernel32.dll", SetLastError = true)]
+			static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
+			try
+			{
+				Bindings.Hook(libraryPointer, GetProcAddress);
+			}
+			catch (Exception e)
+			{
+				LogError($"Failed to bind EOS SDK library {e.Message} - last Win32 error code: {Marshal.GetLastWin32Error()}");
+			}
+			*/
 
 			// JohnCorby is a hero
 			// Stolen from QSB
