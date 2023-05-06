@@ -10,6 +10,7 @@ using Mirror;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,6 +27,7 @@ namespace CosmicFishingBuddies
 
 		private KcpTransport _kcpTransport;
 		private EosTransport _epicTransport;
+		private EosApiKey _epicApiKey;
 
 		public static GameObject TimeSyncManagerPrefab { get; private set; }
 		public static GameObject HarvestPOIPrefab { get; private set; }
@@ -41,17 +43,17 @@ namespace CosmicFishingBuddies
 				_kcpTransport = gameObject.AddComponent<KcpTransport>();
 
 				// EPIC
-				var eosApiKey = ScriptableObject.CreateInstance<EosApiKey>();
-				eosApiKey.epicProductName = "chfb";
-				eosApiKey.epicProductVersion = "1.0";
-				eosApiKey.epicProductId = "353d318b07cc42a6b571e853b56d5d29";
-				eosApiKey.epicSandboxId = "e6b038c4475241b39ad45efd711dfe92";
-				eosApiKey.epicDeploymentId = "532fdccd86a84252adc328dc2404cda4";
-				eosApiKey.epicClientId = "xyza7891iS3Ss77kZa8Ps6fwTrTQcX8l";
-				eosApiKey.epicClientSecret = "4rTbIfqZlTzvQmpkJuU/HqMfYECkETCeBEbfo13DC+g";
+				_epicApiKey = ScriptableObject.CreateInstance<EosApiKey>();
+				_epicApiKey.epicProductName = "CHFB";
+				_epicApiKey.epicProductVersion = "1.0";
+				_epicApiKey.epicProductId = "353d318b07cc42a6b571e853b56d5d29";
+				_epicApiKey.epicSandboxId = "e6b038c4475241b39ad45efd711dfe92";
+				_epicApiKey.epicDeploymentId = "532fdccd86a84252adc328dc2404cda4";
+				_epicApiKey.epicClientId = "xyza7891iS3Ss77kZa8Ps6fwTrTQcX8l";
+				_epicApiKey.epicClientSecret = "4rTbIfqZlTzvQmpkJuU/HqMfYECkETCeBEbfo13DC+g";
 
 				var eosSdkComponent = gameObject.AddComponent<EOSSDKComponent>();
-				eosSdkComponent.apiKeys = eosApiKey;
+				eosSdkComponent.apiKeys = _epicApiKey;
 				eosSdkComponent.epicLoggerLevel = Epic.OnlineServices.Logging.LogLevel.VeryVerbose;
 
 				var eosTransport = gameObject.AddComponent<EosTransport>();

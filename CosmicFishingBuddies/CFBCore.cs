@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -60,9 +61,14 @@ namespace CosmicFishingBuddies
 
 		private static void InitAssemblies()
 		{
+			[DllImport("kernel32.dll")]
+			static extern IntPtr LoadLibrary(string dllToLoad);
+			var eossdkPath = Path.Combine(GetModFolder(), "lib\\x86_64\\EOSSDK-Win64-Shipping.dll");
+			LogInfo($"EOS SDK path {eossdkPath}");
+			LoadLibrary(eossdkPath);
+
 			// JohnCorby is a hero
 			// Stolen from QSB
-
 			static void Init(Assembly assembly)
 			{
 				LogInfo(assembly.ToString());

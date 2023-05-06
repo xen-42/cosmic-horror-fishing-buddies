@@ -10,7 +10,6 @@
   <ItemGroup>
 		<PackageReference Include="DredgeGameLibs" Version="1.0.4.1" IncludeAssets="compile" />
     <Reference Include="../Mirror/*.dll" />
-    <Reference Include="../DLLs/*.dll" />
   </ItemGroup>
   <ItemGroup>
     <None Update="License.md">
