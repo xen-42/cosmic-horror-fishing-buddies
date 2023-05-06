@@ -86,6 +86,7 @@ namespace CosmicFishingBuddies
 				// Teleport ability
 				networkPlayer.remoteTeleportAbility = playerPrefab.AddComponent<RemoteTeleportAbility>();
 				networkPlayer.remoteBanishAbility = playerPrefab.AddComponent<RemoteBanishAbility>();
+				networkPlayer.remoteAtrophyAbility = playerPrefab.AddComponent<RemoteAtrophyAbility>();
 				networkPlayer.remoteLightAbility = playerPrefab.AddComponent<RemoteLightAbility>();
 
 				// 2 - TimeSyncManager

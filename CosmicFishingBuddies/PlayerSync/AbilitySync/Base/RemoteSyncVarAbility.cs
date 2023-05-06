@@ -1,14 +1,7 @@
 ﻿using Mirror;
-using MonoMod.RuntimeDetour;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
-namespace CosmicFishingBuddies.PlayerSync.AbilitySync
+namespace CosmicFishingBuddies.PlayerSync.AbilitySync.Base
 {
 	[RequireComponent(typeof(NetworkPlayer))]
 	internal abstract class RemoteSyncVarAbility : RemoteAbility

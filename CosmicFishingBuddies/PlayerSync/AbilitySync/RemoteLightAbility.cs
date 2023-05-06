@@ -1,8 +1,9 @@
 ﻿using CosmicFishingBuddies.AudioSync;
+using CosmicFishingBuddies.PlayerSync.AbilitySync.Base;
 
 namespace CosmicFishingBuddies.PlayerSync.AbilitySync
 {
-	internal class RemoteLightAbility : RemoteSyncVarAbility
+    internal class RemoteLightAbility : RemoteSyncVarAbility
 	{
 		public void Start()
 		{

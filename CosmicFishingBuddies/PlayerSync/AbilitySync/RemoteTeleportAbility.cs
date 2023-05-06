@@ -1,9 +1,10 @@
-﻿using Mirror;
+﻿using CosmicFishingBuddies.PlayerSync.AbilitySync.Base;
+using Mirror;
 using UnityEngine;
 
 namespace CosmicFishingBuddies.PlayerSync.AbilitySync
 {
-	internal class RemoteTeleportAbility : RemoteRPCAbility
+    internal class RemoteTeleportAbility : RemoteRPCAbility
 	{
 		public GameObject teleportEffect;
 

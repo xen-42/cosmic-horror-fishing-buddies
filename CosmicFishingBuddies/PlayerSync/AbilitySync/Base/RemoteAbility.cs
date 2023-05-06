@@ -1,7 +1,7 @@
 ﻿using Mirror;
 using UnityEngine;
 
-namespace CosmicFishingBuddies.PlayerSync.AbilitySync
+namespace CosmicFishingBuddies.PlayerSync.AbilitySync.Base
 {
 	[RequireComponent(typeof(NetworkPlayer))]
 	internal abstract class RemoteAbility : NetworkBehaviour

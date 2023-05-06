@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using CosmicFishingBuddies.PlayerSync.AbilitySync.Base;
+using UnityEngine;
 
 namespace CosmicFishingBuddies.PlayerSync.AbilitySync
 {
-	internal class RemoteFoghornAbility : RemoteSyncVarAbility
+    internal class RemoteFoghornAbility : RemoteSyncVarAbility
 	{
 		public AudioSource foghornEndSource;
 		public AudioSource foghornMidSource;

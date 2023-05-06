@@ -153,6 +153,7 @@ namespace CosmicFishingBuddies.PlayerSync
 		public RemoteLightAbility remoteLightAbility;
 		public RemoteTeleportAbility remoteTeleportAbility;
 		public RemoteBanishAbility remoteBanishAbility;
+		public RemoteAtrophyAbility remoteAtrophyAbility;
 		public RemoteFoghornAbility remoteFoghornAbility;
 
 		public BoatModelProxy[] boatModelProxies;

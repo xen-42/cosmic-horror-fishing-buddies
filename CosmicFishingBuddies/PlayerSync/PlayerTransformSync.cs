@@ -82,10 +82,22 @@ namespace CosmicFishingBuddies.PlayerSync
 			remotePlayer.transform.localRotation = Quaternion.identity;
 
 			var networkPlayer = GetComponent<NetworkPlayer>();
+			
 			networkPlayer.boatModelProxies = remotePlayer.GetComponentsInChildren<BoatModelProxy>();
+			
 			networkPlayer.remoteTeleportAbility.teleportEffect = remotePlayer.Find("TeleportEffect").gameObject;
+
 			networkPlayer.remoteBanishAbility.banishEffect = remotePlayer.Find("BanishAbility/BanishEffect").gameObject;
 			networkPlayer.remoteBanishAbility.banishAudioSource = remotePlayer.Find("BanishAbility/BanishLoopSFX").GetComponent<AudioSource>();
+
+			var atrophy = GameManager.Instance.PlayerAbilities.abilityMap["atrophy"] as AtrophyAbility;
+			networkPlayer.remoteAtrophyAbility.playerVfxPrefab = atrophy.playerVfxPrefab;
+			networkPlayer.remoteAtrophyAbility.harvestVfxPrefab = atrophy.spotVfxPrefab;
+			networkPlayer.remoteAtrophyAbility.loopAudio = remotePlayer.gameObject.AddComponent<AudioSource>();
+			networkPlayer.remoteAtrophyAbility.loopAudio.spatialBlend = 1;
+			networkPlayer.remoteAtrophyAbility.loopAudio.maxDistance = 20;
+			networkPlayer.remoteAtrophyAbility.loopAudio.minDistance = 5;
+			networkPlayer.remoteAtrophyAbility.loopAudio.clip = atrophy.loopAudioSource.clip;
 
 			networkPlayer.wake = remotePlayer.Find("BoatTrailParticles").gameObject;
 
