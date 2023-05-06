@@ -77,19 +77,6 @@ namespace CosmicFishingBuddies
 				LogInfo($"Loaded EOS SDK library");
 			}
 
-			/*
-			[DllImport("Kernel32.dll", SetLastError = true)]
-			static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
-			try
-			{
-				Bindings.Hook(libraryPointer, GetProcAddress);
-			}
-			catch (Exception e)
-			{
-				LogError($"Failed to bind EOS SDK library {e.Message} - last Win32 error code: {Marshal.GetLastWin32Error()}");
-			}
-			*/
-
 			// JohnCorby is a hero
 			// Stolen from QSB
 			static void Init(Assembly assembly)
