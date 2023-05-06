@@ -4,6 +4,7 @@ using CosmicFishingBuddies.PlayerSync;
 using CosmicFishingBuddies.PlayerSync.AbilitySync;
 using CosmicFishingBuddies.TimeSync;
 using CosmicFishingBuddies.Util;
+using EpicTransport;
 using kcp2k;
 using Mirror;
 using System;
@@ -21,14 +22,10 @@ namespace CosmicFishingBuddies
 		private bool _isConnecting;
 		private bool _isHost;
 
-		private KcpTransport _kcpTransport;
+		public TransportType TransportType { get; private set; }
 
-		public enum TransportType
-		{
-			KCP,
-			EPIC,
-			STEAM
-		}
+		private KcpTransport _kcpTransport;
+		private EosTransport _epicTransport;
 
 		public static GameObject TimeSyncManagerPrefab { get; private set; }
 		public static GameObject HarvestPOIPrefab { get; private set; }
@@ -42,6 +39,25 @@ namespace CosmicFishingBuddies
 				gameObject.SetActive(false);
 
 				_kcpTransport = gameObject.AddComponent<KcpTransport>();
+
+				// EPIC
+				var eosApiKey = ScriptableObject.CreateInstance<EosApiKey>();
+				eosApiKey.epicProductName = "chfb";
+				eosApiKey.epicProductVersion = "1.0";
+				eosApiKey.epicProductId = "353d318b07cc42a6b571e853b56d5d29";
+				eosApiKey.epicSandboxId = "e6b038c4475241b39ad45efd711dfe92";
+				eosApiKey.epicDeploymentId = "532fdccd86a84252adc328dc2404cda4";
+				eosApiKey.epicClientId = "xyza7891iS3Ss77kZa8Ps6fwTrTQcX8l";
+				eosApiKey.epicClientSecret = "4rTbIfqZlTzvQmpkJuU/HqMfYECkETCeBEbfo13DC+g";
+
+				var eosSdkComponent = gameObject.AddComponent<EOSSDKComponent>();
+				eosSdkComponent.apiKeys = eosApiKey;
+				eosSdkComponent.epicLoggerLevel = Epic.OnlineServices.Logging.LogLevel.VeryVerbose;
+
+				var eosTransport = gameObject.AddComponent<EosTransport>();
+				_epicTransport = eosTransport;
+
+				// PREFABS
 
 				playerPrefab = MakeNewNetworkObject(1, "PlayerPrefab");
 				playerPrefab.AddComponent<PlayerTransformSync>();
@@ -146,10 +162,15 @@ namespace CosmicFishingBuddies
 			_isHost = isHost;
 			_isConnecting = true;
 
-			switch(transportType)
+			TransportType = transportType;
+
+			switch (transportType)
 			{
 				case TransportType.KCP:
 					transport = _kcpTransport;
+					break;
+				case TransportType.EPIC:
+					transport = _epicTransport;
 					break;
 				default:
 					throw new Exception($"Unsupported transport {transportType}");

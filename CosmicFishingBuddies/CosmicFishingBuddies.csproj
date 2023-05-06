@@ -40,5 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MirrorWeaver\MirrorWeaver.csproj" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\EpicOnlineTransport\EpicOnlineTransport.csproj" />
+		<Reference Include="../DLLs/*.dll" />
   </ItemGroup>
 </Project>

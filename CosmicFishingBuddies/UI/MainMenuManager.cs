@@ -1,5 +1,6 @@
 ﻿using Coffee.UIExtensions;
 using CosmicFishingBuddies.Util;
+using EpicTransport;
 using System;
 using TMPro;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace CosmicFishingBuddies.UI
 		private SaveSlotWindow _saveSlotWindow;
 
 		private bool _isHost;
-		private CFBNetworkManager.TransportType _transportType;
+		private TransportType _transportType = TransportType.EPIC;
 		private string _address = "localhost";
 
 		private TextMeshProUGUI _connectionText;
@@ -62,9 +63,9 @@ namespace CosmicFishingBuddies.UI
 
 					var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Epic", new(string, Action)[]
 					{
-						//("Epic", () => OnSelectOption(CFBNetworkManager.TransportType.EPIC))),
-						//("Steam", () => OnSelectOption(CFBNetworkManager.TransportType.STEAM))),
-						("IP Address", () => OnSelectTransportOption(CFBNetworkManager.TransportType.KCP))
+						("Epic", () => OnSelectTransportOption(TransportType.EPIC)),
+						//("Steam", () => OnSelectOption(CFBNetworkManager.TransportType.STEAM)),
+						("IP Address", () => OnSelectTransportOption(TransportType.KCP))
 					});
 
 					var startButton = UIHelper.AddButton(options.transform, "Start", OnClickStart);
@@ -90,7 +91,7 @@ namespace CosmicFishingBuddies.UI
 
 			_isHost = true;
 
-			_connectionText.text = "You will host a server!";
+			_connectionText.text = $"You will host a server!\n{EOSSDKComponent.LocalUserProductIdString}";
 
 			_popupWindow.Show();
 		}
@@ -117,11 +118,11 @@ namespace CosmicFishingBuddies.UI
 			_saveSlotWindow.Show();
 		}
 
-		private void OnSelectTransportOption(CFBNetworkManager.TransportType type)
+		private void OnSelectTransportOption(TransportType type)
 		{
 			CFBCore.LogInfo($"Selected server hosting option {type}");
 
-
+			_transportType = type;
 		}
 	}
 }
