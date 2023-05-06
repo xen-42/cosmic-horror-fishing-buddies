@@ -4,6 +4,7 @@ using CosmicFishingBuddies.PlayerSync.AbilitySync;
 using CosmicFishingBuddies.TimeSync;
 using Mirror;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,6 +12,49 @@ namespace CosmicFishingBuddies.PlayerSync
 {
 	internal class NetworkPlayer : NetworkBehaviour
 	{
+		/// <summary>
+		/// Client plays must request authority to call commands on other Network objects, e.g., NetworkHarvestPOI
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="action"></param>
+		public void DoWithAuthority(NetworkIdentity id, Action action)
+		{
+			if (!NetworkClient.active) return;
+
+			if (id != null && !id.isOwned)
+			{
+				CmdGetAuthority(id);
+
+				StartCoroutine(WaitForAuthority(id, action));
+			}
+		}
+
+		private IEnumerator WaitForAuthority(NetworkIdentity id, Action action)
+		{
+			// Wait until we own the object or disconnect
+			yield return new WaitUntil(() => id.isOwned || !NetworkClient.active);
+			action?.Invoke();
+		}
+
+		[Command]
+		private void CmdGetAuthority(NetworkIdentity id)
+		{
+			try
+			{
+				if (id != null && !id.isOwned)
+				{
+					id.RemoveClientAuthority();
+					id.AssignClientAuthority(connectionToClient);
+
+					CFBCore.LogInfo($"Granted authority to {connectionToClient.identity}");
+				}
+			}
+			catch (Exception e)
+			{
+				CFBCore.LogError($"Couldn't get authority {e}");
+			}
+		}
+
 		#region OneShot
 		[Command]
 		public void CmdPlayOneShot(AudioEnum audio, float volume, float pitch) => RpcPlayOneShot(audio, volume, pitch);

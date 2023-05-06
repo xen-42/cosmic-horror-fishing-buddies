@@ -1,4 +1,5 @@
 ﻿using CosmicFishingBuddies.Extensions;
+using CosmicFishingBuddies.HarvestPOISync;
 using CosmicFishingBuddies.PlayerSync;
 using CosmicFishingBuddies.PlayerSync.AbilitySync;
 using CosmicFishingBuddies.TimeSync;
@@ -30,6 +31,7 @@ namespace CosmicFishingBuddies
 		}
 
 		public static GameObject TimeSyncManagerPrefab { get; private set; }
+		public static GameObject HarvestPOIPrefab { get; private set; }
 
 		public override void Awake()
 		{
@@ -90,6 +92,11 @@ namespace CosmicFishingBuddies
 				TimeSyncManagerPrefab = MakeNewNetworkObject(2, nameof(TimeSyncManagerPrefab));
 				TimeSyncManagerPrefab.AddComponent<TimeSyncManager>();
 				spawnPrefabs.Add(TimeSyncManagerPrefab);
+
+				// 3 - HarvestPOI
+				HarvestPOIPrefab = MakeNewNetworkObject(3, nameof(HarvestPOIPrefab));
+				HarvestPOIPrefab.AddComponent<NetworkHarvestPOI>();
+				spawnPrefabs.Add(HarvestPOIPrefab);
 
 				gameObject.SetActive(true);
 
@@ -160,6 +167,8 @@ namespace CosmicFishingBuddies
 				{
 					StartClient();
 				}
+
+				gameObject.AddComponent<NetworkHarvestPOIManager>();
 			}
 		}
 

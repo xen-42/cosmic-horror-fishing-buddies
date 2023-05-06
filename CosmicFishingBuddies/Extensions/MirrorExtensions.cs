@@ -5,9 +5,11 @@ namespace CosmicFishingBuddies.Extensions
 {
 	internal static class MirrorExtensions
 	{
-		public static void SpawnWithServerAuthority(this GameObject prefab)
+		public static GameObject SpawnWithServerAuthority(this GameObject prefab)
 		{
-			NetworkServer.Spawn(GameObject.Instantiate(prefab), NetworkServer.localConnection);
+			var obj = GameObject.Instantiate(prefab);
+			NetworkServer.Spawn(obj, NetworkServer.localConnection);
+			return obj;
 		}
 	}
 }
