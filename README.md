@@ -6,21 +6,38 @@ Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-ou
 
 ## Features
 
-What is synced:
+What is synced (some spoilers here):
 - Player movement
-- Player foghorn
-- Player light
-- Engine sounds
+- Engine sounds & ship wake
 - Time
-- Sleeping
-  - All players must be in port to sleep
+  - Fast forwarding - all players must be fast-forwarding too or at least in port for time to speed up
+- Fishing 
+  - Regular spots (not bait/crab pots)
+- Abilities
+  - Light
+  - Foghorn
+  - Manifest (missing sfx)
+  - Banish (has effects but only works locally)
+  - Atrophy
 
 What is not synced (roadmap):
 - Abilities
+  - Trawl net
+  - Crab pots
+  - Bait
+  - Haste (missing vfx/sfx, since movement is synced anyway)
 - Ship appearance
-- Fishing spots (depletion and creation using bait)
-- Crab pots (including inventories)
 - Events
 - Enemies
 - Waves
 - Collisions?
+
+Other todo:
+- Implement Epic transport
+- Implement Steam transport (maybe, if Epic has drawbacks)
+
+## Dependencies
+- [Winch](https://github.com/Hacktix/Winch)
+- [Mirror](https://mirror-networking.com/)
+  - [kcp2k](https://github.com/vis2k/kcp2k)
+- [HarmonyX](https://github.com/BepInEx/HarmonyX)
