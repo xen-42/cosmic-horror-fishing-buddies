@@ -1,4 +1,5 @@
-﻿using CosmicFishingBuddies.Extensions;
+﻿using CosmicFishingBuddies.Core;
+using CosmicFishingBuddies.Extensions;
 using Mirror;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace CosmicFishingBuddies.HarvestPOISync
 {
-	internal class NetworkHarvestPOIManager : MonoBehaviour
+    internal class NetworkHarvestPOIManager : MonoBehaviour
 	{
 		public static NetworkHarvestPOIManager Instance { get; private set; }
 

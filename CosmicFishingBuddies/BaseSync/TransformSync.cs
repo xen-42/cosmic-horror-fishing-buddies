@@ -1,9 +1,10 @@
-﻿using Mirror;
+﻿using CosmicFishingBuddies.Core;
+using Mirror;
 using UnityEngine;
 
 namespace CosmicFishingBuddies.BaseSync
 {
-	internal abstract class TransformSync : NetworkBehaviour
+    internal abstract class TransformSync : NetworkBehaviour
 	{
 		protected abstract Transform InitLocalTransform();
 		protected abstract Transform InitRemoteTransform();

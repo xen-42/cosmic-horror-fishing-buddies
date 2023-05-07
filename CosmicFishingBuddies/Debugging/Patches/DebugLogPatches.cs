@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using CosmicFishingBuddies.Core;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;

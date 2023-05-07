@@ -1,4 +1,5 @@
 ﻿using CosmicFishingBuddies.BaseSync;
+using CosmicFishingBuddies.Core;
 using CosmicFishingBuddies.Extensions;
 using FluffyUnderware.DevTools.Extensions;
 using System;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace CosmicFishingBuddies.PlayerSync
 {
-	internal class PlayerTransformSync : TransformSync
+    internal class PlayerTransformSync : TransformSync
 	{
 		public static PlayerTransformSync LocalInstance { get; private set; }
 

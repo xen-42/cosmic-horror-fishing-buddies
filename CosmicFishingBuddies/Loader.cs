@@ -1,10 +1,11 @@
-﻿using HarmonyLib;
+﻿using CosmicFishingBuddies.Core;
+using HarmonyLib;
 using System.Reflection;
 using UnityEngine;
 
 namespace CosmicFishingBuddies
 {
-	public class Loader
+    public class Loader
 	{
 		public static void Initialize()
 		{

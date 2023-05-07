@@ -1,4 +1,5 @@
-﻿using CosmicFishingBuddies.HarvestPOISync.Patches;
+﻿using CosmicFishingBuddies.Core;
+using CosmicFishingBuddies.HarvestPOISync.Patches;
 using CosmicFishingBuddies.PlayerSync;
 using Mirror;
 using System;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace CosmicFishingBuddies.HarvestPOISync
 {
-	internal class NetworkHarvestPOI : NetworkBehaviour
+    internal class NetworkHarvestPOI : NetworkBehaviour
 	{
 		[SyncVar]
 		private uint _lastInteractionID = uint.MaxValue;
@@ -62,7 +63,7 @@ namespace CosmicFishingBuddies.HarvestPOISync
 			_lastInteractionID = from;
 			_stockCount = count;
 
-			CFBCore.LogInfo($"Player {from} has requested {Target.name} stock count be set to {count}");
+			//CFBCore.LogInfo($"Player {from} has requested {Target.name} stock count be set to {count}");
 		}
 
 		/// <summary>
@@ -75,7 +76,7 @@ namespace CosmicFishingBuddies.HarvestPOISync
 			{
 				_isCurrentlySpecial = isCurrentlySpecial;
 
-				CFBCore.LogInfo($"{Target.name} has been set to special : {isCurrentlySpecial} {Target.IsCurrentlySpecial}");
+				//CFBCore.LogInfo($"{Target.name} has been set to special : {isCurrentlySpecial} {Target.IsCurrentlySpecial}");
 			}
 			else
 			{
@@ -94,7 +95,7 @@ namespace CosmicFishingBuddies.HarvestPOISync
 					UpdateSpecialFromSyncVar();
 				}
 
-				CFBCore.LogInfo($"{Target.name} for Player {NetworkPlayer.LocalPlayer.netId} has been set to special : {_isCurrentlySpecial}");
+				//CFBCore.LogInfo($"{Target.name} for Player {NetworkPlayer.LocalPlayer.netId} has been set to special : {_isCurrentlySpecial}");
 			}
 			catch (Exception e)
 			{
@@ -118,7 +119,7 @@ namespace CosmicFishingBuddies.HarvestPOISync
 				UpdateStockFromSyncVar();
 			}
 
-			CFBCore.LogInfo($"Player {_lastInteractionID} has set {Target.name} stock count for Player {localID} to {count}");
+			//CFBCore.LogInfo($"Player {_lastInteractionID} has set {Target.name} stock count for Player {localID} to {count}");
 		}
 
 		private void UpdateSpecialFromSyncVar()

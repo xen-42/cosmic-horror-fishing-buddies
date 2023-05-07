@@ -26,6 +26,9 @@
     <None Include="mod_meta.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+		<None Include="lib/*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
   </ItemGroup>
 
   <ItemGroup>
@@ -40,5 +43,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MirrorWeaver\MirrorWeaver.csproj" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\EpicOnlineTransport\EpicOnlineTransport.csproj" />
   </ItemGroup>
 </Project>

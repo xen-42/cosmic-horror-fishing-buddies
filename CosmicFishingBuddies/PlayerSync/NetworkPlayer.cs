@@ -1,4 +1,5 @@
 ﻿using CosmicFishingBuddies.AudioSync;
+using CosmicFishingBuddies.Core;
 using CosmicFishingBuddies.Extensions;
 using CosmicFishingBuddies.PlayerSync.AbilitySync;
 using CosmicFishingBuddies.TimeSync;
@@ -10,7 +11,7 @@ using UnityEngine.Events;
 
 namespace CosmicFishingBuddies.PlayerSync
 {
-	internal class NetworkPlayer : NetworkBehaviour
+    internal class NetworkPlayer : NetworkBehaviour
 	{
 		/// <summary>
 		/// Client plays must request authority to call commands on other Network objects, e.g., NetworkHarvestPOI
