@@ -16,16 +16,16 @@ What is synced (some spoilers here):
 - Abilities
   - Light
   - Foghorn
-  - Manifest (missing sfx)
+  - Manifest
   - Banish (has effects but only works locally)
   - Atrophy
+  - Haste (missing vfx)
 
 What is not synced (roadmap):
 - Abilities
   - Trawl net
   - Crab pots
   - Bait
-  - Haste (missing vfx/sfx, since movement is synced anyway)
 - Ship appearance
 - Events
 - Enemies
