@@ -1,4 +1,5 @@
-﻿using CosmicFishingBuddies.Extensions;
+﻿using CosmicFishingBuddies.Core;
+using CosmicFishingBuddies.Extensions;
 using CosmicFishingBuddies.Util;
 using Epic.OnlineServices.Platform;
 using System;
@@ -12,7 +13,7 @@ using UnityEngine.UI;
 
 namespace CosmicFishingBuddies.UI
 {
-	internal class UIHelper	: MonoBehaviour
+    internal class UIHelper	: MonoBehaviour
 	{
 		public static UIHelper Instance { get; private set; }
 

@@ -1,4 +1,5 @@
-﻿using CosmicFishingBuddies.PlayerSync.AbilitySync.Base;
+﻿using CosmicFishingBuddies.Core;
+using CosmicFishingBuddies.PlayerSync.AbilitySync.Base;
 using UnityEngine;
 
 namespace CosmicFishingBuddies.PlayerSync.AbilitySync

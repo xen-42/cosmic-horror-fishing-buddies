@@ -1,4 +1,5 @@
 ﻿using Coffee.UIExtensions;
+using CosmicFishingBuddies.Core;
 using CosmicFishingBuddies.Util;
 using Epic.OnlineServices;
 using EpicTransport;
@@ -8,10 +9,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TransportType = CosmicFishingBuddies.Core.TransportType;
 
 namespace CosmicFishingBuddies.UI
 {
-	internal class MainMenuManager : MonoBehaviour
+    internal class MainMenuManager : MonoBehaviour
 	{
 		private PopupWindow _popupWindow;
 		private SaveSlotWindow _saveSlotWindow;

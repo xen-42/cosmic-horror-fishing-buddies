@@ -1,4 +1,5 @@
-﻿using CosmicFishingBuddies.HarvestPOISync.Patches;
+﻿using CosmicFishingBuddies.Core;
+using CosmicFishingBuddies.HarvestPOISync.Patches;
 using CosmicFishingBuddies.PlayerSync;
 using Mirror;
 using System;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace CosmicFishingBuddies.HarvestPOISync
 {
-	internal class NetworkHarvestPOI : NetworkBehaviour
+    internal class NetworkHarvestPOI : NetworkBehaviour
 	{
 		[SyncVar]
 		private uint _lastInteractionID = uint.MaxValue;

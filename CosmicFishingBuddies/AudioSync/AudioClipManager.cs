@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CosmicFishingBuddies.Core;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -7,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace CosmicFishingBuddies.AudioSync
 {
-	internal class AudioClipManager : MonoBehaviour
+    internal class AudioClipManager : MonoBehaviour
 	{
 		public void Awake()
 		{
