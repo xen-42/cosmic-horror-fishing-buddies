@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using CosmicHorrorFishingBuddies.Core;
+﻿using CosmicHorrorFishingBuddies.Core;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.SceneManagement;
 
 namespace CosmicHorrorFishingBuddies.AudioSync
 {
-    internal class AudioClipManager : MonoBehaviour
+	internal class AudioClipManager : MonoBehaviour
 	{
 		public void Awake()
 		{

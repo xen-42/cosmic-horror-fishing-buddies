@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using AeLa.EasyFeedback.APIs;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.Extensions
 {
@@ -17,6 +19,16 @@ namespace CosmicHorrorFishingBuddies.Extensions
 		{
 			GameObject.DontDestroyOnLoad(gameObject);
 			return gameObject;
+		}
+
+		public static List<GameObject> GetChildren(this GameObject gameObject)
+		{
+			var children = new List<GameObject>();
+			foreach (Transform child in gameObject.transform)
+			{
+				children.Add(child.gameObject);
+			}
+			return children;
 		}
 	}
 }

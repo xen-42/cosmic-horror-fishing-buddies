@@ -41,7 +41,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			else
 			{
 				SetIsCurrentlySpecial(Target.IsCurrentlySpecial);
-				SetStockCount(Target.Stock, NetworkClient.connection.identity.netId);
+				SetStockCount(Target.Stock, PlayerManager.LocalNetID);
 			}
 		}
 
@@ -95,7 +95,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 					UpdateSpecialFromSyncVar();
 				}
 
-				//CFBCore.LogInfo($"{Target.name} for Player {NetworkPlayer.LocalPlayer.netId} has been set to special : {_isCurrentlySpecial}");
+				//CFBCore.LogInfo($"{Target.name} for Player {PlayerManager.LocalNetID} has been set to special : {_isCurrentlySpecial}");
 			}
 			catch (Exception e)
 			{

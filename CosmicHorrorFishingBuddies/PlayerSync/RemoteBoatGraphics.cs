@@ -1,6 +1,8 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
+using CosmicHorrorFishingBuddies.Extensions;
 using Mirror;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,6 +12,32 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 	{
 		[SyncVar(hook = nameof(UpgradeTierHook))]
 		private int _upgradeTier;
+
+		private SyncList<int> _tier1Children = new();
+		private SyncList<int> _tier2Children = new();
+		private SyncList<int> _tier3Children = new();
+		private SyncList<int> _tier4Children = new();
+
+		[Command]
+		private void SetActiveChildren(int[] tier1, int[] tier2, int[] tier3, int[] tier4)
+		{
+			_tier1Children.Clear();
+			_tier1Children.AddRange(tier1);
+
+			_tier2Children.Clear();
+			_tier2Children.AddRange(tier2);
+
+			_tier3Children.Clear();
+			_tier3Children.AddRange(tier3);
+
+			_tier4Children.Clear();
+			_tier4Children.AddRange(tier4);
+
+			RpcRefreshActiveChildren();
+		}
+
+		[ClientRpc]
+		private void RpcRefreshActiveChildren() => RefreshActiveChildren();
 
 		[Command]
 		public void SetUpgradeTier(int upgradeTier) => _upgradeTier = upgradeTier;
@@ -33,6 +61,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				GameEvents.Instance.OnUpgradesChanged += OnUpgradesChanged;
 
 				// Initial state
+				CheckLocalActiveChildren();
 				SetUpgradeTier(GetLocalUpgradeTier());
 			}
 			else
@@ -46,6 +75,16 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					CFBCore.LogError($"Failed to make remote player {e}");
 				}
 			}
+		}
+
+		public void CheckLocalActiveChildren()
+		{
+			var tier1 = GameManager.Instance.Player._allBoatModelProxies[0].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
+			var tier2 = GameManager.Instance.Player._allBoatModelProxies[1].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
+			var tier3 = GameManager.Instance.Player._allBoatModelProxies[2].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
+			var tier4 = GameManager.Instance.Player._allBoatModelProxies[3].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
+
+			SetActiveChildren(tier1, tier2, tier3, tier4);
 		}
 
 		private int GetLocalUpgradeTier() => Math.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 3);
@@ -63,6 +102,10 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			if (upgradeData is HullUpgradeData)
 			{
 				SetUpgradeTier(upgradeData.tier);
+			}
+			else
+			{
+				CheckLocalActiveChildren();
 			}
 		}
 
@@ -91,11 +134,52 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					CurrentBoatSubModelToggler.gameObject.SetActive(true);
 
 					RefreshBoatModel?.Invoke();
+
+					RefreshActiveChildren();
 				}
 				catch (Exception e)
 				{
 					CFBCore.LogError($"Failed to refresh upgrade tier {e}");
 				}
+			}
+		}
+
+		public void RefreshActiveChildren()
+		{
+			if (!isOwned)
+			{
+				RefreshChildrenForTier(boatModelProxies[0], _tier1Children);
+				RefreshChildrenForTier(boatModelProxies[1], _tier2Children);
+				RefreshChildrenForTier(boatModelProxies[2], _tier3Children);
+				RefreshChildrenForTier(boatModelProxies[3], _tier4Children);
+			}
+		}
+
+		private void RefreshChildrenForTier(BoatModelProxy boatProxy, SyncList<int> children)
+		{
+			//TODO: Is this deterministic?
+			CFBCore.LogInfo($"Updating children on {netId} tier {boatProxy.name} for {PlayerManager.LocalNetID}");
+
+			try
+			{
+				foreach (Transform child in boatProxy.transform)
+				{
+					child.gameObject.SetActive(false);
+				}
+
+				foreach (var childInd in children)
+				{
+					var child = boatProxy.transform.GetChild(childInd);
+					// For some reason rigidbodies on remote players mess with the local player rotation
+					if (!child.GetComponentsInChildren<Rigidbody>().Any())
+					{
+						child.gameObject.SetActive(true);
+					}
+				}
+			}
+			 catch (Exception e)
+			{
+				CFBCore.LogError($"Couldn't update children : {e}");
 			}
 		}
 	}
