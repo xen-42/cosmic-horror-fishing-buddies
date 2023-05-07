@@ -1,5 +1,6 @@
 ﻿using CosmicFishingBuddies.Extensions;
 using CosmicFishingBuddies.Util;
+using Epic.OnlineServices.Platform;
 using System;
 using System.Linq;
 using TMPro;
@@ -7,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace CosmicFishingBuddies.UI
 {
@@ -206,6 +208,19 @@ namespace CosmicFishingBuddies.UI
 			newLabel.SetActive(true);
 
 			return newLabel;
+		}
+
+		public static TMP_InputField AddInputField(Transform parent, string placeholder)
+		{
+			var newInputField = TMP_DefaultControls.CreateInputField(new TMP_DefaultControls.Resources());
+			newInputField.transform.parent = parent;
+			newInputField.transform.localPosition = Vector2.zero;
+			newInputField.transform.localScale = Vector2.one;
+			var inputField = newInputField.GetComponent<TMP_InputField>();
+			inputField.pointSize = 32;
+			inputField.text = placeholder;
+
+			return inputField;
 		}
 	}
 }

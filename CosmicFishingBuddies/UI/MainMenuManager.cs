@@ -1,7 +1,9 @@
 ﻿using Coffee.UIExtensions;
 using CosmicFishingBuddies.Util;
+using Epic.OnlineServices;
 using EpicTransport;
 using System;
+using System.Net;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,10 +17,12 @@ namespace CosmicFishingBuddies.UI
 		private SaveSlotWindow _saveSlotWindow;
 
 		private bool _isHost;
-		private TransportType _transportType = TransportType.EPIC;
+		private TransportType _transportType;
 		private string _address = "localhost";
 
-		private TextMeshProUGUI _connectionText;
+		private TextMeshProUGUI _connectionTitle;
+		private TextMeshProUGUI _connectionInfo;
+		private TMP_InputField _inputField;
 
 		public void Awake()
 		{
@@ -45,8 +49,8 @@ namespace CosmicFishingBuddies.UI
 					options.SetActive(false);
 					var rectTransform = options.AddComponent<RectTransform>();
 					var grid = options.AddComponent<GridLayoutGroup>();
-					grid.cellSize = new Vector2(300, 100);
-					grid.spacing = new Vector2(100, 50);
+					grid.cellSize = new Vector2(500, 80);
+					grid.spacing = new Vector2(100, 20);
 					grid.startAxis = GridLayoutGroup.Axis.Horizontal;
 					grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
 					grid.childAlignment = TextAnchor.MiddleCenter;
@@ -56,17 +60,26 @@ namespace CosmicFishingBuddies.UI
 					options.transform.localScale = Vector2.one;
 					rectTransform.offsetMax = Vector2.zero;
 					rectTransform.offsetMin = Vector2.zero;
-					rectTransform.sizeDelta = new Vector2(400, 400);
+					rectTransform.sizeDelta = new Vector2(500, 500);
 					options.SetActive(true);
 
-					_connectionText = UIHelper.AddLabel(options.transform, "Multiplayer", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
+					_connectionTitle = UIHelper.AddLabel(options.transform, "Multiplayer", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
 
-					var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Epic", new(string, Action)[]
+					var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Epic", new (string, Action)[]
 					{
 						("Epic", () => OnSelectTransportOption(TransportType.EPIC)),
 						//("Steam", () => OnSelectOption(CFBNetworkManager.TransportType.STEAM)),
 						("IP Address", () => OnSelectTransportOption(TransportType.KCP))
 					});
+					_transportType = TransportType.EPIC;
+
+					var dropDownLabel = dropDown.transform.Find("LabelContainer");
+					dropDownLabel.transform.localPosition = new Vector2(20, 60);
+					dropDownLabel.transform.localScale = Vector2.one * 0.8f;
+
+					_connectionInfo = UIHelper.AddLabel(options.transform, "Info", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
+
+					_inputField = UIHelper.AddInputField(options.transform, _address);
 
 					var startButton = UIHelper.AddButton(options.transform, "Start", OnClickStart);
 					startButton.GetComponent<UITransitionEffect>().enabled = false;
@@ -91,7 +104,9 @@ namespace CosmicFishingBuddies.UI
 
 			_isHost = true;
 
-			_connectionText.text = $"You will host a server!\n{EOSSDKComponent.LocalUserProductIdString}";
+			RefreshConnectionTest();
+
+			_inputField.gameObject.SetActive(false);
 
 			_popupWindow.Show();
 		}
@@ -102,7 +117,9 @@ namespace CosmicFishingBuddies.UI
 
 			_isHost = false;
 
-			_connectionText.text = "You're joining a server!\nWARNING: Your save data will be overwritten.";
+			RefreshConnectionTest();
+
+			_inputField.gameObject.SetActive(true);
 
 			_popupWindow.Show();
 		}
@@ -113,7 +130,7 @@ namespace CosmicFishingBuddies.UI
 
 			_popupWindow.Hide();
 
-			CFBNetworkManager.Instance.SetConnection(_isHost, _address, _transportType);
+			CFBNetworkManager.Instance.SetConnection(_isHost, _inputField.text, _transportType);
 
 			_saveSlotWindow.Show();
 		}
@@ -123,6 +140,39 @@ namespace CosmicFishingBuddies.UI
 			CFBCore.LogInfo($"Selected server hosting option {type}");
 
 			_transportType = type;
+
+			RefreshConnectionTest();
+		}
+
+		private void RefreshConnectionTest()
+		{
+			if (_isHost)
+			{
+				_connectionTitle.text = $"You will host the server!";
+
+				if (_transportType == TransportType.EPIC)
+				{
+					_connectionInfo.text = $"Connection code (copied to clipboard):\n{EOSSDKComponent.LocalUserProductIdString}";
+					GUIUtility.systemCopyBuffer = EOSSDKComponent.LocalUserProductIdString;
+				}
+				else
+				{
+					_connectionInfo.text = string.Empty;
+				}
+			}
+			else
+			{
+				_connectionTitle.text = "You're joining a server!";
+				if (_transportType == TransportType.KCP)
+				{
+					_connectionInfo.text = "Type the IP address below.";
+				}
+				else if (_transportType == TransportType.EPIC)
+				{
+					_connectionInfo.text = "Type the connection code below.";
+				}
+				_connectionInfo.text += "\nWARNING: Your save data will be overwritten.";
+			}
 		}
 	}
 }
