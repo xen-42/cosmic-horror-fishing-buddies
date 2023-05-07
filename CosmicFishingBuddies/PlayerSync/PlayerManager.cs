@@ -10,7 +10,7 @@ namespace CosmicFishingBuddies.PlayerSync
 	internal static class PlayerManager
 	{
 		public static readonly List<NetworkPlayer> Players = new();
-		public static UnityEvent RemotePlayerJoined = new();
-		public static UnityEvent RemotePlayerLeft = new();
+		public static UnityEvent<bool> PlayerJoined = new();
+		public static UnityEvent<bool> PlayerLeft = new();
 	}
 }

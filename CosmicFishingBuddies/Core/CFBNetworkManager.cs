@@ -18,7 +18,7 @@ namespace CosmicFishingBuddies.Core
     {
         public static CFBNetworkManager Instance { get; private set; }
 
-        private bool _isConnecting;
+        private bool _isConnected;
         private bool _isHost;
 
         public TransportType TransportType { get; private set; }
@@ -120,8 +120,8 @@ namespace CosmicFishingBuddies.Core
                 CFBCore.Instance.PlayerLoaded.AddListener(OnPlayerLoaded);
                 SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 
-                PlayerManager.RemotePlayerJoined.AddListener(OnRemotePlayerJoined);
-                PlayerManager.RemotePlayerLeft.AddListener(OnRemotePlayerLeft);
+                PlayerManager.PlayerJoined.AddListener(OnPlayerJoined);
+                PlayerManager.PlayerLeft.AddListener(OnPlayerLeft);
 
                 base.Awake();
             }
@@ -146,21 +146,27 @@ namespace CosmicFishingBuddies.Core
             }
         }
 
-        private void OnRemotePlayerJoined()
+        private void OnPlayerJoined(bool isOwned)
         {
-            NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "A player has joined the game!", DredgeColorTypeEnum.POSITIVE);
+			if (!isOwned)
+			{
+				NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "A player has joined the game!", DredgeColorTypeEnum.POSITIVE);
+			}
         }
 
-        private void OnRemotePlayerLeft()
+        private void OnPlayerLeft(bool isOwned)
         {
-            NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "A player has left the game.", DredgeColorTypeEnum.NEGATIVE);
+			if (!isOwned)
+			{
+				NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "A player has left the game.", DredgeColorTypeEnum.NEGATIVE);
+			}
         }
 
         public void SetConnection(bool isHost, string address, TransportType transportType)
         {
             networkAddress = address;
             _isHost = isHost;
-            _isConnecting = true;
+            _isConnected = true;
 
             TransportType = transportType;
 
@@ -179,7 +185,7 @@ namespace CosmicFishingBuddies.Core
 
         private void OnPlayerLoaded()
         {
-            if (_isConnecting)
+            if (_isConnected)
             {
                 if (_isHost)
                 {
@@ -207,184 +213,31 @@ namespace CosmicFishingBuddies.Core
             return template;
         }
 
-        public override void OnServerReady(NetworkConnectionToClient conn)
-        {
-            try
-            {
-                CFBCore.LogInfo($"Server ready {conn.connectionId}");
-
-                base.OnServerReady(conn);
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
-
-        public override void OnServerConnect(NetworkConnectionToClient conn)
-        {
-            try
-            {
-                CFBCore.LogInfo($"[{conn.connectionId}] connecting to server");
-
-                base.OnServerConnect(conn);
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
-
-        public override void OnStartServer()
-        {
-            try
-            {
-                CFBCore.LogInfo("Server start");
-
-                base.OnStartServer();
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
-
-        public override void OnStopServer()
-        {
-            try
-            {
-                CFBCore.LogInfo("Server stop");
-
-                base.OnStopServer();
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
-
         public override void OnStartHost()
         {
-            try
-            {
-                CFBCore.LogInfo($"Now hosting. NetworkServer active [{NetworkServer.active}] NetworkClient active [{NetworkClient.active}]");
+			base.OnStartHost();
 
-                TimeSyncManagerPrefab.SpawnWithServerAuthority();
-
-                base.OnStartHost();
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
-
-        public override void OnStopHost()
-        {
-            try
-            {
-                CFBCore.LogInfo("Stopped hosting");
-
-                base.OnStopHost();
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
-
-        public override void OnClientConnect()
-        {
-            try
-            {
-                CFBCore.LogInfo("Client connected");
-
-                if (_isHost)
-                {
-                    NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "You are hosting the server", DredgeColorTypeEnum.POSITIVE);
-                }
-
-                base.OnClientConnect();
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
-
-        public override void OnClientDisconnect()
-        {
-            try
-            {
-                CFBCore.LogInfo("Client disconnected");
-
-                base.OnClientDisconnect();
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
+			TimeSyncManagerPrefab.SpawnWithServerAuthority();
         }
 
         public override void OnClientError(TransportError error, string reason)
         {
-            try
-            {
-                CFBCore.LogError($"TRANSPORT ERROR: {error} - {reason}");
-
-                base.OnClientError(error, reason);
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
-
-        public override void OnStartClient()
-        {
-            try
-            {
-                CFBCore.LogInfo($"Started client. NetworkServer active [{NetworkServer.active}] NetworkClient active [{NetworkClient.active}]");
-
-                base.OnStartClient();
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
-
-        public override void OnClientNotReady()
-        {
-            try
-            {
-                CFBCore.LogInfo("Client is not ready");
-
-                base.OnClientNotReady();
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
+			base.OnClientError(error, reason);
+			CFBCore.LogError($"TRANSPORT ERROR: {error} - {reason}");
+		}
 
         public override void OnStopClient()
         {
-            try
-            {
-                CFBCore.LogInfo("Stop client");
+			CFBCore.LogInfo("Stop client");
 
-                if (SceneManager.GetActiveScene().name == Scenes.Game)
-                {
-                    GameManager.Instance.Loader.LoadTitleFromGame();
-                }
+			if (SceneManager.GetActiveScene().name == Scenes.Game)
+			{
+				GameManager.Instance.Loader.LoadTitleFromGame();
+			}
 
-                base.OnStopClient();
-            }
-            catch (Exception e)
-            {
-                CFBCore.LogError($"{e}");
-            }
-        }
+			_isConnected = false;
+
+			base.OnStopClient();
+		}
     }
 }
