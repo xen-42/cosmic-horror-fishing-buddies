@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>CosmicHorrorFishingBuddies</AssemblyName>
+    <Description>Cosmic Horror Fishing Buddies</Description>
+    <Version>0.0.1</Version>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="CosmicHorrorFishingBuddies.csproj.user" />
+  </ItemGroup>
+
+  <Target Name="Weave CFB" AfterTargets="PostBuildEvent">
+    <Exec Command=".\MirrorWeaver &quot;$(TargetPath)&quot;" WorkingDirectory="..\MirrorWeaver\bin\$(Configuration)\" />
+  </Target>
+
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Assets/*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="mod_meta.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+		<None Include="lib/*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="..\Mirror\*.dll" />
+    <PackageReference Include="HarmonyX" Version="2.10.1" />
+    <PackageReference Include="DredgeGameLibs" Version="1.0.4.1" />
+    <Reference Include="Winch">
+      <HintPath>$(GameInstall)\Winch.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MirrorWeaver\MirrorWeaver.csproj" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\EpicOnlineTransport\EpicOnlineTransport.csproj" />
+  </ItemGroup>
+</Project>
