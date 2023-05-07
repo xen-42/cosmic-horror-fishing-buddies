@@ -13,6 +13,8 @@ namespace CosmicFishingBuddies.HarvestPOISync.Patches
 		[HarmonyPatch(typeof(HarvestPOI), nameof(HarvestPOI.OnStockUpdated))]
 		public static void HarvestPOI_OnStockUpdated(HarvestPOI __instance)
 		{
+			if (__instance is PlacedHarvestPOI) return;
+
 			if (!disabled)
 			{
 				var localID = NetworkClient.connection.identity.netId;
