@@ -7,12 +7,12 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 	{
 		public void Start()
 		{
-			_networkPlayer.RefreshBoatModel.AddListener(RefreshLights);
+			_networkPlayer.remotePlayerBoatGraphics.RefreshBoatModel.AddListener(RefreshLights);
 		}
 
 		public void OnDestroy()
 		{
-			_networkPlayer.RefreshBoatModel.RemoveListener(RefreshLights);
+			_networkPlayer.remotePlayerBoatGraphics.RefreshBoatModel.RemoveListener(RefreshLights);
 		}
 
 		protected override void OnToggleRemote(bool active)
@@ -23,13 +23,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 
 		public void RefreshLights()
 		{
-			_networkPlayer.CurrentBoatModelProxy.SetLightStrength(IsActive ? 4f : 0f);
+			_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.SetLightStrength(IsActive ? 4f : 0f);
 
-			foreach (var light in _networkPlayer.CurrentBoatModelProxy.Lights)
+			foreach (var light in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.Lights)
 			{
 				light.SetActive(IsActive);
 			}
-			foreach (var lightBeam in _networkPlayer.CurrentBoatModelProxy.LightBeams)
+			foreach (var lightBeam in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.LightBeams)
 			{
 				lightBeam.SetActive(IsActive);
 			}

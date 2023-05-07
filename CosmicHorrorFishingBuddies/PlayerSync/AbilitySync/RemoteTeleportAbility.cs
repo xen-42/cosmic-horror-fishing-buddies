@@ -12,8 +12,8 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 		protected override void OnTriggerAbility(bool active)
 		{
 			teleportEffect.SetActive(active);
-			_networkPlayer.CurrentBoatModelProxy.gameObject.SetActive(!active);
-			_networkPlayer.wake.gameObject.SetActive(!active);
+			_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.gameObject.SetActive(!active);
+			_networkPlayer.remotePlayerBoatGraphics.wake.gameObject.SetActive(!active);
 		}
 	}
 }

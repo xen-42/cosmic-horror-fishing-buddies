@@ -84,8 +84,10 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 			var networkPlayer = GetComponent<NetworkPlayer>();
 			
-			networkPlayer.boatModelProxies = remotePlayer.GetComponentsInChildren<BoatModelProxy>();
-			
+			networkPlayer.remotePlayerBoatGraphics.boatSubModelTogglers = remotePlayer.GetComponentsInChildren<BoatSubModelToggler>();
+			networkPlayer.remotePlayerBoatGraphics.boatModelProxies = remotePlayer.GetComponentsInChildren<BoatModelProxy>();
+			networkPlayer.remotePlayerBoatGraphics.wake = remotePlayer.Find("BoatTrailParticles").gameObject;
+
 			networkPlayer.remoteTeleportAbility.teleportEffect = remotePlayer.Find("TeleportEffect").gameObject;
 
 			networkPlayer.remoteBanishAbility.banishEffect = remotePlayer.Find("BanishAbility/BanishEffect").gameObject;
@@ -99,8 +101,6 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			networkPlayer.remoteAtrophyAbility.loopAudio.maxDistance = 20;
 			networkPlayer.remoteAtrophyAbility.loopAudio.minDistance = 5;
 			networkPlayer.remoteAtrophyAbility.loopAudio.clip = atrophy.loopAudioSource.clip;
-
-			networkPlayer.wake = remotePlayer.Find("BoatTrailParticles").gameObject;
 
 			return remotePlayer;
 		}

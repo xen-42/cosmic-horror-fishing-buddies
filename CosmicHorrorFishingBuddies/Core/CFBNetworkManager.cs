@@ -99,6 +99,9 @@ namespace CosmicHorrorFishingBuddies.Core
                 networkPlayer.remotePlayerEngineAudio.engineSource.loop = true;
                 networkPlayer.remotePlayerEngineAudio.engineSource.playOnAwake = true;
 
+				// Boat graphics
+				networkPlayer.remotePlayerBoatGraphics = playerPrefab.AddComponent<RemoteBoatGraphics>();
+
                 // Teleport ability
                 networkPlayer.remoteTeleportAbility = playerPrefab.AddComponent<RemoteTeleportAbility>();
                 networkPlayer.remoteBanishAbility = playerPrefab.AddComponent<RemoteBanishAbility>();
