@@ -10,6 +10,12 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 	{
 		LIGHT_ON,
 		LIGHT_OFF,
-		PLAYER_COLLISION
+		PLAYER_COLLISION,
+		MANIFEST,
+		ATROPHY,
+		BAIT,
+		DEPLOY_POT,
+		TRAWL,
+		HASTE
 	}
 }
