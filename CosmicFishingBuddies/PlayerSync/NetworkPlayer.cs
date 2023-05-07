@@ -13,49 +13,6 @@ namespace CosmicFishingBuddies.PlayerSync
 {
     internal class NetworkPlayer : NetworkBehaviour
 	{
-		/// <summary>
-		/// Client plays must request authority to call commands on other Network objects, e.g., NetworkHarvestPOI
-		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="action"></param>
-		public void DoWithAuthority(NetworkIdentity id, Action action)
-		{
-			if (!NetworkClient.active) return;
-
-			if (id != null && !id.isOwned)
-			{
-				CmdGetAuthority(id);
-
-				StartCoroutine(WaitForAuthority(id, action));
-			}
-		}
-
-		private IEnumerator WaitForAuthority(NetworkIdentity id, Action action)
-		{
-			// Wait until we own the object or disconnect
-			yield return new WaitUntil(() => id.isOwned || !NetworkClient.active);
-			action?.Invoke();
-		}
-
-		[Command]
-		private void CmdGetAuthority(NetworkIdentity id)
-		{
-			try
-			{
-				if (id != null && !id.isOwned)
-				{
-					id.RemoveClientAuthority();
-					id.AssignClientAuthority(connectionToClient);
-
-					CFBCore.LogInfo($"Granted authority to {connectionToClient.identity}");
-				}
-			}
-			catch (Exception e)
-			{
-				CFBCore.LogError($"Couldn't get authority {e}");
-			}
-		}
-
 		#region OneShot
 		[Command]
 		public void CmdPlayOneShot(AudioEnum audio, float volume, float pitch) => RpcPlayOneShot(audio, volume, pitch);
@@ -187,7 +144,12 @@ namespace CosmicFishingBuddies.PlayerSync
 			}
 
 			PlayerManager.Players.Add(this);
-			if (!isOwned) PlayerManager.RemotePlayerJoined?.Invoke();
+
+			// Don't invoke event if the first player isn't set up yet
+			if (LocalPlayer != null)
+			{
+				PlayerManager.PlayerJoined?.Invoke(isOwned);
+			}
 		}
 
 		private int GetUpgradeTier() => Math.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 3);
@@ -195,7 +157,7 @@ namespace CosmicFishingBuddies.PlayerSync
 		public void OnDestroy()
 		{
 			PlayerManager.Players.Remove(this);
-			if (!isOwned) PlayerManager.RemotePlayerLeft?.Invoke();
+			PlayerManager.PlayerLeft?.Invoke(isOwned);
 
 			if (isOwned)
 			{
