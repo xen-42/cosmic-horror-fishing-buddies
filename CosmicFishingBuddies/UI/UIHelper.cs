@@ -26,8 +26,6 @@ namespace CosmicFishingBuddies.UI
 		private static GameObject _buttonContainer;
 		private static GameObject _menuCanvas;
 
-		private static bool _initialized;
-
 		public enum MainMenuButton
 		{
 			CONTINUE,
@@ -50,17 +48,16 @@ namespace CosmicFishingBuddies.UI
 
 		private void CreatePrefabs()
 		{
-			_initialized = true;
 			try
 			{
 				// BUTTON
-				_buttonPrefab = GameObject.Find("Canvases/MenuCanvas/ButtonContainer/Settings").gameObject.InstantiateInactive().DontDestroyOnLoad();
+				_buttonPrefab = GameObject.Find("Canvases/MenuCanvas/ButtonContainer/Settings").gameObject.InstantiateInactive();
 				_buttonPrefab.name = "ButtonPrefab";
 				Component.DestroyImmediate(_buttonPrefab.GetComponent<SettingsButton>());
 				Component.DestroyImmediate(_buttonPrefab.GetComponentInChildren<LocalizeStringEvent>());
 
 				// WINDOW
-				_windowPrefab = GameObject.Find("Canvases/MenuCanvas/SaveSlotWindow").gameObject.InstantiateInactive().DontDestroyOnLoad();
+				_windowPrefab = GameObject.Find("Canvases/MenuCanvas/SaveSlotWindow").gameObject.InstantiateInactive();
 				_windowPrefab.name = "WindowPrefab";
 				var saveSlotWindow = _windowPrefab.GetComponent<SaveSlotWindow>();
 				var panel = _windowPrefab.transform.Find("Container/Panel");
@@ -79,13 +76,13 @@ namespace CosmicFishingBuddies.UI
 				Component.DestroyImmediate(saveSlotWindow);
 
 				// DROPDOWN
-				_dropDownPrefab = GameObject.Find("Canvases/SettingsDialog/TabbedPanelContainer/Panels/AccessibilityPanel/Container/PopupDuration").gameObject.InstantiateInactive().DontDestroyOnLoad();
+				_dropDownPrefab = GameObject.Find("Canvases/SettingsDialog/TabbedPanelContainer/Panels/AccessibilityPanel/Container/PopupDuration").gameObject.InstantiateInactive();
 				_dropDownPrefab.name = "DropDownPrefab";
 				var dropdownSettingInput = _dropDownPrefab.GetComponent<DropdownSettingInput>();
 				dropdownSettingInput.settingType = SettingType.NONE;
 
 				// LABEL
-				_labelPrefab = GameObject.Find("Canvases/SettingsDialog/TabbedPanelContainer/Panels/AccessibilityPanel/Container/PopupDuration/LabelContainer/DropdownLabel");
+				_labelPrefab = GameObject.Find("Canvases/SettingsDialog/TabbedPanelContainer/Panels/AccessibilityPanel/Container/PopupDuration/LabelContainer/DropdownLabel").gameObject.InstantiateInactive();
 				GameObject.DestroyImmediate(_labelPrefab.GetComponent<LocalizeStringEvent>());
 				_labelPrefab.name = "LabelPrefab";
 			}
@@ -106,10 +103,7 @@ namespace CosmicFishingBuddies.UI
 					_buttonContainer = GameObject.Find("Canvases/MenuCanvas/ButtonContainer").gameObject;
 					_menuCanvas = GameObject.Find("Canvases/MenuCanvas").gameObject;
 
-					if (!_initialized)
-					{
-						CreatePrefabs();
-					}
+					CreatePrefabs();
 				}
 			}
 			catch(Exception e)
