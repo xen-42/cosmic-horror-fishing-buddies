@@ -12,12 +12,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 		[SyncVar]
 		private uint _lastInteractionID = uint.MaxValue;
 
-		public int SyncIndex => _syncIndex;
-
 		public bool IsCurrentlySpecial => _isCurrentlySpecial;
-
-		[SyncVar(hook = nameof(OnIndexHook))]
-		private int _syncIndex = -1;
 
 		[SyncVar(hook = nameof(OnStockCountHook))]
 		private float _stockCount = Mathf.NegativeInfinity;
@@ -29,7 +24,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 
 		private bool _isReady;
 
-		public void Start()
+		public virtual void Start()
 		{
 			if (!NetworkClient.activeHost)
 			{
@@ -42,18 +37,6 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			{
 				SetIsCurrentlySpecial(Target.IsCurrentlySpecial);
 				SetStockCount(Target.Stock, PlayerManager.LocalNetID);
-			}
-		}
-
-		public void SetSyncIndex(int ind)
-		{
-			if (NetworkClient.activeHost)
-			{
-				_syncIndex = ind;
-			}
-			else
-			{
-				CFBCore.LogError($"Client tried to create {nameof(NetworkHarvestPOI)}");
 			}
 		}
 
@@ -101,11 +84,6 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			{
 				CFBCore.LogError($"Couldn't set harvest POI special {e}");
 			}
-		}
-
-		private void OnIndexHook(int _, int ind)
-		{
-			NetworkHarvestPOIManager.Instance.RegisterNetworkHarvestPOI(this);
 		}
 
 		private void OnStockCountHook(float _, float count)

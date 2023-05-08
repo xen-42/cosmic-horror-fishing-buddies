@@ -28,7 +28,8 @@ namespace CosmicHorrorFishingBuddies.Core
         private EosApiKey _epicApiKey;
 
         public static GameObject TimeSyncManagerPrefab { get; private set; }
-        public static GameObject HarvestPOIPrefab { get; private set; }
+        public static GameObject IndexedHarvestPOIPrefab { get; private set; }
+		public static GameObject BaitHarvestPOIPrefab { get; private set; }
 
         public override void Awake()
         {
@@ -114,12 +115,17 @@ namespace CosmicHorrorFishingBuddies.Core
                 TimeSyncManagerPrefab.AddComponent<TimeSyncManager>();
                 spawnPrefabs.Add(TimeSyncManagerPrefab);
 
-                // 3 - HarvestPOI
-                HarvestPOIPrefab = MakeNewNetworkObject(3, nameof(HarvestPOIPrefab));
-                HarvestPOIPrefab.AddComponent<NetworkHarvestPOI>();
-                spawnPrefabs.Add(HarvestPOIPrefab);
+                // 3 - IndexedHarvestPOI
+                IndexedHarvestPOIPrefab = MakeNewNetworkObject(3, nameof(IndexedHarvestPOIPrefab));
+                IndexedHarvestPOIPrefab.AddComponent<IndexedNetworkHarvestPOI>();
+                spawnPrefabs.Add(IndexedHarvestPOIPrefab);
 
-                gameObject.SetActive(true);
+				// 4 - BaitHarvestPOI
+				BaitHarvestPOIPrefab = MakeNewNetworkObject(4, nameof(BaitHarvestPOIPrefab));
+				BaitHarvestPOIPrefab.AddComponent<NetworkBaitHarvestPOI>();
+				spawnPrefabs.Add(BaitHarvestPOIPrefab);
+
+				gameObject.SetActive(true);
 
                 CFBCore.Instance.PlayerLoaded.AddListener(OnPlayerLoaded);
                 SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
