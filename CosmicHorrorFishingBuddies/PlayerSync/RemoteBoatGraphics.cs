@@ -10,6 +10,12 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 {
 	internal class RemoteBoatGraphics : NetworkBehaviour
 	{
+		[SyncVar(hook = nameof(DamageHook))]
+		private int _damage;
+
+		[SyncVar(hook = nameof(CriticalDamageHook))]
+		private bool _criticalDamage;
+
 		[SyncVar(hook = nameof(UpgradeTierHook))]
 		private int _upgradeTier;
 
@@ -41,8 +47,16 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 		[Command]
 		public void SetUpgradeTier(int upgradeTier) => _upgradeTier = upgradeTier;
+		[Command]
+		public void SetDamage(int damage, bool critical)
+		{
+			_damage = damage;
+			_criticalDamage = critical;
+		}
 
 		public void UpgradeTierHook(int prev, int current) => RefreshUpgradeTier();
+		public void DamageHook(int prev, int current) => OnRemotePlayerDamageChanged();
+		public void CriticalDamageHook(bool prev, bool current) => OnRemotePlayerDamageChanged();
 
 		public UnityEvent RefreshBoatModel = new();
 
@@ -56,24 +70,30 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 		public void Start()
 		{
-			if (isOwned)
+			try
 			{
-				GameEvents.Instance.OnUpgradesChanged += OnUpgradesChanged;
-
-				// Initial state
-				CheckLocalActiveChildren();
-				SetUpgradeTier(GetLocalUpgradeTier());
-			}
-			else
-			{
-				try
+				if (isOwned)
+				{
+					GameEvents.Instance.OnUpgradesChanged += OnLocalUpgradesChanged;
+					GameEvents.Instance.OnPlayerDamageChanged += OnLocalPlayerDamageChanged;
+					// Initial state
+					CheckLocalActiveChildren();
+					SetUpgradeTier(GetLocalUpgradeTier());
+				}
+				else
 				{
 					RefreshUpgradeTier();
+					foreach (var boatSubModelToggler in boatSubModelTogglers)
+					{
+						GameEvents.Instance.OnPlayerDamageChanged -= boatSubModelToggler.OnPlayerDamageChanged;
+					}
+					OnRemotePlayerDamageChanged();
 				}
-				catch (Exception e)
-				{
-					CFBCore.LogError($"Failed to make remote player {e}");
-				}
+			}
+
+			catch (Exception e)
+			{
+				CFBCore.LogError($"Failed to make remote player {e}");
 			}
 		}
 
@@ -93,11 +113,12 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		{
 			if (isOwned)
 			{
-				GameEvents.Instance.OnUpgradesChanged -= OnUpgradesChanged;
+				GameEvents.Instance.OnUpgradesChanged -= OnLocalUpgradesChanged;
+				GameEvents.Instance.OnPlayerDamageChanged -= OnLocalPlayerDamageChanged;
 			}
 		}
 
-		private void OnUpgradesChanged(UpgradeData upgradeData)
+		private void OnLocalUpgradesChanged(UpgradeData upgradeData)
 		{
 			if (upgradeData is HullUpgradeData)
 			{
@@ -136,12 +157,26 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					RefreshBoatModel?.Invoke();
 
 					RefreshActiveChildren();
+					OnRemotePlayerDamageChanged();
 				}
 				catch (Exception e)
 				{
 					CFBCore.LogError($"Failed to refresh upgrade tier {e}");
 				}
 			}
+		}
+
+		public void OnRemotePlayerDamageChanged()
+		{
+			CurrentBoatSubModelToggler.hullCriticalEffects.SetActive(_criticalDamage);
+			CurrentBoatSubModelToggler.meshFilter.mesh = CurrentBoatModelProxy.damageStateMeshes[_damage];
+		}
+
+		public void OnLocalPlayerDamageChanged()
+		{
+			var toggler = GameManager.Instance.Player.BoatModelProxy.GetComponent<BoatSubModelToggler>();
+			_damage = GameManager.Instance.Player.BoatModelProxy.DamageStateMeshes.IndexOf(toggler.meshFilter.mesh);
+			_criticalDamage = toggler.hullCriticalEffects.activeInHierarchy;
 		}
 
 		public void RefreshActiveChildren()
@@ -172,7 +207,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					boatProxy.transform.GetChild(childInd).gameObject.SetActive(true);
 				}
 			}
-			 catch (Exception e)
+			catch (Exception e)
 			{
 				CFBCore.LogError($"Couldn't update children : {e}");
 			}
