@@ -3,8 +3,8 @@ A multiplayer mod for DREDGE
 
 Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-out to \_nebula and everyone who's contributed to [Quantum Space Buddies](https://github.com/misternebula/quantum-space-buddies), for the inspiration and code that I stole.
 
-## Features
-What is synced (some spoilers here):
+## Features (spoilers)
+#### What is synced:
 - Player movement
 - Engine sounds & ship wake
 - Time
@@ -22,7 +22,7 @@ What is synced (some spoilers here):
 - Ship appearance
   - Missing fish containers and rudder
 
-What is not synced (roadmap):
+#### What is not synced (roadmap):
 - Abilities
   - Crab pots
   - Bait
@@ -31,7 +31,7 @@ What is not synced (roadmap):
 - Waves
 - Collisions?
 
-Other todo:
+#### Other todo:
 - Implement Epic transport
 - Implement Steam transport (maybe, if Epic has drawbacks)
 
