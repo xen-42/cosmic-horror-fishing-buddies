@@ -177,8 +177,11 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 		public void OnRemotePlayerDamageChanged()
 		{
-			CurrentBoatSubModelToggler.hullCriticalEffects.SetActive(_criticalDamage);
-			CurrentBoatSubModelToggler.meshFilter.mesh = CurrentBoatModelProxy.damageStateMeshes[_damage];
+			if (CurrentBoatSubModelToggler != null)
+			{
+				CurrentBoatSubModelToggler.hullCriticalEffects.SetActive(_criticalDamage);
+				CurrentBoatSubModelToggler.meshFilter.mesh = CurrentBoatModelProxy.damageStateMeshes[_damage];
+			}
 		}
 
 		public void OnRemoteFillPercentChanged()

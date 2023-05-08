@@ -1,4 +1,5 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
+using CosmicHorrorFishingBuddies.Util;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -84,6 +85,7 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 			AudioEnum.DEPLOY_POT => _instance?._potAbility?.abilityData?.castSFX,
 			AudioEnum.TRAWL => _instance?._trawlAbility?.abilityData?.castSFX,
 			AudioEnum.HASTE => _instance?._hasteAbility?.abilityData?.castSFX,
+			AudioEnum.LIGHT_FLICKER => EventHelper.GetWorldEvent<FlickerLightsWorldEvent>()?.flickerSFX,
 			_ => null,
 		};
 
