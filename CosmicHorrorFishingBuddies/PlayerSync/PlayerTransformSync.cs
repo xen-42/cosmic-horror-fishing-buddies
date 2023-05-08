@@ -56,6 +56,14 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				banishAudio.maxDistance = 20;
 				banishAudio.minDistance = 5;
 
+				// SmokeColumn shares a material between all players and gets weird because of it
+				foreach (var smokeColumn in PlayerPrefab.GetComponentsInChildren<SmokeColumn>(true))
+				{
+					var mat = new Material(smokeColumn.smokeMaterial);
+					smokeColumn.line.material = mat;
+					smokeColumn.smokeMaterial = mat;
+				}
+
 				PlayerPrefab.SetActive(false);
 				GameObject.DontDestroyOnLoad(PlayerPrefab);
 			}
