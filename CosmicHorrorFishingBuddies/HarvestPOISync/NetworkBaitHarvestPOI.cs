@@ -1,5 +1,6 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Extensions;
+using CosmicHorrorFishingBuddies.PlayerSync;
 using Mirror;
 using System;
 using System.Collections.Generic;
@@ -22,34 +23,37 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 		[SyncVar]
 		private float _yRot;
 
-		private bool _initialized;
-
 		[Command]
-		public void SetBaitData(ZoneEnum zone, Vector3 position, float yRot, int numFish)
+		public void SetBaitData(ZoneEnum zone, Vector3 position, float yRot, int numFish, uint senderID)
 		{
 			_zone = zone;
 			_position = position;
 			_yRot = yRot;
 			_numFish = numFish;
-			RpcSetBaitData(zone, position, yRot, numFish);
+			RpcSetBaitData(zone, position, yRot, numFish, senderID);
 		}
 
-		[ClientRpc(includeOwner = false)]
-		private void RpcSetBaitData(ZoneEnum zone, Vector3 position, float yRot, int numFish) => InitializeBaitData(zone, position, yRot, numFish);
+		[ClientRpc]
+		private void RpcSetBaitData(ZoneEnum zone, Vector3 position, float yRot, int numFish, uint senderID)
+		{
+			CFBCore.LogInfo($"Player {senderID} requested {NetworkPlayer.LocalPlayer.netId} to make bait");
+			if (NetworkPlayer.LocalPlayer.netIdentity.netId != senderID)
+			{
+				InitializeBaitData(zone, position, yRot, numFish);
+			}
+		}
 
 		private void InitializeBaitData(ZoneEnum zone, Vector3 position, float yRot, int numFish)
 		{
 			try
 			{
-				_initialized = true;
-
 				// Largely copy pasted from BaitAbility
 				var baitPOIDataModel = new BaitPOIDataModel();
 				baitPOIDataModel.doesRestock = false;
 				var fishList = (from i in GameManager.Instance.ItemManager.GetSpatialItemDataBySubtype(ItemSubtype.FISH).OfType<FishItemData>()
-								where !i.IsAberration && i.CanAppearInBaitBalls && i.canBeCaughtByRod && i.zonesFoundIn.HasFlag(zone)
-								&& GameManager.Instance.PlayerStats.HarvestableTypes.Contains(i.harvestableType)
-								select i).Shuffle().ToList();
+					where !i.IsAberration && i.CanAppearInBaitBalls && i.canBeCaughtByRod && i.zonesFoundIn.HasFlag(zone)
+					&& GameManager.Instance.PlayerStats.HarvestableTypes.Contains(i.harvestableType)
+					select i).Shuffle().ToList();
 
 				var range = fishList.GetRange(0, Mathf.Min(fishList.Count, GameManager.Instance.GameConfigData.NumFishSpeciesInBaitBall));
 				Stack<HarvestableItemData> harvestableItemDataStack = new();
@@ -84,20 +88,13 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 				NetworkHarvestPOIManager.Instance.RegisterNetworkBaitHarvestPOI(this);
 
 				gameObject.SetActive(true);
+
+				CFBCore.LogInfo($"Created bait on {NetworkPlayer.LocalPlayer.netId}");
 			}
 			catch (Exception e)
 			{
 				CFBCore.LogError($"Couldn't initialize bait data {e}");
 			}
-		}
-
-		public override void Start()
-		{
-			if (!_initialized && !isOwned)
-			{
-				InitializeBaitData(_zone, _position, _yRot, _numFish);
-			}
-			base.Start();
 		}
 	}
 }

@@ -1,5 +1,7 @@
-﻿using HarmonyLib;
+﻿using CosmicHorrorFishingBuddies.Core;
+using HarmonyLib;
 using Mirror;
+using System;
 
 namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 {
@@ -12,12 +14,18 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 		[HarmonyPatch(typeof(HarvestPOI), nameof(HarvestPOI.OnStockUpdated))]
 		public static void HarvestPOI_OnStockUpdated(HarvestPOI __instance)
 		{
-			if (__instance.IsCrabPotPOI || __instance.IsBaitPOI) return;
+			if (__instance.IsCrabPotPOI) return;
 
 			if (!disabled)
 			{
-				var localID = NetworkClient.connection.identity.netId;
-				NetworkHarvestPOIManager.Instance?.GetNetworkObject(__instance)?.SetStockCount(__instance.harvestable.GetStockCount(false), localID);
+				try
+				{
+					NetworkHarvestPOIManager.Instance?.GetNetworkObject(__instance)?.SetStockCount(__instance.harvestable.GetStockCount(false));
+				}
+				catch (Exception e)
+				{
+					CFBCore.LogError(e);
+				}
 			}
 		}
 

@@ -1,123 +1,90 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.HarvestPOISync.Patches;
-using CosmicHorrorFishingBuddies.PlayerSync;
 using Mirror;
 using System;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.HarvestPOISync
 {
-    internal class NetworkHarvestPOI : NetworkBehaviour
+	internal class NetworkHarvestPOI : NetworkBehaviour
 	{
-		[SyncVar]
-		private uint _lastInteractionID = uint.MaxValue;
-
 		public bool IsCurrentlySpecial => _isCurrentlySpecial;
 
-		[SyncVar(hook = nameof(OnStockCountHook))]
-		private float _stockCount = Mathf.NegativeInfinity;
+		[SyncVar] private float _stockCount = Mathf.NegativeInfinity;
 
-		[SyncVar(hook = nameof(OnSetIsCurrentlySpecialHook))]
-		private bool _isCurrentlySpecial;
+		[SyncVar] private bool _isCurrentlySpecial;
 
 		public HarvestPOI Target { get; set; }
 
-		private bool _isReady;
-
 		public virtual void Start()
 		{
-			if (!NetworkClient.activeHost)
+			try
 			{
-				_isReady = true;
-
-				UpdateStockFromSyncVar();
-				UpdateSpecialFromSyncVar();
+				if (!NetworkClient.activeHost)
+				{
+					RpcSetStockCount(_stockCount);
+					RpcSetSpecial(_isCurrentlySpecial);
+				}
+				else
+				{
+					SetStockCount(Target.Stock);
+					SetIsCurrentlySpecial(Target.IsCurrentlySpecial);
+				}
 			}
-			else
+			catch (Exception e)
 			{
-				SetIsCurrentlySpecial(Target.IsCurrentlySpecial);
-				SetStockCount(Target.Stock, PlayerManager.LocalNetID);
+				CFBCore.LogError(e);
 			}
 		}
 
 		[Command(requiresAuthority = false)]
-		public void SetStockCount(float count, uint from)
+		public void SetStockCount(float count)
 		{
-			_lastInteractionID = from;
 			_stockCount = count;
-
-			//CFBCore.LogInfo($"Player {from} has requested {Target.name} stock count be set to {count}");
+			RpcSetStockCount(count);
 		}
 
-		/// <summary>
-		/// Only host can set this
-		/// </summary>
-		/// <param name="isCurrentlySpecial"></param>
-		public void SetIsCurrentlySpecial(bool isCurrentlySpecial)
-		{
-			if (NetworkClient.activeHost)
-			{
-				_isCurrentlySpecial = isCurrentlySpecial;
-
-				//CFBCore.LogInfo($"{Target.name} has been set to special : {isCurrentlySpecial} {Target.IsCurrentlySpecial}");
-			}
-			else
-			{
-				CFBCore.LogError($"Client tried to set IsCurrentySpecial on a {nameof(NetworkHarvestPOI)}");
-			}
-		}
-
-		private void OnSetIsCurrentlySpecialHook(bool prev, bool current)
+		[ClientRpc]
+		private void RpcSetStockCount(float count)
 		{
 			try
 			{
-				if (!_isReady) return;
+				HarvestPOIPatches.disabled = true;
 
-				if (!NetworkClient.activeHost)
-				{
-					UpdateSpecialFromSyncVar();
-				}
+				var dStock = count - Target.Stock;
+				Target.harvestable.AddStock(dStock, false);
+				Target.OnStockUpdated();
 
-				//CFBCore.LogInfo($"{Target.name} for Player {PlayerManager.LocalNetID} has been set to special : {_isCurrentlySpecial}");
+				HarvestPOIPatches.disabled = false;
 			}
 			catch (Exception e)
 			{
-				CFBCore.LogError($"Couldn't set harvest POI special {e}");
+				CFBCore.LogError(e);
 			}
 		}
 
-		private void OnStockCountHook(float prev, float current)
+		[Command]
+		public void SetIsCurrentlySpecial(bool isCurrentlySpecial)
 		{
-			if (!_isReady) return;
+			_isCurrentlySpecial = isCurrentlySpecial;
+			RpcSetSpecial(isCurrentlySpecial);
+		}
 
-			var localID = NetworkClient.connection.identity.netId;
-
-			if (localID != _lastInteractionID)
+		[ClientRpc]
+		private void RpcSetSpecial(bool isSpecial)
+		{
+			try
 			{
-				UpdateStockFromSyncVar();
+				HarvestPOIPatches.disabled = true;
+
+				Target.SetIsCurrentlySpecial(isSpecial);
+
+				HarvestPOIPatches.disabled = false;
 			}
-
-			//CFBCore.LogInfo($"Player {_lastInteractionID} has set {Target.name} stock count for Player {localID} to {current}");
-		}
-
-		private void UpdateSpecialFromSyncVar()
-		{
-			HarvestPOIPatches.disabled = true;
-
-			Target.SetIsCurrentlySpecial(_isCurrentlySpecial);
-
-			HarvestPOIPatches.disabled = false;
-		}
-
-		private void UpdateStockFromSyncVar()
-		{
-			HarvestPOIPatches.disabled = true;
-
-			var dStock = _stockCount - Target.Stock;
-			Target.harvestable.AddStock(dStock, false);
-			Target.OnStockUpdated();
-
-			HarvestPOIPatches.disabled = false;
+			catch(Exception e)
+			{
+				CFBCore.LogError(e);
+			}
 		}
 	}
 }

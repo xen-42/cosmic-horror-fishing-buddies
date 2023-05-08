@@ -27,7 +27,7 @@ namespace CosmicHorrorFishingBuddies.Core
         private EosTransport _epicTransport;
         private EosApiKey _epicApiKey;
 
-        public static GameObject TimeSyncManagerPrefab { get; private set; }
+        public static GameObject GlobalSyncPrefab { get; private set; }
         public static GameObject IndexedHarvestPOIPrefab { get; private set; }
 		public static GameObject BaitHarvestPOIPrefab { get; private set; }
 
@@ -110,10 +110,11 @@ namespace CosmicHorrorFishingBuddies.Core
                 networkPlayer.remoteLightAbility = playerPrefab.AddComponent<RemoteLightAbility>();
 				networkPlayer.remoteTrawlNetAbility = playerPrefab.AddComponent<RemoteTrawlNetAbility>();
 
-				// 2 - TimeSyncManager
-				TimeSyncManagerPrefab = MakeNewNetworkObject(2, nameof(TimeSyncManagerPrefab));
-                TimeSyncManagerPrefab.AddComponent<TimeSyncManager>();
-                spawnPrefabs.Add(TimeSyncManagerPrefab);
+				// 2 - GlobalSyncManager
+				GlobalSyncPrefab = MakeNewNetworkObject(2, nameof(GlobalSyncPrefab));
+                GlobalSyncPrefab.AddComponent<TimeSyncManager>();
+                GlobalSyncPrefab.AddComponent<NetworkHarvestPOIManager>();
+                spawnPrefabs.Add(GlobalSyncPrefab);
 
                 // 3 - IndexedHarvestPOI
                 IndexedHarvestPOIPrefab = MakeNewNetworkObject(3, nameof(IndexedHarvestPOIPrefab));
@@ -205,8 +206,6 @@ namespace CosmicHorrorFishingBuddies.Core
                 {
                     StartClient();
                 }
-
-                gameObject.AddComponent<NetworkHarvestPOIManager>();
             }
         }
 
@@ -227,7 +226,7 @@ namespace CosmicHorrorFishingBuddies.Core
         {
 			base.OnStartHost();
 
-			TimeSyncManagerPrefab.SpawnWithServerAuthority();
+			GlobalSyncPrefab.SpawnWithServerAuthority();
         }
 
         public override void OnClientError(TransportError error, string reason)

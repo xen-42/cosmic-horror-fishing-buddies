@@ -24,7 +24,8 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 			{
 				_networkPlayer.RemotePlayOneShot(AudioSync.AudioEnum.TRAWL_END, 1f, 1f);
 				_rotationTween?.Kill();
-				_rotationTween = trawlNet.DOLocalRotate(new UnityEngine.Vector3(0, 0, 0), 6f);
+				_rotationTween = trawlNet.DOLocalRotate(new UnityEngine.Vector3(0, 0, 0), 1f);
+				_rotationTween.SetDelay(2f);
 			}
 		}
 	}

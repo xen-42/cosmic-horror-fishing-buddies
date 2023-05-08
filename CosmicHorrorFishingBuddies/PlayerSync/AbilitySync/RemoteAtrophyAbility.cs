@@ -1,5 +1,7 @@
-﻿using CosmicHorrorFishingBuddies.HarvestPOISync;
+﻿using CosmicHorrorFishingBuddies.Core;
+using CosmicHorrorFishingBuddies.HarvestPOISync;
 using Mirror;
+using System;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
@@ -29,9 +31,16 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 		[ClientRpc(includeOwner = false)]
 		public void OnDeactivate()
 		{
-			_playerVfx?.GetComponent<SafeParticleDestroyer>()?.Destroy();
-			_harvestVfx?.GetComponent<SafeParticleDestroyer>()?.Destroy();
-			loopAudio.Stop();
+			try
+			{
+				_playerVfx?.GetComponent<SafeParticleDestroyer>()?.Destroy();
+				_harvestVfx?.GetComponent<SafeParticleDestroyer>()?.Destroy();
+				loopAudio.Stop();
+			}
+			catch(Exception e)
+			{
+				CFBCore.LogError(e);
+			}
 		}
 	}
 }
