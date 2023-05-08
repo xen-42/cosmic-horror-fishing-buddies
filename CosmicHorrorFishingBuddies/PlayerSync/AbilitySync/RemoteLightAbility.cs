@@ -17,28 +17,12 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 		{
 			_networkPlayer.remotePlayerBoatGraphics.RefreshBoatModel.AddListener(RefreshLights);
 			_lightFlickerEffect = GetComponentInChildren<LightFlickerEffect>();
-
-			AddTerminalCommands();
 		}
 
 		public void OnDestroy()
 		{
 			_networkPlayer.remotePlayerBoatGraphics.RefreshBoatModel.RemoveListener(RefreshLights);
-
-			RemoveTerminalCommands();
 		}
-
-		private void AddTerminalCommands()
-		{
-			Terminal.Shell.AddCommand("remote.flicker", DebugTriggerFlickerEvent, 0, 0, "Triggers the flicker lights world event");
-		}
-
-		private void RemoveTerminalCommands()
-		{
-			Terminal.Shell.RemoveCommand("remote.flicker");
-		}
-
-		private void DebugTriggerFlickerEvent(CommandArg[] args) => EventHelper.GetWorldEvent<FlickerLightsWorldEvent>().Activate();
 
 		protected override void OnToggleRemote(bool active)
 		{

@@ -1,14 +1,14 @@
 ﻿using CosmicHorrorFishingBuddies.BaseSync;
 using CosmicHorrorFishingBuddies.Core;
+using CosmicHorrorFishingBuddies.Debugging;
 using CosmicHorrorFishingBuddies.Extensions;
-using FluffyUnderware.DevTools.Extensions;
 using System;
 using System.Linq;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync
 {
-    internal class PlayerTransformSync : TransformSync
+	internal class PlayerTransformSync : TransformSync
 	{
 		public static PlayerTransformSync LocalInstance { get; private set; }
 
@@ -78,6 +78,9 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			CFBCore.LogInfo($"Creating local {nameof(PlayerTransformSync)}");
 
 			LocalInstance = this;
+
+			GameManager.Instance.Player.gameObject.AddComponent<DebugCommands>();
+
 			return GameManager.Instance.Player.transform;
 		}
 
