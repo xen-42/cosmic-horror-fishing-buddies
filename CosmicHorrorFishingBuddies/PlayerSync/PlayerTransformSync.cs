@@ -2,6 +2,7 @@
 using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Extensions;
 using FluffyUnderware.DevTools.Extensions;
+using Mirror.Experimental;
 using System;
 using UnityEngine;
 
@@ -67,6 +68,10 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			CFBCore.LogInfo($"Creating local {nameof(PlayerTransformSync)}");
 
 			LocalInstance = this;
+			var networkRb = gameObject.AddComponent<NetworkRigidbody>();
+			networkRb.SetValue("target", GameManager.Instance.Player.GetComponent<Rigidbody>());
+			networkRb.syncDirection = Mirror.SyncDirection.ClientToServer;
+
 			return GameManager.Instance.Player.transform;
 		}
 
@@ -101,6 +106,17 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			networkPlayer.remoteAtrophyAbility.loopAudio.maxDistance = 20;
 			networkPlayer.remoteAtrophyAbility.loopAudio.minDistance = 5;
 			networkPlayer.remoteAtrophyAbility.loopAudio.clip = atrophy.loopAudioSource.clip;
+
+			var rb = gameObject.AddComponent<Rigidbody>();
+
+			var networkRB = gameObject.AddComponent<NetworkRigidbody>();
+			networkRB.syncDirection = Mirror.SyncDirection.ClientToServer;
+			networkRB.SetValue("target", rb);
+
+			foreach (var joint in remotePlayer.GetComponentsInChildren<ConfigurableJoint>())
+			{
+				joint.connectedBody = rb;
+			}
 
 			return remotePlayer;
 		}

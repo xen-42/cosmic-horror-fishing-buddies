@@ -170,11 +170,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				foreach (var childInd in children)
 				{
 					var child = boatProxy.transform.GetChild(childInd);
-					// For some reason rigidbodies on remote players mess with the local player rotation
-					if (!child.GetComponentsInChildren<Rigidbody>().Any())
-					{
-						child.gameObject.SetActive(true);
-					}
+					child.gameObject.SetActive(true);
 				}
 			}
 			 catch (Exception e)
