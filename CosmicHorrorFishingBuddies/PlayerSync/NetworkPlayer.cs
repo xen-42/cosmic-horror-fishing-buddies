@@ -69,6 +69,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		public RemoteBanishAbility remoteBanishAbility;
 		public RemoteAtrophyAbility remoteAtrophyAbility;
 		public RemoteFoghornAbility remoteFoghornAbility;
+		public RemoteTrawlNetAbility remoteTrawlNetAbility;
 
 		public void Start()
 		{

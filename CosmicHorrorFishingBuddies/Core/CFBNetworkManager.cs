@@ -107,9 +107,10 @@ namespace CosmicHorrorFishingBuddies.Core
                 networkPlayer.remoteBanishAbility = playerPrefab.AddComponent<RemoteBanishAbility>();
                 networkPlayer.remoteAtrophyAbility = playerPrefab.AddComponent<RemoteAtrophyAbility>();
                 networkPlayer.remoteLightAbility = playerPrefab.AddComponent<RemoteLightAbility>();
+				networkPlayer.remoteTrawlNetAbility = playerPrefab.AddComponent<RemoteTrawlNetAbility>();
 
-                // 2 - TimeSyncManager
-                TimeSyncManagerPrefab = MakeNewNetworkObject(2, nameof(TimeSyncManagerPrefab));
+				// 2 - TimeSyncManager
+				TimeSyncManagerPrefab = MakeNewNetworkObject(2, nameof(TimeSyncManagerPrefab));
                 TimeSyncManagerPrefab.AddComponent<TimeSyncManager>();
                 spawnPrefabs.Add(TimeSyncManagerPrefab);
 

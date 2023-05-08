@@ -15,7 +15,9 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 		ATROPHY,
 		BAIT,
 		DEPLOY_POT,
-		TRAWL,
+		TRAWL_ACTIVATE,
+		TRAWL_END,
+		TRAWL_BREAK,
 		HASTE,
 		LIGHT_FLICKER
 	}

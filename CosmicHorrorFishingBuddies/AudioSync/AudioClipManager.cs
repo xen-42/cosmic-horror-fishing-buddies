@@ -83,7 +83,11 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 			AudioEnum.ATROPHY => _instance?._atrophyAbility?.abilityData?.castSFX,
 			AudioEnum.BAIT => _instance?._baitAbility?.abilityData?.castSFX,
 			AudioEnum.DEPLOY_POT => _instance?._potAbility?.abilityData?.castSFX,
-			AudioEnum.TRAWL => _instance?._trawlAbility?.abilityData?.castSFX,
+
+			AudioEnum.TRAWL_ACTIVATE => _instance?._trawlAbility?.abilityData?.castSFX,
+			AudioEnum.TRAWL_END => _instance?._trawlAbility?.endSFX,
+			AudioEnum.TRAWL_BREAK => _instance?._trawlAbility?.breakSFX,
+
 			AudioEnum.HASTE => _instance?._hasteAbility?.abilityData?.castSFX,
 			AudioEnum.LIGHT_FLICKER => EventHelper.GetWorldEvent<FlickerLightsWorldEvent>()?.flickerSFX,
 			_ => null,
