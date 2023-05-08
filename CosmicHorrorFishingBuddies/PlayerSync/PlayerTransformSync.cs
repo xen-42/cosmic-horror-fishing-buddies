@@ -3,6 +3,7 @@ using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Extensions;
 using FluffyUnderware.DevTools.Extensions;
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync
@@ -35,11 +36,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				var boat3 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat3"));
 				var boat4 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat4"));
 
-				// TODO: Fix the tyres
-				boat1.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
-				boat2.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
-				boat3.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
-				boat4.GetComponentsInChildren<Rigidbody>().ForEach(x => x.gameObject.SetActive(false));
+				// Attached rigidbodies are really weird. Have to set up some networkrigidbody stuff in the future
+				foreach (var rigidBody in PlayerPrefab.gameObject.GetComponentsInChildren<Rigidbody>(true).Select(x => x.gameObject))
+				{
+					GameObject.DestroyImmediate(rigidBody.GetComponent<Joint>());
+					GameObject.DestroyImmediate(rigidBody.GetComponent<RigidBodyVelocityResetter>());
+					GameObject.DestroyImmediate(rigidBody.GetComponent<Rigidbody>());
+				}
 
 				var wake = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("BoatTrailParticles"));
 

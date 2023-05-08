@@ -26,6 +26,8 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 		[HarmonyPatch(typeof(HarvestPOI), nameof(HarvestPOI.Update))]
 		public static void HarvestPOI_Update(HarvestPOI __instance)
 		{
+			if (__instance is PlacedHarvestPOI) return;
+
 			if (!disabled && NetworkClient.activeHost)
 			{
 				var networkObj = NetworkHarvestPOIManager.Instance?.GetNetworkObject(__instance);
