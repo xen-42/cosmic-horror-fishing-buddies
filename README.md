@@ -20,13 +20,14 @@ What is synced (some spoilers here):
   - Banish (has effects but only works locally)
   - Atrophy
   - Haste (missing vfx)
+- Ship appearance
+  - Missing fish containers and rudder
 
 What is not synced (roadmap):
 - Abilities
   - Trawl net
   - Crab pots
   - Bait
-- Ship appearance
 - Events
 - Enemies
 - Waves
