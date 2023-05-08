@@ -79,6 +79,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					// Initial state
 					CheckLocalActiveChildren();
 					SetUpgradeTier(GetLocalUpgradeTier());
+					OnLocalPlayerDamageChanged();
 				}
 				else
 				{
