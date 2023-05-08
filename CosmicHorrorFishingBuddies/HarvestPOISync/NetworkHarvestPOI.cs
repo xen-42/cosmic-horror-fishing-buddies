@@ -14,28 +14,36 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 
 		[SyncVar] private bool _isCurrentlySpecial;
 
-		public HarvestPOI Target { get; set; }
-
-		public virtual void Start()
+		public HarvestPOI Target
 		{
-			try
+			get
 			{
-				if (!NetworkClient.activeHost)
-				{
-					RpcSetStockCount(_stockCount);
-					RpcSetSpecial(_isCurrentlySpecial);
-				}
-				else
-				{
-					SetStockCount(Target.Stock);
-					SetIsCurrentlySpecial(Target.IsCurrentlySpecial);
-				}
+				return _target;
 			}
-			catch (Exception e)
+			set
 			{
-				CFBCore.LogError(e);
+				_target = value;
+				try
+				{
+					if (!NetworkClient.activeHost)
+					{
+						RpcSetStockCount(_stockCount);
+						RpcSetSpecial(_isCurrentlySpecial);
+					}
+					else
+					{
+						SetStockCount(_target.Stock);
+						SetIsCurrentlySpecial(_target.IsCurrentlySpecial);
+					}
+				}
+				catch (Exception e)
+				{
+					CFBCore.LogError(e);
+				}
 			}
 		}
+
+		private HarvestPOI _target;
 
 		[Command(requiresAuthority = false)]
 		public void SetStockCount(float count)
@@ -59,7 +67,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			}
 			catch (Exception e)
 			{
-				CFBCore.LogError(e);
+				CFBCore.LogError($"HOW?!?!?! Target: {Target == null} this: {name} target name: {Target.name} - {e}");
 			}
 		}
 

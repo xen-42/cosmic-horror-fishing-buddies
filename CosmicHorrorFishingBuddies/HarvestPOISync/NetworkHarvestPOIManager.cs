@@ -88,7 +88,6 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			else
 			{
 				CFBCore.LogError($"Untracked HarvestPOI {harvestPOI.name}");
-				GameObject.DestroyImmediate(networkPOI.gameObject);
 				return null;
 			}
 		}

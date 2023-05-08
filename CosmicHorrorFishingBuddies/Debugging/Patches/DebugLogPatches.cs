@@ -20,11 +20,11 @@ namespace CosmicHorrorFishingBuddies.Debugging.Patches
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(Debug.LogWarning), new Type[] { typeof(object) })]
 		public static void Debug_LogWarning(object message) => CFBCore.LogWarning($"[UnityEngine.Debug.Log] {message}");
+		*/
 
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(Debug.LogError), new Type[] { typeof(object) })]
 		public static void Debug_LogError(object message) => CFBCore.LogError($"[UnityEngine.Debug.Log] {message}");
-		*/
 
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(Debug.LogException), new Type[] { typeof(Exception) })]
