@@ -1,5 +1,6 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Extensions;
+using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync;
 using Mirror;
 using System;
 using System.Linq;
@@ -22,10 +23,10 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		[SyncVar(hook = nameof(UpgradeTierHook))]
 		private int _upgradeTier;
 
-		private SyncList<int> _tier1Children = new();
-		private SyncList<int> _tier2Children = new();
-		private SyncList<int> _tier3Children = new();
-		private SyncList<int> _tier4Children = new();
+		private readonly SyncList<int> _tier1Children = new();
+		private readonly SyncList<int> _tier2Children = new();
+		private readonly SyncList<int> _tier3Children = new();
+		private readonly SyncList<int> _tier4Children = new();
 
 		[Command]
 		private void SetActiveChildren(int[] tier1, int[] tier2, int[] tier3, int[] tier4)

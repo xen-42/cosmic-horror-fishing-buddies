@@ -12,7 +12,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 		[HarmonyPatch(typeof(HarvestPOI), nameof(HarvestPOI.OnStockUpdated))]
 		public static void HarvestPOI_OnStockUpdated(HarvestPOI __instance)
 		{
-			if (__instance.IsCrabPotPOI) return;
+			if (__instance.IsCrabPotPOI || __instance.IsBaitPOI) return;
 
 			if (!disabled)
 			{
@@ -25,7 +25,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 		[HarmonyPatch(typeof(HarvestPOI), nameof(HarvestPOI.Update))]
 		public static void HarvestPOI_Update(HarvestPOI __instance)
 		{
-			if (__instance.IsCrabPotPOI) return;
+			if (__instance.IsCrabPotPOI || __instance.IsBaitPOI) return;
 
 			if (!disabled && NetworkClient.activeHost)
 			{

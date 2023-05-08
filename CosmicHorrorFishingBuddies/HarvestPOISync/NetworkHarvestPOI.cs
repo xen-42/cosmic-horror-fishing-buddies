@@ -67,7 +67,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			}
 		}
 
-		private void OnSetIsCurrentlySpecialHook(bool _, bool current)
+		private void OnSetIsCurrentlySpecialHook(bool prev, bool current)
 		{
 			try
 			{
@@ -86,7 +86,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			}
 		}
 
-		private void OnStockCountHook(float _, float count)
+		private void OnStockCountHook(float prev, float current)
 		{
 			if (!_isReady) return;
 
@@ -97,7 +97,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 				UpdateStockFromSyncVar();
 			}
 
-			//CFBCore.LogInfo($"Player {_lastInteractionID} has set {Target.name} stock count for Player {localID} to {count}");
+			//CFBCore.LogInfo($"Player {_lastInteractionID} has set {Target.name} stock count for Player {localID} to {current}");
 		}
 
 		private void UpdateSpecialFromSyncVar()
