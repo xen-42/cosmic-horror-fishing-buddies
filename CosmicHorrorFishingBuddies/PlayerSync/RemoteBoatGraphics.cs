@@ -10,6 +10,9 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 {
 	internal class RemoteBoatGraphics : NetworkBehaviour
 	{
+		[SyncVar(hook = nameof(FillPercentHook))]
+		private float _fillPercent;
+
 		[SyncVar(hook = nameof(DamageHook))]
 		private int _damage;
 
@@ -53,10 +56,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			_damage = damage;
 			_criticalDamage = critical;
 		}
+		[Command]
+		public void SetFillPercent(float fillPercent) => _fillPercent = fillPercent;
 
 		public void UpgradeTierHook(int prev, int current) => RefreshUpgradeTier();
 		public void DamageHook(int prev, int current) => OnRemotePlayerDamageChanged();
 		public void CriticalDamageHook(bool prev, bool current) => OnRemotePlayerDamageChanged();
+		public void FillPercentHook(float prev, float current) => OnRemoteFillPercentChanged();
 
 		public UnityEvent RefreshBoatModel = new();
 
@@ -76,10 +82,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				{
 					GameEvents.Instance.OnUpgradesChanged += OnLocalUpgradesChanged;
 					GameEvents.Instance.OnPlayerDamageChanged += OnLocalPlayerDamageChanged;
+					GameManager.Instance.SaveData.Inventory.OnContentsUpdated += OnLocalInventoryContentsUpdated;
+
 					// Initial state
 					CheckLocalActiveChildren();
 					SetUpgradeTier(GetLocalUpgradeTier());
 					OnLocalPlayerDamageChanged();
+					OnLocalInventoryContentsUpdated();
 				}
 				else
 				{
@@ -87,8 +96,9 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					foreach (var boatSubModelToggler in boatSubModelTogglers)
 					{
 						GameEvents.Instance.OnPlayerDamageChanged -= boatSubModelToggler.OnPlayerDamageChanged;
+						GameEvents.Instance.OnPlayerStatsChanged -= boatSubModelToggler.OnPlayerStatsChanged;
+						GameManager.Instance.SaveData.Inventory.OnContentsUpdated -= boatSubModelToggler.RefreshFishContainers;
 					}
-					OnRemotePlayerDamageChanged();
 				}
 			}
 
@@ -125,10 +135,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			{
 				SetUpgradeTier(upgradeData.tier);
 			}
-			else
-			{
-				CheckLocalActiveChildren();
-			}
+			CheckLocalActiveChildren();
 		}
 
 		public void RefreshUpgradeTier()
@@ -159,6 +166,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 					RefreshActiveChildren();
 					OnRemotePlayerDamageChanged();
+					OnRemoteFillPercentChanged();
 				}
 				catch (Exception e)
 				{
@@ -173,11 +181,26 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			CurrentBoatSubModelToggler.meshFilter.mesh = CurrentBoatModelProxy.damageStateMeshes[_damage];
 		}
 
+		public void OnRemoteFillPercentChanged()
+		{
+			for(int i = 0; i < CurrentBoatSubModelToggler.fishContainers.Length; i++)
+			{
+				var fishContainer = CurrentBoatSubModelToggler.fishContainers[i];
+				fishContainer.gameObject.SetActive(i < Mathf.CeilToInt(_fillPercent * CurrentBoatSubModelToggler.fishContainers.Length));
+			}
+		}
+
 		public void OnLocalPlayerDamageChanged()
 		{
 			var toggler = GameManager.Instance.Player.BoatModelProxy.GetComponent<BoatSubModelToggler>();
 			_damage = GameManager.Instance.Player.BoatModelProxy.DamageStateMeshes.IndexOf(toggler.meshFilter.mesh);
 			_criticalDamage = toggler.hullCriticalEffects.activeInHierarchy;
+		}
+
+		public void OnLocalInventoryContentsUpdated()
+		{
+			float num = GameManager.Instance.SaveData.Inventory.GetFillProportional(ItemSubtype.FISH) + GameManager.Instance.SaveData.Inventory.GetFillProportional(ItemSubtype.TRINKET);
+			SetFillPercent(num);
 		}
 
 		public void RefreshActiveChildren()
