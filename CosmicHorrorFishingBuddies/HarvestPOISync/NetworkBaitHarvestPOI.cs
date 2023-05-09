@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.HarvestPOISync
 {
-	internal class NetworkBaitHarvestPOI : NetworkHarvestPOI
+	internal class NetworkBaitHarvestPOI : NetworkStockableHarvestPOI
 	{
 		[SyncVar]
 		private ZoneEnum _zone;

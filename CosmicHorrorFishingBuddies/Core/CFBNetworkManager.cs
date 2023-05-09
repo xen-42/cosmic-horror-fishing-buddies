@@ -30,6 +30,7 @@ namespace CosmicHorrorFishingBuddies.Core
         public static GameObject GlobalSyncPrefab { get; private set; }
         public static GameObject IndexedHarvestPOIPrefab { get; private set; }
 		public static GameObject BaitHarvestPOIPrefab { get; private set; }
+		public static GameObject PlacedHarvestPOIPrefab { get; private set; }
 
         public override void Awake()
         {
@@ -125,6 +126,11 @@ namespace CosmicHorrorFishingBuddies.Core
 				BaitHarvestPOIPrefab = MakeNewNetworkObject(4, nameof(BaitHarvestPOIPrefab));
 				BaitHarvestPOIPrefab.AddComponent<NetworkBaitHarvestPOI>();
 				spawnPrefabs.Add(BaitHarvestPOIPrefab);
+
+				// 5 - PlacedHarvestPOIPrefab
+				PlacedHarvestPOIPrefab = MakeNewNetworkObject(5, nameof(PlacedHarvestPOIPrefab));
+				PlacedHarvestPOIPrefab.AddComponent<NetworkPlacedHarvestPOI>();
+				spawnPrefabs.Add(PlacedHarvestPOIPrefab);
 
 				gameObject.SetActive(true);
 

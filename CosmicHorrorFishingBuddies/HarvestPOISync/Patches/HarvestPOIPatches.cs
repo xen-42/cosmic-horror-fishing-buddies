@@ -20,7 +20,11 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 			{
 				try
 				{
-					NetworkHarvestPOIManager.Instance?.GetNetworkObject(__instance)?.SetStockCount(__instance.harvestable.GetStockCount(false));
+					var networkObj = NetworkHarvestPOIManager.Instance?.GetNetworkObject(__instance);
+					if (networkObj is NetworkStockableHarvestPOI stockableObj)
+					{
+						stockableObj.SetStockCount(__instance.harvestable.GetStockCount(false));
+					}
 				}
 				catch (Exception e)
 				{
@@ -39,9 +43,9 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 			{
 				var networkObj = NetworkHarvestPOIManager.Instance?.GetNetworkObject(__instance);
 
-				if (networkObj != null && networkObj.IsCurrentlySpecial != __instance.IsCurrentlySpecial)
+				if (networkObj is NetworkStockableHarvestPOI stockableObj && stockableObj.IsCurrentlySpecial != __instance.IsCurrentlySpecial)
 				{
-					networkObj.SetIsCurrentlySpecial(__instance.isCurrentlySpecial);
+					stockableObj.SetIsCurrentlySpecial(__instance.isCurrentlySpecial);
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 ﻿using CosmicHorrorFishingBuddies.Extensions;
 using CosmicHorrorFishingBuddies.HarvestPOISync;
+using CosmicHorrorFishingBuddies.HarvestPOISync.Data;
 using CosmicHorrorFishingBuddies.PlayerSync;
 using Mirror;
 using System;
@@ -18,6 +19,7 @@ namespace CosmicHorrorFishingBuddies.Core
 			Instance = this;
 		}
 
+		#region Bait
 		public void TrySpawnNetworkBait(BaitHarvestPOI bait)
 		{
 			try
@@ -49,21 +51,55 @@ namespace CosmicHorrorFishingBuddies.Core
 			networkBaitHarvestPOI.SetBaitData(zone, position, yRot, numFish, sender.netId);
 
 			// Target the original creator so it can register its bait
-			SpawnNetworkBaitCallback(sender.connectionToClient, networkBaitHarvestPOI);
+			SpawnNetworkPOICallback(sender.connectionToClient, networkBaitHarvestPOI);
+		}
+		#endregion
+
+		#region Crab
+		public void TrySpawnNetworkCrabPot(PlacedHarvestPOI crabPot)
+		{
+			try
+			{
+				if (NetworkHarvestPOIManager.Instance.IsHarvestPOITracked(crabPot)) return;
+
+				CFBCore.LogInfo($"Spawning network crab pot for {PlayerManager.LocalNetID}");
+
+				_previouslyCreatedLocalHarvestPOI = crabPot;
+
+				CmdSpawnNetworkCrabPot(new SerializedCrabPotPOIDataWrapper(crabPot.Harvestable as SerializedCrabPotPOIData), NetworkPlayer.LocalPlayer.netIdentity);
+			}
+			catch (Exception e)
+			{
+				CFBCore.LogError($"Couldn't spawn network bait {e}");
+			}
 		}
 
-		[TargetRpc]
-		private void SpawnNetworkBaitCallback(NetworkConnectionToClient _, NetworkBaitHarvestPOI networkBait)
+		[Command(requiresAuthority = false)]
+		private void CmdSpawnNetworkCrabPot(SerializedCrabPotPOIDataWrapper crabPotData, NetworkIdentity sender)
 		{
-			if (networkBait.Target != null)
-			{
-				CFBCore.LogInfo("It already spawned extra bait");
-				GameObject.DestroyImmediate(networkBait.Target);
-			}
+			var networkPlacedHarvestPOI = CFBNetworkManager.PlacedHarvestPOIPrefab.SpawnWithServerAuthority().GetComponent<NetworkPlacedHarvestPOI>();
 
-			networkBait.Target = _previouslyCreatedLocalHarvestPOI;
+			networkPlacedHarvestPOI.SetCrabPotData(crabPotData, sender.netId);
+
+			// Target the original creator so it can register its bait
+			SpawnNetworkPOICallback(sender.connectionToClient, networkPlacedHarvestPOI);
+		}
+		#endregion
+
+		[TargetRpc]
+		private void SpawnNetworkPOICallback(NetworkConnectionToClient _, NetworkHarvestPOI networkPOI)
+		{
+			networkPOI.Target = _previouslyCreatedLocalHarvestPOI;
 			_previouslyCreatedLocalHarvestPOI = null;
-			NetworkHarvestPOIManager.Instance.RegisterNetworkBaitHarvestPOI(networkBait);
+
+			if (networkPOI is NetworkBaitHarvestPOI networkBait)
+			{
+				NetworkHarvestPOIManager.Instance.RegisterNetworkBaitHarvestPOI(networkBait);
+			}
+			else if (networkPOI is NetworkPlacedHarvestPOI networkCrabPot)
+			{
+				NetworkHarvestPOIManager.Instance.RegisterPlacedHarvestPOI(networkCrabPot);
+			}
 		}
 	}
 }

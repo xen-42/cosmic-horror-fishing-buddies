@@ -17,6 +17,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 		private Dictionary<HarvestPOI, NetworkHarvestPOI> _lookUp = new();
 
 		private Dictionary<BaitHarvestPOI, NetworkBaitHarvestPOI> _baitLookUp = new();
+		private Dictionary<PlacedHarvestPOI, NetworkPlacedHarvestPOI> _crabLookUp = new();
 
 		public void Start()
 		{
@@ -56,6 +57,11 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			_baitLookUp[networkPOI.Target as BaitHarvestPOI] = networkPOI;
 		}
 
+		public void RegisterPlacedHarvestPOI(NetworkPlacedHarvestPOI networkPOI)
+		{
+			_crabLookUp[networkPOI.Target as PlacedHarvestPOI] = networkPOI;
+		}
+
 		public void TryDestroyNetworkBait(BaitHarvestPOI bait)
 		{
 			if (_baitLookUp.TryGetValue(bait, out var networkBait))
@@ -70,7 +76,9 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 
 		public bool IsHarvestPOITracked(HarvestPOI harvestPOI)
 		{
-			return (harvestPOI is BaitHarvestPOI baitHarvestPOI && _baitLookUp.ContainsKey(baitHarvestPOI)) || _lookUp.ContainsKey(harvestPOI);
+			return (harvestPOI is BaitHarvestPOI baitHarvestPOI && _baitLookUp.ContainsKey(baitHarvestPOI)) 
+				|| (harvestPOI is PlacedHarvestPOI placedHarvestPOI && _crabLookUp.ContainsKey(placedHarvestPOI))
+				|| _lookUp.ContainsKey(harvestPOI);
 		}
 
 		public NetworkHarvestPOI GetNetworkObject(HarvestPOI harvestPOI)
@@ -78,6 +86,10 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			if (harvestPOI is BaitHarvestPOI baitHarvestPOI && _baitLookUp.TryGetValue(baitHarvestPOI, out var networkBait))
 			{
 				return networkBait;
+			}
+			else if (harvestPOI is PlacedHarvestPOI placedHarvestPOI && _crabLookUp.TryGetValue(placedHarvestPOI, out var networkCrabPot))
+			{
+				return networkCrabPot;
 			}
 			else if (_lookUp.TryGetValue(harvestPOI, out var networkPOI))
 			{
