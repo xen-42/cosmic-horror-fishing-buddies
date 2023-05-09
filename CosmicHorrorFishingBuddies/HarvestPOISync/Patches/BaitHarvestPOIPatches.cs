@@ -17,7 +17,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 
 		private static void Start(BaitHarvestPOI instance)
 		{
-			NetworkHarvestPOIManager.Instance?.TrySpawnNetworkBait(instance);
+			CFBSpawnManager.Instance?.TrySpawnNetworkBait(instance);
 		}
 
 		/*

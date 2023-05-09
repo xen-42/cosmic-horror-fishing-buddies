@@ -113,7 +113,7 @@ namespace CosmicHorrorFishingBuddies.Core
 				// 2 - GlobalSyncManager
 				GlobalSyncPrefab = MakeNewNetworkObject(2, nameof(GlobalSyncPrefab));
                 GlobalSyncPrefab.AddComponent<TimeSyncManager>();
-                GlobalSyncPrefab.AddComponent<NetworkHarvestPOIManager>();
+                GlobalSyncPrefab.AddComponent<CFBSpawnManager>();
                 spawnPrefabs.Add(GlobalSyncPrefab);
 
                 // 3 - IndexedHarvestPOI
@@ -198,6 +198,7 @@ namespace CosmicHorrorFishingBuddies.Core
         {
             if (_isConnected)
             {
+				GameManager.Instance.Player.gameObject.AddComponent<NetworkHarvestPOIManager>();
                 if (_isHost)
                 {
                     StartHost();
