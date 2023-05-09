@@ -26,6 +26,6 @@
     <Reference Include="Winch">
       <HintPath>$(GameInstall)\Winch.dll</HintPath>
     </Reference>
-		<Reference Include="C:\GitHub\DredgeGameLibs\package\lib\*.dll" />
+      <PackageReference Include="DredgeGameLibs" Version="1.0.4.1" />
   </ItemGroup>
 </Project>
