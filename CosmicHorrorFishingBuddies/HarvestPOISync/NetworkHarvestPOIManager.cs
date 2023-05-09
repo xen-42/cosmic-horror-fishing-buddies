@@ -26,7 +26,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 				Instance = this;
 
 				SortedHarvestPOIs = GameManager.Instance.HarvestPOIManager.allHarvestPOIs;
-				SortedHarvestPOIs.OrderBy(x => x.name);
+				SortedHarvestPOIs.Sort((a, b) => a.name.CompareTo(b.name));
 
 				if (NetworkClient.activeHost)
 				{
