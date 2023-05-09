@@ -9,8 +9,8 @@ Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-ou
 - Engine sounds & ship wake
 - Time
   - Fast forwarding - all players must be fast-forwarding too or at least in port for time to speed up
-- Fishing 
-  - Regular spots (not bait/crab pots)
+- Fishing spots
+  - Stock is synced but "special" status isn't currently
 - Abilities
   - Light
   - Foghorn
@@ -19,20 +19,20 @@ Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-ou
   - Atrophy
   - Haste (missing vfx)
   - Trawl net
+  - Bait
+  - Crab pots (inventory not yet synced)
 - Ship appearance
   - Missing fish containers and rudder
+  - Rigidbody boat assets (net, tires) don't animate yet
 
 #### What is not synced (roadmap):
-- Abilities
-  - Crab pots
-  - Bait
+- Location/quest specific details
 - Events
 - Enemies
 - Waves
 - Collisions?
 
 #### Other todo:
-- Implement Epic transport
 - Implement Steam transport (maybe, if Epic has drawbacks)
 
 ## Dependencies
