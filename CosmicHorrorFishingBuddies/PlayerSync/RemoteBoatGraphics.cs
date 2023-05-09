@@ -187,10 +187,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 		public void OnRemoteFillPercentChanged()
 		{
-			for(int i = 0; i < CurrentBoatSubModelToggler.fishContainers.Length; i++)
+			if (CurrentBoatSubModelToggler != null)
 			{
-				var fishContainer = CurrentBoatSubModelToggler.fishContainers[i];
-				fishContainer.gameObject.SetActive(i < Mathf.CeilToInt(_fillPercent * CurrentBoatSubModelToggler.fishContainers.Length));
+				for (int i = 0; i < CurrentBoatSubModelToggler.fishContainers.Length; i++)
+				{
+					var fishContainer = CurrentBoatSubModelToggler.fishContainers[i];
+					fishContainer.gameObject.SetActive(i < Mathf.CeilToInt(_fillPercent * CurrentBoatSubModelToggler.fishContainers.Length));
+				}
 			}
 		}
 
