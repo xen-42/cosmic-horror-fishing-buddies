@@ -151,6 +151,8 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					{
 						boatModel.gameObject.SetActive(false);
 						boatModel.enabled = false;
+
+						boatModel.GetComponentInChildren<SteeringAnimator>(true).enabled = false;
 					}
 					CurrentBoatModelProxy = boatModelProxies[_upgradeTier];
 					CurrentBoatModelProxy.gameObject.SetActive(true);

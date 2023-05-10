@@ -62,6 +62,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 		public RemotePlayerEngineAudio remotePlayerEngineAudio;
 		public RemoteBoatGraphics remotePlayerBoatGraphics;
+		public RemoteSteeringAnimator remoteSteeringAnimator;
 
 		// Abilities
 		public RemoteLightAbility remoteLightAbility;
