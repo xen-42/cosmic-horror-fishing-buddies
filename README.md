@@ -22,7 +22,6 @@ Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-ou
   - Bait
   - Crab pots (inventory not yet synced)
 - Ship appearance
-  - Missing fish containers and rudder
   - Rigidbody boat assets (net, tires) don't animate yet
 
 #### What is not synced (roadmap):
