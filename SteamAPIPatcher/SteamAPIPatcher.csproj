@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<AssemblyName>SteamAPIPatcher</AssemblyName>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+		<PlatformTarget>x86</PlatformTarget>
 	</PropertyGroup>
 
 	<ItemGroup>
