@@ -1,6 +1,8 @@
 # Comic Horror Fishing Buddies
 A multiplayer mod for DREDGE
 
+![fishing buddies](https://github.com/xen-42/cosmic-horror-fishing-buddies/assets/22628069/d1cd9095-af1c-4296-84b4-d55f0e7a3980)
+
 Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-out to \_nebula and everyone who's contributed to [Quantum Space Buddies](https://github.com/misternebula/quantum-space-buddies), for the inspiration and code that I stole.
 
 ## Features (spoilers)
@@ -23,6 +25,8 @@ Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-ou
   - Crab pots (inventory not yet synced)
 - Ship appearance
   - Rigidbody boat assets (net, tires) don't animate yet
+
+![fishing buddies 2](https://github.com/xen-42/cosmic-horror-fishing-buddies/assets/22628069/fe5177b1-babc-45a6-8070-2327776e938b)
 
 #### What is not synced (roadmap):
 - Location/quest specific details
