@@ -182,7 +182,7 @@ namespace CosmicHorrorFishingBuddies.Core
 
         public void SetConnection(bool isHost, string address, TransportType transportType)
         {
-            networkAddress = address;
+            networkAddress = address.Trim();
             _isHost = isHost;
             _isConnected = true;
 
@@ -212,7 +212,9 @@ namespace CosmicHorrorFishingBuddies.Core
                 }
                 else
                 {
-                    StartClient();
+					// hack to get disconnect call if start client fails immediately (happens on kcp transport when failing to resolve host name)
+					typeof(NetworkClient).GetProperty(nameof(NetworkClient.connection))!.SetValue(null, new NetworkConnectionToServer());
+					StartClient();
                 }
             }
         }
@@ -237,10 +239,17 @@ namespace CosmicHorrorFishingBuddies.Core
 			GlobalSyncPrefab.SpawnWithServerAuthority();
         }
 
-        public override void OnClientError(TransportError error, string reason)
+		public override void OnStartClient()
+		{
+			base.OnStartClient();
+
+			CFBCore.LogInfo($"Trying to connect to [{networkAddress}] on [{transport}]");
+		}
+
+		public override void OnClientError(TransportError error, string reason)
         {
 			base.OnClientError(error, reason);
-			CFBCore.LogError($"TRANSPORT ERROR: {error} - {reason}");
+			CFBCore.LogError($"TRANSPORT ERROR: [{error}] - [{reason}] on [{transport}] [{networkAddress}]");
 		}
 
         public override void OnStopClient()

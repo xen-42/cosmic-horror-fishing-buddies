@@ -1,6 +1,7 @@
 {
-  "Version": "0.0.1",
-  "ModAssembly": "CosmicHorrorFishingBuddies.dll",
-  "MinWinchVersion": "alpha-1.3",
-  "Entrypoint": "CosmicHorrorFishingBuddies.Loader/Initialize"
+	"Author": "xen-42",
+	"Version": "0.0.1",
+	"ModAssembly": "CosmicHorrorFishingBuddies.dll",
+	"MinWinchVersion": "alpha-1.3",
+	"Entrypoint": "CosmicHorrorFishingBuddies.Loader/Initialize"
 }
