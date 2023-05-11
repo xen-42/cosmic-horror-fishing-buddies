@@ -40,6 +40,7 @@ namespace CosmicHorrorFishingBuddies.UI
 		{
 			try
 			{
+				CFBCore.LogInfo($"Switched from scene [{prev.name}] to [{current.name}]");
 				if (current.name == Scenes.Title)
 				{
 					_saveSlotWindow = UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.LOAD).GetComponent<LoadGameButton>().saveSlotWindow;
@@ -92,6 +93,8 @@ namespace CosmicHorrorFishingBuddies.UI
 
 					GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.CONTINUE));
 					GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.LOAD));
+
+					CFBCore.LogInfo("Altered main menu!");
 				}
 			}
 			catch (Exception e)

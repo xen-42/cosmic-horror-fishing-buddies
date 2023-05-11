@@ -199,7 +199,9 @@ namespace CosmicHorrorFishingBuddies.Core
                 default:
                     throw new Exception($"Unsupported transport {transportType}");
             }
-        }
+			// Have to set this when changing transport after mirror initializes
+			Transport.active = transport;
+		}
 
         private void OnPlayerLoaded()
         {
