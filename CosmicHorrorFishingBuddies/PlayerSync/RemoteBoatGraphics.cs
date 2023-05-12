@@ -1,6 +1,5 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Extensions;
-using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync;
 using Mirror;
 using System;
 using System.Linq;
@@ -11,6 +10,28 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 {
 	internal class RemoteBoatGraphics : NetworkBehaviour
 	{
+		[SyncVar]
+		private float _lightLumens;
+		public float LightLumens { get => _lightLumens; }
+
+		[SyncVar]
+		private float _lightRange;
+		public float LightRange { get => _lightRange; }	
+
+		[Command]
+		public void SetLightUpgrades(float lightLumens, float lightRange)
+		{
+			_lightLumens = lightLumens;
+			_lightRange = lightRange;
+			RpcLightUpgrades();
+		}
+
+		[ClientRpc(includeOwner = false)]
+		private void RpcLightUpgrades()
+		{
+			GameEvents.Instance.TriggerPlayerStatsChanged();
+		}
+
 		[SyncVar(hook = nameof(FillPercentHook))]
 		private float _fillPercent;
 
@@ -84,15 +105,22 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					GameEvents.Instance.OnUpgradesChanged += OnLocalUpgradesChanged;
 					GameEvents.Instance.OnPlayerDamageChanged += OnLocalPlayerDamageChanged;
 					GameManager.Instance.SaveData.Inventory.OnContentsUpdated += OnLocalInventoryContentsUpdated;
+					GameEvents.Instance.OnPlayerStatsChanged += OnPlayerStatsChanged;
 
 					// Initial state
 					CheckLocalActiveChildren();
 					SetUpgradeTier(GetLocalUpgradeTier());
 					OnLocalPlayerDamageChanged();
 					OnLocalInventoryContentsUpdated();
+					OnPlayerStatsChanged();
 				}
 				else
 				{
+					foreach (var variablePlayerLight in GetComponentsInChildren<VariablePlayerLight>(true))
+					{
+						RemoteVariablePlayerLight.Replace(variablePlayerLight, this);
+					}
+
 					RefreshUpgradeTier();
 					foreach (var boatSubModelToggler in boatSubModelTogglers)
 					{
@@ -127,6 +155,8 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			{
 				GameEvents.Instance.OnUpgradesChanged -= OnLocalUpgradesChanged;
 				GameEvents.Instance.OnPlayerDamageChanged -= OnLocalPlayerDamageChanged;
+				GameManager.Instance.SaveData.Inventory.OnContentsUpdated -= OnLocalInventoryContentsUpdated;
+				GameEvents.Instance.OnPlayerStatsChanged -= OnPlayerStatsChanged;
 			}
 		}
 
@@ -210,6 +240,11 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		{
 			float num = GameManager.Instance.SaveData.Inventory.GetFillProportional(ItemSubtype.FISH) + GameManager.Instance.SaveData.Inventory.GetFillProportional(ItemSubtype.TRINKET);
 			SetFillPercent(num);
+		}
+
+		public void OnPlayerStatsChanged()
+		{
+			SetLightUpgrades(GameManager.Instance.PlayerStats.LightLumens, GameManager.Instance.PlayerStats.LightRange);
 		}
 
 		public void RefreshActiveChildren()
