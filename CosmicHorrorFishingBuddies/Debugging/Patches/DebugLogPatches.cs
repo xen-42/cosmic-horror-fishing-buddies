@@ -12,7 +12,6 @@ namespace CosmicHorrorFishingBuddies.Debugging.Patches
     [HarmonyPatch(typeof(Debug))]
     internal static class DebugLogPatches
     {
-		/*
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Debug.Log), new Type[] { typeof(object) })]
         public static void Debug_Log(object message) => CFBCore.LogInfo($"[UnityEngine.Debug.Log] {message}");
@@ -20,7 +19,6 @@ namespace CosmicHorrorFishingBuddies.Debugging.Patches
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(Debug.LogWarning), new Type[] { typeof(object) })]
 		public static void Debug_LogWarning(object message) => CFBCore.LogWarning($"[UnityEngine.Debug.Log] {message}");
-		*/
 
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(Debug.LogError), new Type[] { typeof(object) })]

@@ -81,7 +81,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 			GameManager.Instance.Player.gameObject.AddComponent<DebugCommands>();
 
-			return GameManager.Instance.Player.transform;
+			return transform;
 		}
 
 		protected override Transform InitRemoteTransform()
@@ -97,7 +97,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			remotePlayer.transform.localRotation = Quaternion.identity;
 
 			var networkPlayer = GetComponent<NetworkPlayer>();
-			
+
 			networkPlayer.remotePlayerBoatGraphics.boatSubModelTogglers = remotePlayer.GetComponentsInChildren<BoatSubModelToggler>();
 			networkPlayer.remotePlayerBoatGraphics.boatModelProxies = remotePlayer.GetComponentsInChildren<BoatModelProxy>();
 			networkPlayer.remotePlayerBoatGraphics.wake = remotePlayer.Find("BoatTrailParticles").gameObject;
@@ -116,7 +116,16 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			networkPlayer.remoteAtrophyAbility.loopAudio.minDistance = 5;
 			networkPlayer.remoteAtrophyAbility.loopAudio.clip = atrophy.loopAudioSource.clip;
 
-			return remotePlayer;
+			return transform;
+		}
+
+		private void Update()
+		{
+			if (isOwned)
+			{
+				transform.position = GameManager.Instance.Player.transform.position;
+				transform.rotation = GameManager.Instance.Player.transform.rotation;
+			}
 		}
 	}
 }

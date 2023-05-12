@@ -97,7 +97,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			}
 			else
 			{
-				CFBCore.LogError($"Untracked HarvestPOI {harvestPOI.name} on {NetworkPlayer.LocalPlayer.netId}");
+				CFBCore.LogError($"Untracked HarvestPOI {harvestPOI?.name} on {NetworkPlayer.LocalPlayer?.netId}");
 				return null;
 			}
 		}

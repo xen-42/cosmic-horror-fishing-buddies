@@ -11,23 +11,24 @@ namespace CosmicHorrorFishingBuddies.BaseSync
 
 		private Transform _syncedTransform;
 
-		private void Start()
+		private NetworkTransform _networkTransform;
+
+		public void Awake()
+		{
+			_networkTransform = gameObject.GetComponent<NetworkTransform>();
+			_networkTransform.target = transform;
+		}
+
+		public void Start()
 		{
 			CFBCore.LogInfo($"Start TransformSync: {netId}");
 
 			_syncedTransform = isOwned ? InitLocalTransform() : InitRemoteTransform();
 
-			var networkTransform = gameObject.GetComponent<NetworkTransform>();
-			networkTransform.target = transform;
-		}
+			_networkTransform.transform.position = Vector3.zero;
+			_networkTransform.transform.rotation = Quaternion.identity;
 
-		private void Update()
-		{
-			if (isOwned)
-			{
-				transform.position = GameManager.Instance.Player.transform.position;
-				transform.rotation = GameManager.Instance.Player.transform.rotation;
-			}
+			_networkTransform.target = _syncedTransform;
 		}
 	}
 }
