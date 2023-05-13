@@ -1,5 +1,5 @@
 # Comic Horror Fishing Buddies
-A WIP multiplayer mod for DREDGE. Currently early alpha and does not work as intended.
+A WIP multiplayer mod for DREDGE. Currently early alpha and might not work as intended. Requires the [Winch modloader](https://github.com/Hacktix/Winch).
 
 ![fishing buddies](https://github.com/xen-42/cosmic-horror-fishing-buddies/assets/22628069/d1cd9095-af1c-4296-84b4-d55f0e7a3980)
 
