@@ -2,7 +2,7 @@
 	"Name": "Cosmic Horror Fishing Buddies",
 	"ModGUID": "xen.cosmichorrorfishingbuddies",
 	"Author": "xen-42",
-	"Version": "0.0.3",
+	"Version": "0.0.4",
 	"ModAssembly": "CosmicHorrorFishingBuddies.dll",
 	"MinWinchVersion": "alpha-1.3",
 	"Entrypoint": "CosmicHorrorFishingBuddies.Loader/Initialize"
