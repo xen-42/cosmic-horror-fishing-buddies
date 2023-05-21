@@ -1,5 +1,5 @@
 {
-	"DisplayName": "Steam API Patcher",
+	"Name": "Steam API Patcher",
 	"Author": "xen-42",
 	"ModGUID": "xen.steamapipatcher",
 	"Version": "1.0",
