@@ -153,11 +153,11 @@ namespace CosmicHorrorFishingBuddies.Core
         {
             if (current.name != Scenes.Game)
             {
-                if (NetworkServer.activeHost)
+				if (NetworkServer.activeHost)
                 {
                     StopHost();
                 }
-                if (NetworkClient.isConnected)
+                else if (NetworkClient.isConnected)
                 {
                     StopClient();
                 }
@@ -211,15 +211,21 @@ namespace CosmicHorrorFishingBuddies.Core
                 if (_isHost)
                 {
                     StartHost();
-                }
+					NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "Now hosting", DredgeColorTypeEnum.POSITIVE);
+				}
                 else
                 {
 					// hack to get disconnect call if start client fails immediately (happens on kcp transport when failing to resolve host name)
 					typeof(NetworkClient).GetProperty(nameof(NetworkClient.connection))!.SetValue(null, new NetworkConnectionToServer());
 					StartClient();
-                }
+					NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, $"You've joined the server", DredgeColorTypeEnum.POSITIVE);
+				}
             }
-        }
+			else
+			{
+				NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "Something went wrong when connecting to the server", DredgeColorTypeEnum.NEGATIVE);
+			}
+		}
 
         private GameObject MakeNewNetworkObject(uint assetId, string name)
         {
