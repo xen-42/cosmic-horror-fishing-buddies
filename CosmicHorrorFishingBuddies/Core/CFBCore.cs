@@ -1,5 +1,6 @@
 ﻿using CosmicHorrorFishingBuddies.AudioSync;
 using CosmicHorrorFishingBuddies.UI;
+using DG.Tweening;
 using HarmonyLib;
 using Sirenix.Utilities;
 using System;
@@ -19,7 +20,10 @@ namespace CosmicHorrorFishingBuddies.Core
 
         public static GameObject terminal;
 
+		public const string INTRO_SKIP_ARG = "skipintro";
+
         public UnityEvent PlayerLoaded = new();
+		public UnityEvent<string> SwitchSceneRequested = new();
 
         public void Awake()
         {
@@ -122,5 +126,14 @@ namespace CosmicHorrorFishingBuddies.Core
             }
             catch { }
         }
+
+		public static void RestartGame()
+		{
+			LogInfo("Restarting the game");
+			var args = Environment.GetCommandLineArgs().ToList();
+			if (!args.Contains(INTRO_SKIP_ARG)) args.Add(INTRO_SKIP_ARG);
+			System.Diagnostics.Process.Start(Application.dataPath.Replace("_Data", ".exe"), string.Join(" ", args));
+			Application.Quit();
+		}
     }
 }

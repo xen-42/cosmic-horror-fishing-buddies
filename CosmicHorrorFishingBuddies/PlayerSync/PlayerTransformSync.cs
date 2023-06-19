@@ -65,7 +65,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				}
 
 				PlayerPrefab.SetActive(false);
-				GameObject.DontDestroyOnLoad(PlayerPrefab);
+				PlayerPrefab.DontDestroyOnLoad();
 			}
 			catch (Exception e)
 			{

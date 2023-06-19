@@ -6,10 +6,12 @@ using CosmicHorrorFishingBuddies.TimeSync;
 using CosmicHorrorFishingBuddies.Util;
 using DG.Tweening;
 using EpicTransport;
+using HarmonyLib;
 using kcp2k;
 using Mirror;
 using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -138,7 +140,7 @@ namespace CosmicHorrorFishingBuddies.Core
 				gameObject.SetActive(true);
 
                 CFBCore.Instance.PlayerLoaded.AddListener(OnPlayerLoaded);
-                SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+				CFBCore.Instance.SwitchSceneRequested.AddListener(OnSwitchSceneRequested);
 
                 PlayerManager.PlayerJoined.AddListener(OnPlayerJoined);
                 PlayerManager.PlayerLeft.AddListener(OnPlayerLeft);
@@ -151,22 +153,22 @@ namespace CosmicHorrorFishingBuddies.Core
             }
         }
 
-        private void SceneManager_activeSceneChanged(Scene prev, Scene current)
-        {
-            if (current.name != Scenes.Game)
-            {
+		private void OnSwitchSceneRequested(string scene)
+		{
+			if (SceneManager.GetActiveScene().name == Scenes.Game)
+			{
 				_flagSkipGoingToTitle = true;
 				if (NetworkServer.activeHost)
-                {
-                    StopHost();
-                }
-                else if (NetworkClient.isConnected)
-                {
-                    StopClient();
-                }
+				{
+					StopHost();
+				}
+				else if (NetworkClient.isConnected)
+				{
+					StopClient();
+				}
 				_flagSkipGoingToTitle = false;
 			}
-        }
+		}
 
         private void OnPlayerJoined(bool isOwned)
         {
@@ -209,22 +211,20 @@ namespace CosmicHorrorFishingBuddies.Core
 
         private void OnPlayerLoaded()
         {
-            if (_isConnected)
-            {
+			if (_isConnected)
+			{
 				GameManager.Instance.Player.gameObject.AddComponent<NetworkHarvestPOIManager>();
-                if (_isHost)
-                {
-                    StartHost();
+				if (_isHost)
+				{
+					StartHost();
 					NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "Now hosting", DredgeColorTypeEnum.POSITIVE);
 				}
-                else
-                {
-					// hack to get disconnect call if start client fails immediately (happens on kcp transport when failing to resolve host name)
-					typeof(NetworkClient).GetProperty(nameof(NetworkClient.connection))!.SetValue(null, new NetworkConnectionToServer());
+				else
+				{
 					StartClient();
 					NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, $"You've joined the server", DredgeColorTypeEnum.POSITIVE);
 				}
-            }
+			}
 			else
 			{
 				NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, "Something went wrong when connecting to the server", DredgeColorTypeEnum.NEGATIVE);
@@ -268,14 +268,17 @@ namespace CosmicHorrorFishingBuddies.Core
         {
 			CFBCore.LogInfo("Stop client");
 
-			if (!_flagSkipGoingToTitle && SceneManager.GetActiveScene().name == Scenes.Game)
-			{
-				GameManager.Instance.Loader.LoadTitleFromGame();
-			}
-
 			_isConnected = false;
 
 			base.OnStopClient();
+
+			if (!_flagSkipGoingToTitle && SceneManager.GetActiveScene().name == Scenes.Game)
+			{
+				// GameManager.Instance.Loader.LoadTitleFromGame();
+			}
+
+			// Temporary fix (that is to say, permanent)
+			CFBCore.RestartGame();
 		}
     }
 }
