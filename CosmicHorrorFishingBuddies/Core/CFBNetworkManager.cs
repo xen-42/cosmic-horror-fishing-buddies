@@ -4,6 +4,7 @@ using CosmicHorrorFishingBuddies.PlayerSync;
 using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync;
 using CosmicHorrorFishingBuddies.TimeSync;
 using CosmicHorrorFishingBuddies.Util;
+using DG.Tweening;
 using EpicTransport;
 using kcp2k;
 using Mirror;
@@ -18,6 +19,7 @@ namespace CosmicHorrorFishingBuddies.Core
     {
         public static CFBNetworkManager Instance { get; private set; }
 
+		private bool _flagSkipGoingToTitle;
         private bool _isConnected;
         private bool _isHost;
 
@@ -153,6 +155,7 @@ namespace CosmicHorrorFishingBuddies.Core
         {
             if (current.name != Scenes.Game)
             {
+				_flagSkipGoingToTitle = true;
 				if (NetworkServer.activeHost)
                 {
                     StopHost();
@@ -161,7 +164,8 @@ namespace CosmicHorrorFishingBuddies.Core
                 {
                     StopClient();
                 }
-            }
+				_flagSkipGoingToTitle = false;
+			}
         }
 
         private void OnPlayerJoined(bool isOwned)
@@ -264,7 +268,7 @@ namespace CosmicHorrorFishingBuddies.Core
         {
 			CFBCore.LogInfo("Stop client");
 
-			if (SceneManager.GetActiveScene().name == Scenes.Game)
+			if (!_flagSkipGoingToTitle && SceneManager.GetActiveScene().name == Scenes.Game)
 			{
 				GameManager.Instance.Loader.LoadTitleFromGame();
 			}
