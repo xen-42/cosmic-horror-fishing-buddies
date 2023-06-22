@@ -4,6 +4,7 @@ using DG.Tweening;
 using HarmonyLib;
 using Sirenix.Utilities;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -132,7 +133,7 @@ namespace CosmicHorrorFishingBuddies.Core
 			LogInfo("Restarting the game");
 			var args = Environment.GetCommandLineArgs().ToList();
 			if (!args.Contains(INTRO_SKIP_ARG)) args.Add(INTRO_SKIP_ARG);
-			System.Diagnostics.Process.Start(Application.dataPath.Replace("_Data", ".exe"), string.Join(" ", args));
+			Process.Start(Application.dataPath.Replace("_Data", ".exe"), string.Join(" ", args));
 			Application.Quit();
 		}
     }
