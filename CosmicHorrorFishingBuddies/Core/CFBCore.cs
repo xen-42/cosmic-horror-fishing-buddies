@@ -1,6 +1,6 @@
 ﻿using CosmicHorrorFishingBuddies.AudioSync;
+using CosmicHorrorFishingBuddies.Save;
 using CosmicHorrorFishingBuddies.UI;
-using DG.Tweening;
 using HarmonyLib;
 using Sirenix.Utilities;
 using System;
@@ -25,6 +25,8 @@ namespace CosmicHorrorFishingBuddies.Core
 
         public UnityEvent PlayerLoaded = new();
 		public UnityEvent<string> SwitchSceneRequested = new();
+
+		private bool _restarting;
 
         public void Awake()
         {
@@ -128,7 +130,27 @@ namespace CosmicHorrorFishingBuddies.Core
             catch { }
         }
 
+		public static bool CanRestart()
+		{
+			return !SaveManagerPatches.IsSaving && !SaveManagerPatches.IsLoading && !SaveManagerPatches.IsSavingSettings;
+		}
+
 		public static void RestartGame()
+		{
+			if (Instance._restarting)
+			{
+				LogError("Game is already restarting");
+				return;
+			}
+			else
+			{
+				// Make sure we aren't saving/loading any data before restarting to prevent corruption
+				Instance._restarting = true;
+				Delay.RunWhen(CanRestart, RestartInternal);
+			}
+		}
+
+		private static void RestartInternal()
 		{
 			LogInfo("Restarting the game");
 			var args = Environment.GetCommandLineArgs().ToList();
