@@ -82,7 +82,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				SetTimeMode(GameManager.Instance.Time.CurrentTimePassageMode);
 			}
 
-			PlayerManager.Players.Add(this);
+			PlayerManager.Players.Add(netIdentity.netId, this);
 
 			// Don't invoke event if the first player isn't set up yet
 			if (LocalPlayer != null)
@@ -93,7 +93,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 		public void OnDestroy()
 		{
-			PlayerManager.Players.Remove(this);
+			PlayerManager.Players.Remove(netIdentity.netId);
 			PlayerManager.PlayerLeft?.Invoke(isOwned);
 		}
 	}

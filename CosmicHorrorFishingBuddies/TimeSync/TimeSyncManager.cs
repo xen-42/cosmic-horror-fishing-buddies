@@ -28,7 +28,7 @@ namespace CosmicHorrorFishingBuddies.TimeSync
 				var allPlayersSkippingFlag = true;
 				var anyPlayerSkippingFlag = false;
 				var allPlayersDockedFlag = true;
-				foreach (var player in PlayerManager.Players)
+				foreach (var player in PlayerManager.Players.Values)
 				{
 					if (player.TimeMode == TimePassageMode.NONE) allPlayersSkippingFlag = false;
 					else anyPlayerSkippingFlag = true;

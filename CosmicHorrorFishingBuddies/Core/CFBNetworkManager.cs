@@ -4,6 +4,7 @@ using CosmicHorrorFishingBuddies.PlayerSync;
 using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync;
 using CosmicHorrorFishingBuddies.TimeSync;
 using CosmicHorrorFishingBuddies.Util;
+using CosmicHorrorFishingBuddies.WorldEventSync;
 using DG.Tweening;
 using EpicTransport;
 using HarmonyLib;
@@ -120,7 +121,8 @@ namespace CosmicHorrorFishingBuddies.Core
 				GlobalSyncPrefab = MakeNewNetworkObject(2, nameof(GlobalSyncPrefab));
                 GlobalSyncPrefab.AddComponent<TimeSyncManager>();
                 GlobalSyncPrefab.AddComponent<CFBSpawnManager>();
-                spawnPrefabs.Add(GlobalSyncPrefab);
+				GlobalSyncPrefab.AddComponent<WorldEventSyncManager>();
+				spawnPrefabs.Add(GlobalSyncPrefab);
 
                 // 3 - IndexedHarvestPOI
                 IndexedHarvestPOIPrefab = MakeNewNetworkObject(3, nameof(IndexedHarvestPOIPrefab));
