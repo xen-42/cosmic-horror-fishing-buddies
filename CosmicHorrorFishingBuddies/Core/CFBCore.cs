@@ -1,4 +1,5 @@
 ﻿using CosmicHorrorFishingBuddies.AudioSync;
+using CosmicHorrorFishingBuddies.Debugging;
 using CosmicHorrorFishingBuddies.Save;
 using CosmicHorrorFishingBuddies.UI;
 using CosmicHorrorFishingBuddies.Util;
@@ -49,7 +50,12 @@ namespace CosmicHorrorFishingBuddies.Core
                 gameObject.AddComponent<UIHelper>();
                 gameObject.AddComponent<MainMenuManager>();
 
-                Application.logMessageReceived += Application_logMessageReceived;
+#if DEBUG
+				gameObject.AddComponent<DebugKeyPadCommands>();
+				gameObject.AddComponent<TerminalCommands>();
+#endif
+
+				Application.logMessageReceived += Application_logMessageReceived;
             }
             catch (Exception e)
             {

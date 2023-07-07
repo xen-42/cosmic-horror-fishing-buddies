@@ -44,4 +44,8 @@
 		<ProjectReference Include="..\MirrorWeaver\MirrorWeaver.csproj" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\EpicOnlineTransport\EpicOnlineTransport.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="DebugCheats\" />
+	</ItemGroup>
 </Project>

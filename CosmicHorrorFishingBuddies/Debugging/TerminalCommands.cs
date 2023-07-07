@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.Debugging
 {
-	internal class DebugCommands : MonoBehaviour
+	internal class TerminalCommands : MonoBehaviour
 	{
 		public void Start()
 		{

@@ -79,8 +79,6 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 			LocalInstance = this;
 
-			GameManager.Instance.Player.gameObject.AddComponent<DebugCommands>();
-
 			return transform;
 		}
 
