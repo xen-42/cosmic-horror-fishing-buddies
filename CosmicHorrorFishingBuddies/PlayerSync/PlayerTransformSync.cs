@@ -1,6 +1,5 @@
 ﻿using CosmicHorrorFishingBuddies.BaseSync;
 using CosmicHorrorFishingBuddies.Core;
-using CosmicHorrorFishingBuddies.Debugging;
 using CosmicHorrorFishingBuddies.Extensions;
 using System;
 using System.Linq;
@@ -65,7 +64,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				}
 
 				PlayerPrefab.SetActive(false);
-				GameObject.DontDestroyOnLoad(PlayerPrefab);
+				PlayerPrefab.DontDestroyOnLoad();
 			}
 			catch (Exception e)
 			{
@@ -78,8 +77,6 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			CFBCore.LogInfo($"Creating local {nameof(PlayerTransformSync)}");
 
 			LocalInstance = this;
-
-			GameManager.Instance.Player.gameObject.AddComponent<DebugCommands>();
 
 			return transform;
 		}

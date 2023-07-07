@@ -3,7 +3,7 @@ using Mirror;
 
 namespace CosmicHorrorFishingBuddies.HarvestPOISync
 {
-	internal class IndexedNetworkHarvestPOI	: NetworkStockableHarvestPOI
+	internal class IndexedNetworkHarvestPOI : NetworkStockableHarvestPOI
 	{
 		[SyncVar(hook = nameof(OnIndexHook))]
 		private int _syncIndex = -1;

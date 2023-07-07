@@ -1,5 +1,4 @@
-﻿using AeLa.EasyFeedback.APIs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.Extensions

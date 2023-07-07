@@ -51,9 +51,9 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 				var baitPOIDataModel = new BaitPOIDataModel();
 				baitPOIDataModel.doesRestock = false;
 				var fishList = (from i in GameManager.Instance.ItemManager.GetSpatialItemDataBySubtype(ItemSubtype.FISH).OfType<FishItemData>()
-					where !i.IsAberration && i.CanAppearInBaitBalls && i.canBeCaughtByRod && i.zonesFoundIn.HasFlag(zone)
-					&& GameManager.Instance.PlayerStats.HarvestableTypes.Contains(i.harvestableType)
-					select i).Shuffle().ToList();
+								where !i.IsAberration && i.CanAppearInBaitBalls && i.canBeCaughtByRod && i.zonesFoundIn.HasFlag(zone)
+								&& GameManager.Instance.PlayerStats.HarvestableTypes.Contains(i.harvestableType)
+								select i).Shuffle().ToList();
 
 				var range = fishList.GetRange(0, Mathf.Min(fishList.Count, GameManager.Instance.GameConfigData.NumFishSpeciesInBaitBall));
 				Stack<HarvestableItemData> harvestableItemDataStack = new();

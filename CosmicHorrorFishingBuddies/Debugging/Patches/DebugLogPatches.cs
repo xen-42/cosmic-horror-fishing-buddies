@@ -1,20 +1,16 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.Debugging.Patches
 {
-    [HarmonyPatch(typeof(Debug))]
-    internal static class DebugLogPatches
-    {
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(Debug.Log), new Type[] { typeof(object) })]
-        public static void Debug_Log(object message) => CFBCore.LogInfo($"[UnityEngine.Debug.Log] {message}");
+	[HarmonyPatch(typeof(Debug))]
+	internal static class DebugLogPatches
+	{
+		[HarmonyPostfix]
+		[HarmonyPatch(nameof(Debug.Log), new Type[] { typeof(object) })]
+		public static void Debug_Log(object message) => CFBCore.LogInfo($"[UnityEngine.Debug.Log] {message}");
 
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(Debug.LogWarning), new Type[] { typeof(object) })]

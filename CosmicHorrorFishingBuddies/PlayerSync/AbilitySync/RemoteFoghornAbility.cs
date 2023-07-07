@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-    internal class RemoteFoghornAbility : RemoteSyncVarAbility
+	internal class RemoteFoghornAbility : RemoteSyncVarAbility
 	{
 		public AudioSource foghornEndSource;
 		public AudioSource foghornMidSource;

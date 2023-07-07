@@ -1,9 +1,5 @@
 ﻿using Mirror;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine.Events;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync
@@ -12,7 +8,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 	{
 		public static uint LocalNetID => NetworkClient.connection?.identity?.netId ?? uint.MaxValue;
 
-		public static readonly List<NetworkPlayer> Players = new();
+		public static readonly Dictionary<uint, NetworkPlayer> Players = new();
 		public static UnityEvent<bool> PlayerJoined = new();
 		public static UnityEvent<bool> PlayerLeft = new();
 	}

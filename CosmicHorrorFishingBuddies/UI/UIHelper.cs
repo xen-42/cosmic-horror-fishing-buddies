@@ -1,19 +1,16 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Extensions;
 using CosmicHorrorFishingBuddies.Util;
-using Epic.OnlineServices.Platform;
 using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace CosmicHorrorFishingBuddies.UI
 {
-    internal class UIHelper	: MonoBehaviour
+	internal class UIHelper : MonoBehaviour
 	{
 		public static UIHelper Instance { get; private set; }
 
@@ -77,13 +74,14 @@ namespace CosmicHorrorFishingBuddies.UI
 				Component.DestroyImmediate(saveSlotWindow);
 
 				// DROPDOWN
-				_dropDownPrefab = GameObject.Find("Canvases/SettingsDialog/TabbedPanelContainer/Panels/AccessibilityPanel/Container/PopupDuration").gameObject.InstantiateInactive();
+				var existingDropDown = GameObject.FindObjectOfType<DropdownSettingInput>(true);
+				_dropDownPrefab = existingDropDown.gameObject.InstantiateInactive();
 				_dropDownPrefab.name = "DropDownPrefab";
 				var dropdownSettingInput = _dropDownPrefab.GetComponent<DropdownSettingInput>();
 				dropdownSettingInput.settingType = SettingType.NONE;
 
 				// LABEL
-				_labelPrefab = GameObject.Find("Canvases/SettingsDialog/TabbedPanelContainer/Panels/AccessibilityPanel/Container/PopupDuration/LabelContainer/DropdownLabel").gameObject.InstantiateInactive();
+				_labelPrefab = existingDropDown.transform.Find("LabelContainer/DropdownLabel").gameObject.InstantiateInactive();
 				GameObject.DestroyImmediate(_labelPrefab.GetComponent<LocalizeStringEvent>());
 				_labelPrefab.name = "LabelPrefab";
 			}
@@ -107,7 +105,7 @@ namespace CosmicHorrorFishingBuddies.UI
 					CreatePrefabs();
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				CFBCore.LogError($"Couldn't create {nameof(UIHelper)} : {e}");
 			}
@@ -168,7 +166,7 @@ namespace CosmicHorrorFishingBuddies.UI
 		public static GameObject AddDropDown(Transform parent, string text, string tooltip, (string text, Action action)[] options)
 		{
 			var newDropdown = _dropDownPrefab.InstantiateInactive();
-			newDropdown.name = $"{text}Dropdown";
+			newDropdown.name = $"{text.Replace(" ", "")}Dropdown";
 			newDropdown.transform.parent = parent;
 			newDropdown.transform.localScale = Vector2.one;
 
@@ -184,6 +182,7 @@ namespace CosmicHorrorFishingBuddies.UI
 			var label = newDropdown.transform.Find("LabelContainer/DropdownLabel");
 			GameObject.DestroyImmediate(label.GetComponent<LocalizeStringEvent>());
 			label.GetComponent<TextMeshProUGUI>().text = text;
+			Delay.FireOnNextUpdate(() => newDropdown.transform.Find("LabelContainer").GetComponent<RectTransform>().anchoredPosition = new Vector2(50, 10));
 
 			newDropdown.SetActive(true);
 
