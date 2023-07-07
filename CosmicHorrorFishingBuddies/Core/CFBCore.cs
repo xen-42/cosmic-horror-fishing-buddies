@@ -1,6 +1,7 @@
 ﻿using CosmicHorrorFishingBuddies.AudioSync;
 using CosmicHorrorFishingBuddies.Save;
 using CosmicHorrorFishingBuddies.UI;
+using CosmicHorrorFishingBuddies.Util;
 using HarmonyLib;
 using Sirenix.Utilities;
 using System;
@@ -11,6 +12,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using Winch.Core;
 
 namespace CosmicHorrorFishingBuddies.Core
@@ -144,8 +146,15 @@ namespace CosmicHorrorFishingBuddies.Core
 			}
 			else
 			{
-				// Make sure we aren't saving/loading any data before restarting to prevent corruption
 				Instance._restarting = true;
+
+				// Save their game even though they aren't at a dock its fine
+				if (SceneManager.GetActiveScene().name == Scenes.Game)
+				{
+					GameManager.Instance.Save();
+				}
+
+				// Make sure we aren't saving/loading any data before restarting to prevent corruption
 				Delay.RunWhen(CanRestart, RestartInternal);
 			}
 		}
