@@ -35,6 +35,7 @@ namespace CosmicHorrorFishingBuddies.TimeSync.Patches
 			if (TimeSyncManager.Instance != null)
 			{
 				// Never let them freeze time
+				UnityEngine.Time.timeScale = 1f;
 				__instance._freezeTime = false;
 				NetworkPlayer.LocalPlayer?.SetTimeMode(__instance.currentTimePassageMode);
 			}
