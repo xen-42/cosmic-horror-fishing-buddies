@@ -1,11 +1,9 @@
-﻿using CommandTerminal;
-using CosmicHorrorFishingBuddies.AudioSync;
+﻿using CosmicHorrorFishingBuddies.AudioSync;
 using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base;
 using CosmicHorrorFishingBuddies.Util;
 using Mirror;
 using System;
-using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {

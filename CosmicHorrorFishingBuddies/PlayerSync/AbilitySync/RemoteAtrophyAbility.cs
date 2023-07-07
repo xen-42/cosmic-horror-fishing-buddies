@@ -15,7 +15,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 		private GameObject _playerVfx, _harvestVfx;
 
 		[Command]
-		public void Activate(NetworkIdentity harvestID) => OnActivate( harvestID);
+		public void Activate(NetworkIdentity harvestID) => OnActivate(harvestID);
 
 		[ClientRpc(includeOwner = false)]
 		protected void OnActivate(NetworkIdentity harvestID)
@@ -37,7 +37,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 				_harvestVfx?.GetComponent<SafeParticleDestroyer>()?.Destroy();
 				loopAudio.Stop();
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				CFBCore.LogError(e);
 			}

@@ -1,9 +1,9 @@
 ﻿namespace CosmicHorrorFishingBuddies.Core
 {
-    public enum TransportType
-    {
-        KCP,
-        EPIC,
-        STEAM
-    }
+	public enum TransportType
+	{
+		KCP,
+		EPIC,
+		STEAM
+	}
 }

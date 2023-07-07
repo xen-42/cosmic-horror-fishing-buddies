@@ -5,8 +5,8 @@ using System;
 namespace CosmicHorrorFishingBuddies.PlayerSync.Events.Patches
 {
 	[HarmonyPatch(typeof(FlickerLightsWorldEvent))]
-    internal class FlickerLightsWorldEventPatch
-    {
+	internal class FlickerLightsWorldEventPatch
+	{
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(FlickerLightsWorldEvent.Activate))]
 		public static void FlickerLightsWorldEvent_Activate()
@@ -20,5 +20,5 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.Events.Patches
 				CFBCore.LogError(e);
 			}
 		}
-    }
+	}
 }

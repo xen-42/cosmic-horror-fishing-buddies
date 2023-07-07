@@ -24,7 +24,7 @@ internal class RespawnPatch
 
 		// Respawn the player
 		_teleportAbility = GameManager.Instance.PlayerAbilities.abilityMap["manifest"] as TeleportAbility;
-		
+
 		// Don't want to give them the achievement for this
 		_cachedAchievementDistance = _teleportAbility.achievementDistance;
 		_teleportAbility.achievementDistance = float.MaxValue;

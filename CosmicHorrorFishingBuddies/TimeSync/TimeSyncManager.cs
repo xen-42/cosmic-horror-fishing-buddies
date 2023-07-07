@@ -1,6 +1,5 @@
 ﻿using CosmicHorrorFishingBuddies.PlayerSync;
 using Mirror;
-using System.Linq;
 
 namespace CosmicHorrorFishingBuddies.TimeSync
 {
