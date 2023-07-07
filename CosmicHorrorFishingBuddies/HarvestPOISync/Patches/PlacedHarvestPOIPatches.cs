@@ -9,7 +9,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(PlacedHarvestPOI.Awake))]
 		public static void PlacedHarvestPOI_Awake(PlacedHarvestPOI __instance)
-		{
+		{			
 			// PlacedHarvestPOI has no Start method else I'd use that
 			Delay.FireOnNextUpdate(() => Start(__instance));
 		}
@@ -17,6 +17,6 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 		private static void Start(PlacedHarvestPOI instance)
 		{
 			CFBSpawnManager.Instance?.TrySpawnNetworkCrabPot(instance);
-		}
+		} 
 	}
 }

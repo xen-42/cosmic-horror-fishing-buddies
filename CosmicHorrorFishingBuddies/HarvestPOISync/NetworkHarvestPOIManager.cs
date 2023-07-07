@@ -4,6 +4,7 @@ using CosmicHorrorFishingBuddies.PlayerSync;
 using Mirror;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.HarvestPOISync
@@ -75,7 +76,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 
 		public bool IsHarvestPOITracked(HarvestPOI harvestPOI)
 		{
-			return (harvestPOI is BaitHarvestPOI baitHarvestPOI && _baitLookUp.ContainsKey(baitHarvestPOI))
+			return (harvestPOI is BaitHarvestPOI baitHarvestPOI && _baitLookUp.ContainsKey(baitHarvestPOI)) 
 				|| (harvestPOI is PlacedHarvestPOI placedHarvestPOI && _crabLookUp.ContainsKey(placedHarvestPOI))
 				|| _lookUp.ContainsKey(harvestPOI);
 		}

@@ -1,6 +1,8 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
+using CosmicHorrorFishingBuddies.HarvestPOISync.Patches;
 using Mirror;
 using System;
+using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.HarvestPOISync
 {
@@ -35,6 +37,6 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 
 		private HarvestPOI _target;
 
-
+		
 	}
 }

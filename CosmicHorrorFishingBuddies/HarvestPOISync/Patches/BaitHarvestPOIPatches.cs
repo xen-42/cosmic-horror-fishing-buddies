@@ -1,5 +1,6 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using HarmonyLib;
+using System.Collections;
 
 namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 {
@@ -12,7 +13,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync.Patches
 		{
 			// BaitHarvestPOI has no Start method else I'd use that
 			Delay.FireOnNextUpdate(() => Start(__instance));
-		}
+		} 
 
 		private static void Start(BaitHarvestPOI instance)
 		{

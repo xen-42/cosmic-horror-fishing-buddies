@@ -1,10 +1,15 @@
 ﻿using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base;
 using Mirror;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-	internal class RemoteBanishAbility : RemoteRPCAbility
+    internal class RemoteBanishAbility : RemoteRPCAbility
 	{
 		public GameObject banishEffect;
 		public AudioSource banishAudioSource;

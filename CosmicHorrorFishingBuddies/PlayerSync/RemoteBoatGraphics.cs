@@ -16,7 +16,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 		[SyncVar]
 		private float _lightRange;
-		public float LightRange { get => _lightRange; }
+		public float LightRange { get => _lightRange; }	
 
 		[Command]
 		public void SetLightUpgrades(float lightLumens, float lightRange)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.BaseSync
 {
-	internal abstract class TransformSync : NetworkBehaviour
+    internal abstract class TransformSync : NetworkBehaviour
 	{
 		protected abstract Transform InitLocalTransform();
 		protected abstract Transform InitRemoteTransform();

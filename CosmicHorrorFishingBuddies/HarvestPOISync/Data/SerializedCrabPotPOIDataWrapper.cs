@@ -13,7 +13,7 @@
 		public SerializedCrabPotPOIDataWrapper(SerializedCrabPotPOIData data)
 		{
 			yRotation = data.yRotation;
-			x = data.x;
+			x = data.x;	
 			z = data.z;
 			deployableItemId = data.deployableItemId;
 			durability = data.durability;
