@@ -144,8 +144,8 @@ namespace CosmicHorrorFishingBuddies.Core
                 CFBCore.Instance.PlayerLoaded.AddListener(OnPlayerLoaded);
 				CFBCore.Instance.SwitchSceneRequested.AddListener(OnSwitchSceneRequested);
 
-                PlayerManager.PlayerJoined.AddListener(OnPlayerJoined);
-                PlayerManager.PlayerLeft.AddListener(OnPlayerLeft);
+                PlayerManager.PlayerJoined += OnPlayerJoined;
+                PlayerManager.PlayerLeft += OnPlayerLeft;
 
                 base.Awake();
             }
@@ -172,7 +172,7 @@ namespace CosmicHorrorFishingBuddies.Core
 			}
 		}
 
-        private void OnPlayerJoined(bool isOwned)
+        private void OnPlayerJoined(bool isOwned, uint id)
         {
 			if (!isOwned)
 			{
@@ -180,7 +180,7 @@ namespace CosmicHorrorFishingBuddies.Core
 			}
         }
 
-        private void OnPlayerLeft(bool isOwned)
+        private void OnPlayerLeft(bool isOwned, uint id)
         {
 			if (!isOwned)
 			{
@@ -196,17 +196,12 @@ namespace CosmicHorrorFishingBuddies.Core
 
             TransportType = transportType;
 
-            switch (transportType)
-            {
-                case TransportType.KCP:
-                    transport = _kcpTransport;
-                    break;
-                case TransportType.EPIC:
-                    transport = _epicTransport;
-                    break;
-                default:
-                    throw new Exception($"Unsupported transport {transportType}");
-            }
+			transport = transportType switch
+			{
+				TransportType.KCP => _kcpTransport,
+				TransportType.EPIC => _epicTransport,
+				_ => throw new Exception($"Unsupported transport {transportType}"),
+			};
 			// Have to set this when changing transport after mirror initializes
 			Transport.active = transport;
 		}

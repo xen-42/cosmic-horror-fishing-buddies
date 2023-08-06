@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
@@ -9,7 +10,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		public static uint LocalNetID => NetworkClient.connection?.identity?.netId ?? uint.MaxValue;
 
 		public static readonly Dictionary<uint, NetworkPlayer> Players = new();
-		public static UnityEvent<bool> PlayerJoined = new();
-		public static UnityEvent<bool> PlayerLeft = new();
+		public static Action<bool, uint> PlayerJoined;
+		public static Action<bool, uint> PlayerLeft;
 	}
 }

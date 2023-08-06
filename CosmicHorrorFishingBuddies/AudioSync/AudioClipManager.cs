@@ -6,6 +6,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace CosmicHorrorFishingBuddies.AudioSync
 {
+	[AddToGameScene]
 	internal class AudioClipManager : MonoBehaviour
 	{
 		public void Awake()
