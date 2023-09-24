@@ -147,7 +147,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			SetActiveChildren(tier1, tier2, tier3, tier4);
 		}
 
-		private int GetLocalUpgradeTier() => Math.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 3);
+		private int GetLocalUpgradeTier() => Mathf.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 3);
 
 		public void OnDestroy()
 		{
