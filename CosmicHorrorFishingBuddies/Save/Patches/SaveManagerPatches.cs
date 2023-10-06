@@ -32,4 +32,13 @@ internal static class SaveManagerPatches
 	[HarmonyPostfix]
 	[HarmonyPatch(nameof(SaveManager.Load))]
 	public static void SaveManager_Load_Postfix() => IsLoading = false;
+
+	[HarmonyPostfix]
+	[HarmonyPatch(nameof(SaveManager.Init))]
+	public static void SaveManager_Init(SaveManager __instance)
+	{
+		// TODO: Disable changing these settings
+		__instance.activeSettingsData.constrainCursor = 0;
+		__instance.activeSettingsData.pauseOnFocusLoss = 0;
+	}
 }

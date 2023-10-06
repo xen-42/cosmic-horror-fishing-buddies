@@ -9,6 +9,9 @@ A WIP multiplayer mod for DREDGE. Currently early alpha and might not work as in
 
 Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-out to \_nebula and everyone who's contributed to [Quantum Space Buddies](https://github.com/misternebula/quantum-space-buddies), for the inspiration ~~and code that I stole~~.
 
+## How to Install
+Download the DREDGE Mod Manager from [dredgemods.com](https://dredgemods.com/)!
+
 ## Features (spoilers)
 #### What is synced:
 - Player movement
@@ -29,18 +32,17 @@ Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-ou
   - Crab pots (inventory not yet synced)
 - Ship appearance
   - Rigidbody boat assets (net, tires) don't animate yet
+- World Events
+  - Only the occurrence of events is currently synced, will also have to sync the movement of whatever is spawned by the event
 
 ![fishing buddies 2](https://github.com/xen-42/cosmic-horror-fishing-buddies/assets/22628069/fe5177b1-babc-45a6-8070-2327776e938b)
 
 #### What is not synced (roadmap):
 - Location/quest specific details
-- Events
+- Weather
 - Enemies
 - Waves
 - Collisions?
-
-#### Other todo:
-- Implement Steam transport (maybe, if Epic has drawbacks)
 
 ## Dependencies
 - [Winch](https://github.com/Hacktix/Winch)
