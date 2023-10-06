@@ -9,10 +9,12 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-    internal class RemoteBanishAbility : RemoteRPCAbility<BanishAbility>
+    internal class RemoteBanishAbility : RemoteRPCAbility
 	{
 		public GameObject banishEffect;
 		public AudioSource banishAudioSource;
+
+		public override Type AbilityType => typeof(AtrophyAbility);
 
 		[ClientRpc(includeOwner = false)]
 		protected override void OnTriggerAbility(bool active)

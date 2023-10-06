@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 {
 	[RequireComponent(typeof(NetworkPlayer))]
-	internal abstract class RemoteSyncVarAbility<T> : RemoteAbility<T> where T : Ability
+	internal abstract class RemoteSyncVarAbility : RemoteAbility
 	{
 		[SyncVar(hook = nameof(Hook))]
 		private bool _active;
@@ -16,7 +16,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 		{
 			if (isOwned)
 			{
-				Toggle(AbilityHelper.GetAbility<T>().IsActive);
+				Toggle(AbilityHelper.GetAbility(AbilityType).IsActive);
 			}
 		}
 

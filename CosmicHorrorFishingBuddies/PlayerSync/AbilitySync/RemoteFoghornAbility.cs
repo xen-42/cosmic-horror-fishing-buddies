@@ -1,14 +1,17 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base;
 using CosmicHorrorFishingBuddies.Util;
+using System;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-    internal class RemoteFoghornAbility : RemoteSyncVarAbility<FoghornAbility>
+    internal class RemoteFoghornAbility : RemoteSyncVarAbility
 	{
 		public AudioSource foghornEndSource;
 		public AudioSource foghornMidSource;
+
+		public override Type AbilityType => typeof(FoghornAbility);
 
 		public override void Start()
 		{

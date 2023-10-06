@@ -1,13 +1,16 @@
 ﻿using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base;
 using DG.Tweening;
 using Mirror;
+using System;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-	internal class RemoteTrawlNetAbility : RemoteRPCAbility<TrawlNetAbility>
+	internal class RemoteTrawlNetAbility : RemoteRPCAbility
 	{
 		// Have to adjust the rotation of the trawl net - will be unnessecary when rigidbodies work
 		private Tween _rotationTween;
+
+		public override Type AbilityType => typeof(TrawlNetAbility);
 
 		[ClientRpc(includeOwner = false)]
 		protected override void OnTriggerAbility(bool active)

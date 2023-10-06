@@ -9,9 +9,11 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-	internal class RemoteLightAbility : RemoteSyncVarAbility<LightAbility>
+	internal class RemoteLightAbility : RemoteSyncVarAbility
 	{
 		private LightFlickerEffect _lightFlickerEffect;
+
+		public override Type AbilityType => typeof(LightAbility);
 
 		public override void Start()
 		{

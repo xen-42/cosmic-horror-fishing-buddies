@@ -20,12 +20,17 @@ public static class AbilityHelper
 		{ typeof(BoostAbility), "haste" },
 	};
 
+	public static Ability GetAbility(Type type)
+	{
+		if (!_abilityCache.ContainsKey(type))
+		{
+			_abilityCache.Add(type, GameManager.Instance.PlayerAbilities.abilityMap[_abilityNames[type]]);
+		}
+		return _abilityCache[type];
+	}
+
 	public static T GetAbility<T>() where T : Ability
 	{
-		if (!_abilityCache.ContainsKey(typeof(T)))
-		{
-			_abilityCache.Add(typeof(T), GameManager.Instance.PlayerAbilities.abilityMap[_abilityNames[typeof(T)]]);
-		}
-		return _abilityCache[typeof(T)] as T;
+		return GetAbility(typeof(T)) as T;
 	}
 }
