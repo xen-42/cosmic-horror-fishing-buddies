@@ -110,7 +110,7 @@ namespace CosmicHorrorFishingBuddies.Core
 				networkPlayer.remotePlayerBoatGraphics = playerPrefab.AddComponent<RemoteBoatGraphics>();
 				networkPlayer.remoteSteeringAnimator = playerPrefab.AddComponent<RemoteSteeringAnimator>();
 
-                // Teleport ability
+                // Abilities
                 networkPlayer.remoteTeleportAbility = playerPrefab.AddComponent<RemoteTeleportAbility>();
                 networkPlayer.remoteBanishAbility = playerPrefab.AddComponent<RemoteBanishAbility>();
                 networkPlayer.remoteAtrophyAbility = playerPrefab.AddComponent<RemoteAtrophyAbility>();

@@ -4,11 +4,11 @@ using UnityEngine;
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 {
 	[RequireComponent(typeof(NetworkPlayer))]
-	internal abstract class RemoteAbility : NetworkBehaviour
+	internal abstract class RemoteAbility<T> : NetworkBehaviour where T : Ability
 	{
 		protected NetworkPlayer _networkPlayer;
 
-		public void Awake()
+		public virtual void Awake()
 		{
 			_networkPlayer = GetComponent<NetworkPlayer>();
 		}

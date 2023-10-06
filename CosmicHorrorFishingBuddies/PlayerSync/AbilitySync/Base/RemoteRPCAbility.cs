@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 {
 	[RequireComponent(typeof(NetworkPlayer))]
-	internal abstract class RemoteRPCAbility : RemoteAbility
+	internal abstract class RemoteRPCAbility<T> : RemoteAbility<T> where T : Ability
 	{
 		[Command]
 		public override sealed void Toggle(bool active) => OnTriggerAbility(active);
