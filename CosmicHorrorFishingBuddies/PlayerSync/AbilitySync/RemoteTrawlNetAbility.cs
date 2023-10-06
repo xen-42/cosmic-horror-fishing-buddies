@@ -4,7 +4,7 @@ using Mirror;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-	internal class RemoteTrawlNetAbility : RemoteRPCAbility
+	internal class RemoteTrawlNetAbility : RemoteRPCAbility<TrawlNetAbility>
 	{
 		// Have to adjust the rotation of the trawl net - will be unnessecary when rigidbodies work
 		private Tween _rotationTween;

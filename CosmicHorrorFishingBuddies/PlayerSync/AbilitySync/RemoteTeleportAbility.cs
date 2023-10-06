@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-    internal class RemoteTeleportAbility : RemoteRPCAbility
+    internal class RemoteTeleportAbility : RemoteRPCAbility<TeleportAbility>
 	{
 		public GameObject teleportEffect;
 

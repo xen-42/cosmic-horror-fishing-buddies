@@ -9,14 +9,16 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-	internal class RemoteLightAbility : RemoteSyncVarAbility
+	internal class RemoteLightAbility : RemoteSyncVarAbility<LightAbility>
 	{
 		private LightFlickerEffect _lightFlickerEffect;
 
-		public void Start()
+		public override void Start()
 		{
 			_networkPlayer.remotePlayerBoatGraphics.RefreshBoatModel.AddListener(RefreshLights);
 			_lightFlickerEffect = GetComponentInChildren<LightFlickerEffect>();
+
+			RefreshLights();
 		}
 
 		public void OnDestroy()

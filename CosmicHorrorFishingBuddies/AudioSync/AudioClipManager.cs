@@ -16,26 +16,13 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 		}
 
 		private PlayerCollisionAudio _playerCollisionAudio;
-		private LightAbility _lightAbility;
-		private TeleportAbility _teleportAbility;
-		private AtrophyAbility _atrophyAbility;
-		private BaitAbility _baitAbility;
-		private DeployPotAbility _potAbility;
-		private TrawlNetAbility _trawlAbility;
-		private BoostAbility _hasteAbility;
 
 		private static AudioClipManager _instance;
 
 		private void OnPlayerLoaded()
 		{
 			_playerCollisionAudio = GameObject.FindObjectOfType<PlayerCollisionAudio>();
-			_lightAbility = GameManager.Instance.PlayerAbilities.abilityMap["lights"] as LightAbility;
-			_teleportAbility = GameManager.Instance.PlayerAbilities.abilityMap["manifest"] as TeleportAbility;
-			_atrophyAbility = GameManager.Instance.PlayerAbilities.abilityMap["atrophy"] as AtrophyAbility;
-			_baitAbility = GameManager.Instance.PlayerAbilities.abilityMap["bait"] as BaitAbility;
-			_potAbility = GameManager.Instance.PlayerAbilities.abilityMap["pot"] as DeployPotAbility;
-			_trawlAbility = GameManager.Instance.PlayerAbilities.abilityMap["trawl"] as TrawlNetAbility;
-			_hasteAbility = GameManager.Instance.PlayerAbilities.abilityMap["haste"] as BoostAbility;
+
 		}
 
 		public static void PlayClip(AudioEnum audio, AudioSource source, float volume, float pitch)
@@ -71,8 +58,8 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 
 		private static AudioClip GetClip(AudioEnum audio) => audio switch
 		{
-			AudioEnum.LIGHT_ON => _instance?._lightAbility?.onSFX,
-			AudioEnum.LIGHT_OFF => _instance?._lightAbility?.offSFX,
+			AudioEnum.LIGHT_ON => AbilityHelper.GetAbility<LightAbility>().onSFX,
+			AudioEnum.LIGHT_OFF => AbilityHelper.GetAbility<LightAbility>().offSFX,
 			_ => null,
 		};
 
@@ -80,16 +67,16 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 		{
 			AudioEnum.PLAYER_COLLISION => _instance?._playerCollisionAudio?.clipRefs?.PickRandom(),
 			// Ability -> Ability Data
-			AudioEnum.MANIFEST => _instance?._teleportAbility?.abilityData?.castSFX,
-			AudioEnum.ATROPHY => _instance?._atrophyAbility?.abilityData?.castSFX,
-			AudioEnum.BAIT => _instance?._baitAbility?.abilityData?.castSFX,
-			AudioEnum.DEPLOY_POT => _instance?._potAbility?.abilityData?.castSFX,
+			AudioEnum.MANIFEST => AbilityHelper.GetAbility<TeleportAbility>()?.abilityData?.castSFX,
+			AudioEnum.ATROPHY => AbilityHelper.GetAbility<AtrophyAbility>()?.abilityData?.castSFX,
+			AudioEnum.BAIT => AbilityHelper.GetAbility<BaitAbility>()?.abilityData?.castSFX,
+			AudioEnum.DEPLOY_POT => AbilityHelper.GetAbility<DeployPotAbility>()?.abilityData?.castSFX,
 
-			AudioEnum.TRAWL_ACTIVATE => _instance?._trawlAbility?.abilityData?.castSFX,
-			AudioEnum.TRAWL_END => _instance?._trawlAbility?.endSFX,
-			AudioEnum.TRAWL_BREAK => _instance?._trawlAbility?.breakSFX,
+			AudioEnum.TRAWL_ACTIVATE => AbilityHelper.GetAbility<TrawlNetAbility>()?.abilityData?.castSFX,
+			AudioEnum.TRAWL_END => AbilityHelper.GetAbility<TrawlNetAbility>()?.endSFX,
+			AudioEnum.TRAWL_BREAK => AbilityHelper.GetAbility<TrawlNetAbility>()?.breakSFX,
 
-			AudioEnum.HASTE => _instance?._hasteAbility?.abilityData?.castSFX,
+			AudioEnum.HASTE => AbilityHelper.GetAbility<BoostAbility>()?.abilityData?.castSFX,
 			AudioEnum.LIGHT_FLICKER => EventHelper.GetWorldEvent<FlickerLightsWorldEvent>()?.flickerSFX,
 			_ => null,
 		};

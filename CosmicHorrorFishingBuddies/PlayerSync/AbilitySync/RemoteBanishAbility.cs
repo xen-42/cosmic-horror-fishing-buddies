@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-    internal class RemoteBanishAbility : RemoteRPCAbility
+    internal class RemoteBanishAbility : RemoteRPCAbility<BanishAbility>
 	{
 		public GameObject banishEffect;
 		public AudioSource banishAudioSource;
