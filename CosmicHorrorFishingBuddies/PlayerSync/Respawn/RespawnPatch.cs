@@ -8,9 +8,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.Respawn;
 [HarmonyPatch(typeof(Player))]
 internal class RespawnPatch
 {
-	private static float _cachedAchievementDistance;
-	private static GameObject _cachedTeleportDestination;
-	private static TeleportAbility _teleportAbility;
+
 
 	[HarmonyPrefix]
 	[HarmonyPatch(nameof(Player.Die), new Type[] { })]
@@ -22,44 +20,21 @@ internal class RespawnPatch
 			return true;
 		}
 
-		// Respawn the player
-		_teleportAbility = GameManager.Instance.PlayerAbilities.abilityMap["manifest"] as TeleportAbility;
-		
-		// Don't want to give them the achievement for this
-		_cachedAchievementDistance = _teleportAbility.achievementDistance;
-		_teleportAbility.achievementDistance = float.MaxValue;
-
-		// Go to previous dock
-		_cachedTeleportDestination = _teleportAbility.teleportDestinationObject;
 		var destination = GameManager.Instance.Player.PreviousDock?.GetComponentInChildren<DockPOI>()?.dockSlots[0]?.gameObject;
-		// Paranoid that it could be null, it shouldn't though
-		if (destination != null) _teleportAbility.teleportDestinationObject = destination;
-
-		GameEvents.Instance.OnTeleportComplete += Instance_OnTeleportComplete;
-
-		_teleportAbility.Activate();
+		TeleportPlayer.To(destination);
+		GameEvents.Instance.OnTeleportComplete += OnTeleportComplete;
 
 		return false;
 	}
 
-	private static void Instance_OnTeleportComplete()
+	private static void OnTeleportComplete()
 	{
-		if (_teleportAbility != null)
-		{
-			// Reset achievement distance
-			_teleportAbility.achievementDistance = _cachedAchievementDistance;
+		GameEvents.Instance.OnTeleportComplete -= OnTeleportComplete;
 
-			// Reset the destination
-			_teleportAbility.teleportDestinationObject = _cachedTeleportDestination;
+		// Tank their sanity
+		GameManager.Instance.Player.Sanity.ChangeSanity(-GameManager.Instance.Player.Sanity.CurrentSanity);
 
-			// Tank their sanity
-			GameManager.Instance.Player.Sanity.ChangeSanity(-GameManager.Instance.Player.Sanity.CurrentSanity);
-
-			GameEvents.Instance.OnTeleportComplete -= Instance_OnTeleportComplete;
-			_teleportAbility = null;
-
-			NotificationHelper.ShowNotificationWithColour(NotificationType.DAMAGE_TAKEN, "An unknown force keeps you from death...", DredgeColorTypeEnum.NEGATIVE);
-		}
+		NotificationHelper.ShowNotificationWithColour(NotificationType.DAMAGE_TAKEN, "An unknown force keeps you from death...", DredgeColorTypeEnum.NEGATIVE);
 	}
 }
 

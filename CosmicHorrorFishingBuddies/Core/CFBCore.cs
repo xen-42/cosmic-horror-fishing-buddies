@@ -1,4 +1,5 @@
-﻿using CosmicHorrorFishingBuddies.Debugging;
+﻿using CosmicHorrorFishingBuddies.AudioSync;
+using CosmicHorrorFishingBuddies.Debugging;
 using CosmicHorrorFishingBuddies.Save;
 using CosmicHorrorFishingBuddies.UI;
 using CosmicHorrorFishingBuddies.Util;
