@@ -43,17 +43,12 @@ namespace CosmicHorrorFishingBuddies.Core
 
 				new Harmony(nameof(CFBCore)).PatchAll();
 
-				Application.runInBackground = true;
-
 				gameObject.AddComponent<CFBNetworkManager>();
 				gameObject.AddComponent<AudioClipManager>();
 				gameObject.AddComponent<UIHelper>();
 				gameObject.AddComponent<MainMenuManager>();
 
-#if DEBUG
-				gameObject.AddComponent<DebugKeyPadCommands>();
-				gameObject.AddComponent<TerminalCommands>();
-#endif
+				gameObject.AddComponent<DebugController>();
 
 				Application.logMessageReceived += Application_logMessageReceived;
 			}
@@ -167,10 +162,15 @@ namespace CosmicHorrorFishingBuddies.Core
 
 		private static void RestartInternal()
 		{
-			LogInfo("Restarting the game");
-			var args = Environment.GetCommandLineArgs().ToList();
-			if (!args.Contains(INTRO_SKIP_ARG)) args.Add(INTRO_SKIP_ARG);
-			Process.Start(Application.dataPath.Replace("_Data", ".exe"), string.Join(" ", args));
+			// Don't restart if we have QuickLoad on else we get trapped forever
+			if (!DebugController.Instance.QuickLoad)
+			{
+				LogInfo("Restarting the game");
+				var args = Environment.GetCommandLineArgs().ToList();
+				if (!args.Contains(INTRO_SKIP_ARG)) args.Add(INTRO_SKIP_ARG);
+				Process.Start(Application.dataPath.Replace("_Data", ".exe"), string.Join(" ", args));
+			}
+
 			Application.Quit();
 		}
 	}
