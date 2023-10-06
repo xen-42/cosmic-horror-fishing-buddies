@@ -8,10 +8,10 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
     internal class RemoteFoghornAbility : RemoteSyncVarAbility
 	{
+		public override Type AbilityType => typeof(FoghornAbility);
+
 		public AudioSource foghornEndSource;
 		public AudioSource foghornMidSource;
-
-		public override Type AbilityType => typeof(FoghornAbility);
 
 		public override void Start()
 		{

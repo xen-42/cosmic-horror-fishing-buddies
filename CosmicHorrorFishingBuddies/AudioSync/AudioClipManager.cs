@@ -10,20 +10,13 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 	[AddToGameScene]
 	internal class AudioClipManager : MonoBehaviour
 	{
+		private static AudioClipManager _instance;
+		private PlayerCollisionAudio _playerCollisionAudio;
+
 		public void Awake()
 		{
 			_instance = this;
-			CFBCore.Instance.PlayerLoaded.AddListener(OnPlayerLoaded);
-		}
-
-		private PlayerCollisionAudio _playerCollisionAudio;
-
-		private static AudioClipManager _instance;
-
-		private void OnPlayerLoaded()
-		{
 			_playerCollisionAudio = GameObject.FindObjectOfType<PlayerCollisionAudio>();
-
 		}
 
 		public static void PlayClip(AudioEnum audio, AudioSource source, float volume, float pitch)

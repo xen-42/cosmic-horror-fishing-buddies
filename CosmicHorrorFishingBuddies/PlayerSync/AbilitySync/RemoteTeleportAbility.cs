@@ -7,9 +7,9 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
     internal class RemoteTeleportAbility : RemoteRPCAbility
 	{
-		public GameObject teleportEffect;
-
 		public override Type AbilityType => typeof(TeleportAbility);
+
+		public GameObject teleportEffect;
 
 		[ClientRpc(includeOwner = false)]
 		protected override void OnTriggerAbility(bool active)
