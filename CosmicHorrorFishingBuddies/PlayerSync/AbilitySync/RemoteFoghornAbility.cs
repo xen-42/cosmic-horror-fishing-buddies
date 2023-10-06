@@ -1,5 +1,6 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base;
+using CosmicHorrorFishingBuddies.Util;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
@@ -9,11 +10,12 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 		public AudioSource foghornEndSource;
 		public AudioSource foghornMidSource;
 
-		public void Start()
+		public override void Start()
 		{
-			var existingFoghorn = FindObjectOfType<FoghornAbility>();
-			foghornEndSource.clip = existingFoghorn.foghornEndSource.clip;
-			foghornMidSource.clip = existingFoghorn.foghornMidSource.clip;
+			base.Start();
+
+			foghornEndSource.clip = AbilityHelper.GetAbility<FoghornAbility>().foghornEndSource.clip;
+			foghornMidSource.clip = AbilityHelper.GetAbility<FoghornAbility>().foghornMidSource.clip;
 		}
 
 		protected override void OnToggleRemote(bool active)
