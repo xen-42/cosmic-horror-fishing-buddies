@@ -131,7 +131,7 @@ namespace CosmicHorrorFishingBuddies.UI
 		{
 			CFBCore.LogInfo("Begin!");
 
-			_popupWindow.Hide();
+			_popupWindow.Hide(PopupWindow.WindowHideMode.CLOSE);
 
 			CFBNetworkManager.Instance.SetConnection(_isHost, _inputField.text, _transportType);
 
