@@ -1,13 +1,7 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Messaging;
 using CosmicHorrorFishingBuddies.PlayerSync;
-using CosmicHorrorFishingBuddies.Util;
-using Mirror;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CosmicHorrorFishingBuddies.Util.Attributes;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.EnvironmentSync

@@ -1,9 +1,6 @@
 ﻿using CosmicHorrorFishingBuddies.Util;
+using CosmicHorrorFishingBuddies.Util.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,10 +9,12 @@ namespace CosmicHorrorFishingBuddies.Core;
 public class CFBSceneManager : MonoBehaviour
 {
 	public static Action GameSceneLoaded;
+	public static Action MainMenuSceneLoaded;
 
 	public void Awake()
 	{
 		SceneManager.activeSceneChanged += OnSceneChanged;
+		OnSceneChanged(default, SceneManager.GetActiveScene());
 	}
 
 	public void OnDestroy()
@@ -27,13 +26,24 @@ public class CFBSceneManager : MonoBehaviour
 	{
 		var sceneManagerObject = new GameObject(nameof(CFBSceneManager));
 
-		if (current.name == Scenes.Game)
+		switch(current.name)
 		{
-			GameSceneLoaded?.Invoke();
-			foreach (var type in TypeHelper.GetTypesWithAttribute(typeof(AddToGameSceneAttribute)))
-			{
-				sceneManagerObject.AddComponent(type);
-			}
+			case Scenes.Game:
+				foreach (var type in TypeHelper.GetTypesWithAttribute(typeof(AddToGameSceneAttribute)))
+				{
+					sceneManagerObject.AddComponent(type);
+				}
+				GameSceneLoaded?.Invoke();
+				break;
+
+			case Scenes.Title:
+				foreach (var type in TypeHelper.GetTypesWithAttribute(typeof(AddToMainMenuSceneAttribute)))
+				{
+					sceneManagerObject.AddComponent(type);
+				}
+				MainMenuSceneLoaded?.Invoke();
+				break;
+
 		}
 	}
 }

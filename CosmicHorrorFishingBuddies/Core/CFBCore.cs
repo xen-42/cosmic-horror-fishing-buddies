@@ -1,5 +1,4 @@
-﻿using CosmicHorrorFishingBuddies.AudioSync;
-using CosmicHorrorFishingBuddies.Debugging;
+﻿using CosmicHorrorFishingBuddies.Debugging;
 using CosmicHorrorFishingBuddies.Save;
 using CosmicHorrorFishingBuddies.UI;
 using CosmicHorrorFishingBuddies.Util;
@@ -47,8 +46,9 @@ namespace CosmicHorrorFishingBuddies.Core
                 new Harmony(nameof(CFBCore)).PatchAll();
 
 				gameObject.AddComponent<CFBNetworkManager>();
+				gameObject.AddComponent<CFBSceneManager>();
 				gameObject.AddComponent<UIHelper>();
-				gameObject.AddComponent<MainMenuManager>();
+				gameObject.AddComponent<DebugController>();
 
 				Application.logMessageReceived += Application_logMessageReceived;
             }
