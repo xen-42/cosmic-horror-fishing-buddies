@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 
 namespace CosmicHorrorFishingBuddies.Debugging;
 
+[AddToGameScene]
 [JsonObject(MemberSerialization.OptIn)]
 internal class DebugController : MonoBehaviour
 {

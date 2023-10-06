@@ -47,11 +47,8 @@ namespace CosmicHorrorFishingBuddies.Core
                 new Harmony(nameof(CFBCore)).PatchAll();
 
 				gameObject.AddComponent<CFBNetworkManager>();
-				gameObject.AddComponent<AudioClipManager>();
 				gameObject.AddComponent<UIHelper>();
 				gameObject.AddComponent<MainMenuManager>();
-
-				gameObject.AddComponent<DebugController>();
 
 				Application.logMessageReceived += Application_logMessageReceived;
             }
