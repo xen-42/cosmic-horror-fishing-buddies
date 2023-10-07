@@ -13,6 +13,7 @@ using TransportType = CosmicHorrorFishingBuddies.Core.TransportType;
 
 namespace CosmicHorrorFishingBuddies.UI
 {
+	[AddToMainMenuScene]
     internal class MainMenuManager : MonoBehaviour
 	{
 		private PopupWindow _popupWindow;
