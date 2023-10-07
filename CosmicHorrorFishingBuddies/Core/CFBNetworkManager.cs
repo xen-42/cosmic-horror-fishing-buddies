@@ -141,8 +141,8 @@ namespace CosmicHorrorFishingBuddies.Core
 				CFBCore.Instance.PlayerLoaded.AddListener(OnPlayerLoaded);
 				CFBCore.Instance.SwitchSceneRequested.AddListener(OnSwitchSceneRequested);
 
-				PlayerManager.PlayerJoined += OnPlayerJoined;
-				PlayerManager.PlayerLeft += OnPlayerLeft;
+				PlayerManager.PlayerJoined.AddListener(OnPlayerJoined);
+				PlayerManager.PlayerLeft.AddListener(OnPlayerLeft);
 
 				base.Awake();
 			}
@@ -169,7 +169,7 @@ namespace CosmicHorrorFishingBuddies.Core
 			}
 		}
 
-		private void OnPlayerJoined(bool isOwned, uint netID)
+		private void OnPlayerJoined(bool isOwned)
 		{
 			if (!isOwned)
 			{
@@ -177,7 +177,7 @@ namespace CosmicHorrorFishingBuddies.Core
 			}
 		}
 
-		private void OnPlayerLeft(bool isOwned, uint netID)
+		private void OnPlayerLeft(bool isOwned)
 		{
 			if (!isOwned)
 			{
