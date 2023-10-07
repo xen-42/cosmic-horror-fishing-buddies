@@ -1,4 +1,5 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
+using CosmicHorrorFishingBuddies.PlayerSync;
 using CosmicHorrorFishingBuddies.Util;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,15 @@ namespace CosmicHorrorFishingBuddies.Debugging
 	{
 		private List<(KeyCode key, Action action)> _commands;
 
+		private int _dockIndex;
+
 		public void Awake()
 		{
 			_commands = new()
 			{
 				(KeyCode.Keypad0, LogAllWorldEventData),
-				(KeyCode.Keypad1, TriggerPassiveEvent)
+				(KeyCode.Keypad1, TriggerPassiveEvent),
+				(KeyCode.Keypad2, CycleNextDock)
 			};
 		}
 
@@ -24,7 +28,19 @@ namespace CosmicHorrorFishingBuddies.Debugging
 		{
 			foreach (var (key, action) in _commands)
 			{
-				if (Input.GetKeyDown(key)) action.Invoke();
+				if (Input.GetKeyDown(key))
+				{
+
+					NotificationHelper.ShowNotificationWithColour(NotificationType.NONE, $"Invoked debug action {action.Method.Name}", DredgeColorTypeEnum.POSITIVE);
+					try
+					{
+						action.Invoke();
+					}
+					catch (Exception e)
+					{
+						CFBCore.LogError($"Failed to invoke debug command {e}");
+					}
+				}
 			}
 		}
 
@@ -54,6 +70,19 @@ namespace CosmicHorrorFishingBuddies.Debugging
 			{
 				CFBCore.LogInfo($"{worldEvent.name} {worldEvent.allowInPassiveMode} {worldEvent.GetType().Name}");
 			}
+		}
+
+		private void CycleNextDock()
+		{
+			var docks = GameObject.FindObjectsOfType<DockPOI>(true).Select(x => x?.dockSlots[0]?.gameObject).Where(x => x != null);
+			if (_dockIndex >= docks.Count()) _dockIndex -= docks.Count();
+
+			CFBCore.LogInfo($"Teleporting to dock {_dockIndex} out of {docks.Count()}");
+
+			TeleportPlayer.To(docks.ElementAt(_dockIndex++));
+
+			// Keep Sanity up
+			GameManager.Instance.Player.Sanity.ChangeSanity(100);
 		}
 	}
 }
