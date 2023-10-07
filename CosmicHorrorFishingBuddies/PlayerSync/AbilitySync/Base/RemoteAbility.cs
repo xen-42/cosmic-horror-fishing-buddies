@@ -9,7 +9,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 	{
 		protected NetworkPlayer _networkPlayer;
 
-		public abstract Type AbilityType { get; }
+		public virtual Type AbilityType { get; }
 
 		public virtual void Awake()
 		{

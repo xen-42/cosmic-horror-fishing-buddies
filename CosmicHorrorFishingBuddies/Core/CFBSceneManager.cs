@@ -26,7 +26,7 @@ public class CFBSceneManager : MonoBehaviour
 	{
 		var sceneManagerObject = new GameObject(nameof(CFBSceneManager));
 
-		switch(current.name)
+		switch (current.name)
 		{
 			case Scenes.Game:
 				foreach (var type in TypeHelper.GetTypesWithAttribute(typeof(AddToGameSceneAttribute)))

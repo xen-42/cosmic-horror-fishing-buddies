@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-    internal class RemoteTeleportAbility : RemoteRPCAbility
+	internal class RemoteTeleportAbility : RemoteRPCAbility
 	{
 		public override Type AbilityType => typeof(TeleportAbility);
 

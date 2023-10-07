@@ -17,7 +17,7 @@ namespace CosmicHorrorFishingBuddies.Util
 			{
 				return Game;
 			}
-			return null;	
+			return null;
 		}
 	}
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
-    internal class RemoteFoghornAbility : RemoteSyncVarAbility
+	internal class RemoteFoghornAbility : RemoteSyncVarAbility
 	{
 		public override Type AbilityType => typeof(FoghornAbility);
 
@@ -16,7 +16,6 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 		public override void Start()
 		{
 			base.Start();
-
 			foghornEndSource.clip = AbilityHelper.GetAbility<FoghornAbility>().foghornEndSource.clip;
 			foghornMidSource.clip = AbilityHelper.GetAbility<FoghornAbility>().foghornMidSource.clip;
 		}

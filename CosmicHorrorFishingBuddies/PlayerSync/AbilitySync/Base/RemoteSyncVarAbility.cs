@@ -10,15 +10,14 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 	{
 		[SyncVar(hook = nameof(Hook))]
 		private bool _active;
-		private bool _hasStarted;
 
 		public bool IsActive => _active;
 
 		public virtual void Start()
 		{
-			if (isOwned)
+			if (!isOwned)
 			{
-				Toggle(AbilityHelper.GetAbility(AbilityType).IsActive);
+				OnToggleRemote(_active);
 			}
 		}
 
@@ -32,7 +31,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 		private void Hook(bool _, bool current)
 		{
 			CFBCore.LogInfo($"Hook - Player {NetworkPlayer.LocalPlayer.netId} just toggled {AbilityType.Name} to {current}");
-			if (!isOwned && _hasStarted)
+			if (!isOwned)
 			{
 				OnToggleRemote(current);
 			}
