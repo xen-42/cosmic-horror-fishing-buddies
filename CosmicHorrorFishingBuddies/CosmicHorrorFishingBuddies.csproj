@@ -32,6 +32,9 @@
 
 	<ItemGroup>
 		<Reference Include="..\Mirror\*.dll" />
+		<Compile Remove="DebugCheats\**" />
+		<EmbeddedResource Remove="DebugCheats\**" />
+		<None Remove="DebugCheats\**" />
 		<PackageReference Include="HarmonyX" Version="2.10.1" />
 		<PackageReference Include="DredgeGameLibs" Version="1.3.0" />
 		<Reference Include="Winch">
@@ -43,9 +46,5 @@
 	<ItemGroup>
 		<ProjectReference Include="..\MirrorWeaver\MirrorWeaver.csproj" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\EpicOnlineTransport\EpicOnlineTransport.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="DebugCheats\" />
 	</ItemGroup>
 </Project>
