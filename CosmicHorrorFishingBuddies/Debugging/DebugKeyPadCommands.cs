@@ -20,7 +20,8 @@ namespace CosmicHorrorFishingBuddies.Debugging
 			{
 				(KeyCode.Keypad0, LogAllWorldEventData),
 				(KeyCode.Keypad1, TriggerPassiveEvent),
-				(KeyCode.Keypad2, CycleNextDock)
+				(KeyCode.Keypad2, CycleNextDock),
+				(KeyCode.Keypad3, RefreshPlayer),
 			};
 		}
 
@@ -83,6 +84,16 @@ namespace CosmicHorrorFishingBuddies.Debugging
 
 			// Keep Sanity up
 			GameManager.Instance.Player.Sanity.ChangeSanity(100);
+		}
+
+		private void RefreshPlayer()
+		{
+			// Reset all cooldowns and refill sanity
+			GameManager.Instance.Player.Sanity.ChangeSanity(100);
+			foreach (var ability in GameManager.Instance.PlayerAbilities.abilityMap.Values)
+			{
+				GameManager.Instance.SaveData.abilityHistory[ability.abilityData.name.ToLowerInvariant()] = float.NegativeInfinity;
+			}
 		}
 	}
 }
