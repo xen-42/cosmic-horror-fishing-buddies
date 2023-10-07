@@ -11,10 +11,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
 	internal class RemoteLightAbility : RemoteSyncVarAbility
 	{
+		public override Type AbilityType => typeof(LightAbility);
+
 		private LightFlickerEffect _lightFlickerEffect;
 
-		public void Start()
+		public override void Start()
 		{
+			base.Start();
 			_networkPlayer.remotePlayerBoatGraphics.RefreshBoatModel.AddListener(RefreshLights);
 			_lightFlickerEffect = GetComponentInChildren<LightFlickerEffect>();
 		}
