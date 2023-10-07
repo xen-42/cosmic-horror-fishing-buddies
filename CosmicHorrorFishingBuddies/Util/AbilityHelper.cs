@@ -18,6 +18,9 @@ public static class AbilityHelper
 		{ typeof(DeployPotAbility), "pot" },
 		{ typeof(TrawlNetAbility), "trawl" },
 		{ typeof(BoostAbility), "haste" },
+		{ typeof(FoghornAbility), "foghorn" },
+		{ typeof(SpyglassAbility), "spyglass" },
+
 	};
 
 	public static Ability GetAbility(Type type)

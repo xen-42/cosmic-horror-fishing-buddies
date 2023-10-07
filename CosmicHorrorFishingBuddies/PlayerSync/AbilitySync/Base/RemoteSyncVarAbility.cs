@@ -1,4 +1,5 @@
-﻿using CosmicHorrorFishingBuddies.Util;
+﻿using CosmicHorrorFishingBuddies.Core;
+using CosmicHorrorFishingBuddies.Util;
 using Mirror;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 	{
 		[SyncVar(hook = nameof(Hook))]
 		private bool _active;
+		private bool _hasStarted;
 
 		public bool IsActive => _active;
 
@@ -21,11 +23,16 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 		}
 
 		[Command]
-		public override sealed void Toggle(bool active) => _active = active;
+		public override sealed void Toggle(bool active)
+		{
+			CFBCore.LogInfo($"Command - Player {NetworkPlayer.LocalPlayer.netId} just toggled {AbilityType.Name} to {active}");
+			_active = active;
+		}
 
 		private void Hook(bool _, bool current)
 		{
-			if (!isOwned)
+			CFBCore.LogInfo($"Hook - Player {NetworkPlayer.LocalPlayer.netId} just toggled {AbilityType.Name} to {current}");
+			if (!isOwned && _hasStarted)
 			{
 				OnToggleRemote(current);
 			}

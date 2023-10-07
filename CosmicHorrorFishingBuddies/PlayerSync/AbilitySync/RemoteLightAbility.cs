@@ -21,8 +21,6 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 
 			_networkPlayer.remotePlayerBoatGraphics.RefreshBoatModel.AddListener(RefreshLights);
 			_lightFlickerEffect = GetComponentInChildren<LightFlickerEffect>();
-
-			RefreshLights();
 		}
 
 		public void OnDestroy()
