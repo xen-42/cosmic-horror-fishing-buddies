@@ -62,15 +62,29 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			_crabLookUp[networkPOI.Target as PlacedHarvestPOI] = networkPOI;
 		}
 
-		public void TryDestroyNetworkBait(BaitHarvestPOI bait)
+		public void DestroyNetworkBait(BaitHarvestPOI bait)
 		{
 			if (_baitLookUp.TryGetValue(bait, out var networkBait))
 			{
 				_baitLookUp.Remove(bait);
-				if (NetworkClient.activeHost)
-				{
-					NetworkServer.Destroy(networkBait.gameObject);
-				}
+				networkBait.DestroyHarvestPOI();
+			}
+			else
+			{
+				CFBCore.LogError($"Failed to find network object for {bait.name}");
+			}
+		}
+
+		public void DestroyCrabPot(PlacedHarvestPOI crabPot)
+		{
+			if (_crabLookUp.TryGetValue(crabPot, out var networkCrabPot))
+			{
+				_crabLookUp.Remove(crabPot);
+				networkCrabPot.DestroyHarvestPOI();
+			}
+			else
+			{
+				CFBCore.LogError($"Failed to find network object for {crabPot.name}");
 			}
 		}
 
