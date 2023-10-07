@@ -87,14 +87,14 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			// Don't invoke event if the first player isn't set up yet
 			if (LocalPlayer != null)
 			{
-				PlayerManager.PlayerJoined?.Invoke(isOwned);
+				PlayerManager.PlayerJoined?.Invoke(isOwned, netIdentity.netId);
 			}
 		}
 
 		public void OnDestroy()
 		{
 			PlayerManager.Players.Remove(netIdentity.netId);
-			PlayerManager.PlayerLeft?.Invoke(isOwned);
+			PlayerManager.PlayerLeft?.Invoke(isOwned, netIdentity.netId);
 		}
 	}
 }
