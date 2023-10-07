@@ -1,15 +1,12 @@
 ﻿using CosmicHorrorFishingBuddies.Util;
 using HarmonyLib;
 using System;
-using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.Respawn;
 
 [HarmonyPatch(typeof(Player))]
 internal class RespawnPatch
 {
-
-
 	[HarmonyPrefix]
 	[HarmonyPatch(nameof(Player.Die), new Type[] { })]
 	public static bool Player_Die(Player __instance)
@@ -37,6 +34,3 @@ internal class RespawnPatch
 		NotificationHelper.ShowNotificationWithColour(NotificationType.DAMAGE_TAKEN, "An unknown force keeps you from death...", DredgeColorTypeEnum.NEGATIVE);
 	}
 }
-
-
-
