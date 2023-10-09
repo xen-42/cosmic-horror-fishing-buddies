@@ -15,9 +15,9 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 
 		public override void Start()
 		{
-			base.Start();
 			foghornEndSource.clip = AbilityHelper.GetAbility<FoghornAbility>().foghornEndSource.clip;
 			foghornMidSource.clip = AbilityHelper.GetAbility<FoghornAbility>().foghornMidSource.clip;
+			base.Start();
 		}
 
 		protected override void OnToggleRemote(bool active)
