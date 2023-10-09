@@ -25,13 +25,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 			CFBCore.LogInfo($"Remote player foghorn {active}");
 			if (active)
 			{
-				foghornMidSource.volume = 3.0f;
+				foghornMidSource.volume = 1f;
 				foghornMidSource.Play();
 			}
 			if (!active)
 			{
 				foghornMidSource.Stop();
-				foghornEndSource.volume = 3.0f;
+				foghornEndSource.volume = 1f;
 				foghornEndSource.PlayOneShot(foghornEndSource.clip);
 			}
 		}

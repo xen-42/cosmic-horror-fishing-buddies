@@ -2,6 +2,7 @@
 using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Debugging;
 using CosmicHorrorFishingBuddies.Extensions;
+using CosmicHorrorFishingBuddies.Util;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -108,10 +109,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			var atrophy = GameManager.Instance.PlayerAbilities.abilityMap["atrophy"] as AtrophyAbility;
 			networkPlayer.remoteAtrophyAbility.playerVfxPrefab = atrophy.playerVfxPrefab;
 			networkPlayer.remoteAtrophyAbility.harvestVfxPrefab = atrophy.spotVfxPrefab;
-			networkPlayer.remoteAtrophyAbility.loopAudio = remotePlayer.gameObject.AddComponent<AudioSource>();
-			networkPlayer.remoteAtrophyAbility.loopAudio.spatialBlend = 1;
-			networkPlayer.remoteAtrophyAbility.loopAudio.maxDistance = 20;
-			networkPlayer.remoteAtrophyAbility.loopAudio.minDistance = 5;
+			networkPlayer.remoteAtrophyAbility.loopAudio = AudioSourceUtil.MakeSpatialAudio(remotePlayer.gameObject);
 			networkPlayer.remoteAtrophyAbility.loopAudio.clip = atrophy.loopAudioSource.clip;
 
 			return transform;
