@@ -4,8 +4,8 @@ namespace CosmicHorrorFishingBuddies.Util
 {
 	internal static class Scenes
 	{
-		public static string Title = nameof(Title);
-		public static string Game = nameof(Game);
+		public const string Title = nameof(Title);
+		public const string Game = nameof(Game);
 
 		public static string StringFromLoadSceneReference(AssetReference loadSceneReference)
 		{

@@ -1,4 +1,6 @@
-﻿using Mirror;
+﻿using CosmicHorrorFishingBuddies.Util;
+using Mirror;
+using System;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
@@ -8,7 +10,9 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 	{
 		protected NetworkPlayer _networkPlayer;
 
-		public void Awake()
+		public virtual Type AbilityType { get; }
+
+		public virtual void Awake()
 		{
 			_networkPlayer = GetComponent<NetworkPlayer>();
 		}

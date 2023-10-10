@@ -16,8 +16,6 @@
 		<Exec Command=".\MirrorWeaver &quot;$(TargetPath)&quot;" WorkingDirectory="..\MirrorWeaver\bin\$(Configuration)\" />
 	</Target>
 
-
-
 	<ItemGroup>
 		<None Include="Assets/*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -32,20 +30,13 @@
 
 	<ItemGroup>
 		<Reference Include="..\Mirror\*.dll" />
-		<PackageReference Include="HarmonyX" Version="2.10.1" />
+		<PackageReference Include="HarmonyX" Version="2.10.2" />
 		<PackageReference Include="DredgeGameLibs" Version="1.3.0" />
-		<Reference Include="Winch">
-			<HintPath>$(GameInstall)\Winch.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
+		<PackageReference Include="Winch" Version="0.2.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\MirrorWeaver\MirrorWeaver.csproj" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\EpicOnlineTransport\EpicOnlineTransport.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="DebugCheats\" />
 	</ItemGroup>
 </Project>

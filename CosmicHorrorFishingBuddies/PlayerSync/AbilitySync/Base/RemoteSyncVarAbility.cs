@@ -1,4 +1,6 @@
-﻿using Mirror;
+﻿using CosmicHorrorFishingBuddies.Core;
+using CosmicHorrorFishingBuddies.Util;
+using Mirror;
 using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
@@ -11,12 +13,32 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 
 		public bool IsActive => _active;
 
+		public virtual void Start()
+		{
+			// Local - set our initial state
+			if (_networkPlayer.isLocalPlayer)
+			{
+				Toggle(AbilityHelper.GetAbility(AbilityType).IsActive);
+			}
+			// Remote - send the initial state
+			else
+			{
+				OnToggleRemote(_active);
+			}
+		}
+
 		[Command]
-		public override sealed void Toggle(bool active) => _active = active;
+		public override sealed void Toggle(bool active)
+		{
+			_active = active;
+
+			// Hook has to be manually called on the server
+			Hook(default, active);
+		}
 
 		private void Hook(bool _, bool current)
 		{
-			if (!isOwned)
+			if (!_networkPlayer.isLocalPlayer)
 			{
 				OnToggleRemote(current);
 			}

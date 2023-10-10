@@ -9,12 +9,15 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
 	internal class RemoteLightAbility : RemoteSyncVarAbility
 	{
+		public override Type AbilityType => typeof(LightAbility);
+
 		private LightFlickerEffect _lightFlickerEffect;
 
-		public void Start()
+		public override void Start()
 		{
 			_networkPlayer.remotePlayerBoatGraphics.RefreshBoatModel.AddListener(RefreshLights);
 			_lightFlickerEffect = GetComponentInChildren<LightFlickerEffect>();
+			base.Start();
 		}
 
 		public void OnDestroy()
@@ -49,15 +52,22 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 
 		public void RefreshLights()
 		{
-			_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.SetLightStrength(IsActive ? 4f : 0f);
+			try
+			{
+				_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.SetLightStrength(IsActive ? 4f : 0f);
 
-			foreach (var light in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.Lights)
-			{
-				light.SetActive(IsActive);
+				foreach (var light in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.Lights)
+				{
+					light.SetActive(IsActive);
+				}
+				foreach (var lightBeam in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.LightBeams)
+				{
+					lightBeam.SetActive(IsActive);
+				}
 			}
-			foreach (var lightBeam in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.LightBeams)
+			catch (Exception e)
 			{
-				lightBeam.SetActive(IsActive);
+				CFBCore.LogError(e);
 			}
 		}
 	}

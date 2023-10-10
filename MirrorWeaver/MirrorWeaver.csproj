@@ -23,10 +23,8 @@
 
 	<ItemGroup>
 		<Reference Include="..\Mirror\*.dll" />
-		<PackageReference Include="HarmonyX" Version="2.10.1" />
-		<Reference Include="Winch">
-			<HintPath>$(GameInstall)\Winch.dll</HintPath>
-		</Reference>
-		<PackageReference Include="DredgeGameLibs" Version="1.1.0" />
+		<PackageReference Include="HarmonyX" Version="2.10.2" />
+		<PackageReference Include="DredgeGameLibs" Version="1.3.0" />
+		<PackageReference Include="Winch" Version="0.2.2" />
 	</ItemGroup>
 </Project>

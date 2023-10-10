@@ -1,4 +1,10 @@
-﻿namespace CosmicHorrorFishingBuddies.AudioSync
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CosmicHorrorFishingBuddies.AudioSync
 {
 	public enum AudioEnum
 	{

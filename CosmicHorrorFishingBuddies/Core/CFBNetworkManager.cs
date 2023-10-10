@@ -76,18 +76,11 @@ namespace CosmicHorrorFishingBuddies.Core
 				var remoteFoghornObj = new GameObject(nameof(RemoteFoghornAbility));
 				remoteFoghornObj.transform.parent = playerPrefab.transform;
 				remoteFoghornObj.transform.localPosition = Vector3.zero;
-				networkPlayer.remoteFoghornAbility.foghornEndSource = remoteFoghornObj.AddComponent<AudioSource>();
-				networkPlayer.remoteFoghornAbility.foghornEndSource.spatialBlend = 1;
-				networkPlayer.remoteFoghornAbility.foghornEndSource.minDistance = 15;
-				networkPlayer.remoteFoghornAbility.foghornMidSource = remoteFoghornObj.AddComponent<AudioSource>();
-				networkPlayer.remoteFoghornAbility.foghornMidSource.spatialBlend = 1;
-				networkPlayer.remoteFoghornAbility.foghornMidSource.minDistance = 15;
+				networkPlayer.remoteFoghornAbility.foghornEndSource = AudioSourceUtil.MakeSpatialAudio(remoteFoghornObj, maxDistance: 100);
+				networkPlayer.remoteFoghornAbility.foghornMidSource = AudioSourceUtil.MakeSpatialAudio(remoteFoghornObj, maxDistance: 100);
 
 				// PlaySFX
-				networkPlayer.oneShotSource = playerPrefab.AddComponent<AudioSource>();
-				networkPlayer.oneShotSource.spatialBlend = 1;
-				networkPlayer.oneShotSource.minDistance = 5;
-				networkPlayer.oneShotSource.maxDistance = 20;
+				networkPlayer.oneShotSource = AudioSourceUtil.MakeSpatialAudio(playerPrefab);
 
 				// Engine audio
 				// All NetworkBehaviours have to be on root object to share its netid
@@ -96,12 +89,7 @@ namespace CosmicHorrorFishingBuddies.Core
 				var engineAudioObj = new GameObject(nameof(RemotePlayerEngineAudio));
 				engineAudioObj.transform.parent = playerPrefab.transform;
 				engineAudioObj.transform.localPosition = Vector3.zero;
-				networkPlayer.remotePlayerEngineAudio.engineSource = engineAudioObj.AddComponent<AudioSource>();
-				networkPlayer.remotePlayerEngineAudio.engineSource.spatialBlend = 1;
-				networkPlayer.remotePlayerEngineAudio.engineSource.minDistance = 10;
-				networkPlayer.remotePlayerEngineAudio.engineSource.maxDistance = 40;
-				networkPlayer.remotePlayerEngineAudio.engineSource.loop = true;
-				networkPlayer.remotePlayerEngineAudio.engineSource.playOnAwake = true;
+				networkPlayer.remotePlayerEngineAudio.engineSource = AudioSourceUtil.MakeSpatialAudio(engineAudioObj, loop: true);
 
 				// Boat graphics
 				networkPlayer.remotePlayerBoatGraphics = playerPrefab.AddComponent<RemoteBoatGraphics>();
@@ -141,8 +129,8 @@ namespace CosmicHorrorFishingBuddies.Core
 				CFBCore.Instance.PlayerLoaded.AddListener(OnPlayerLoaded);
 				CFBCore.Instance.SwitchSceneRequested.AddListener(OnSwitchSceneRequested);
 
-				PlayerManager.PlayerJoined.AddListener(OnPlayerJoined);
-				PlayerManager.PlayerLeft.AddListener(OnPlayerLeft);
+				PlayerManager.PlayerJoined += OnPlayerJoined;
+				PlayerManager.PlayerLeft += OnPlayerLeft;
 
 				base.Awake();
 			}
@@ -169,7 +157,7 @@ namespace CosmicHorrorFishingBuddies.Core
 			}
 		}
 
-		private void OnPlayerJoined(bool isOwned)
+		private void OnPlayerJoined(bool isOwned, uint netID)
 		{
 			if (!isOwned)
 			{
@@ -177,7 +165,7 @@ namespace CosmicHorrorFishingBuddies.Core
 			}
 		}
 
-		private void OnPlayerLeft(bool isOwned)
+		private void OnPlayerLeft(bool isOwned, uint netID)
 		{
 			if (!isOwned)
 			{

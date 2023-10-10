@@ -1,9 +1,9 @@
-﻿using CosmicHorrorFishingBuddies.AudioSync;
-using CosmicHorrorFishingBuddies.Debugging;
+﻿using CosmicHorrorFishingBuddies.Debugging;
 using CosmicHorrorFishingBuddies.Save;
 using CosmicHorrorFishingBuddies.UI;
 using CosmicHorrorFishingBuddies.Util;
 using HarmonyLib;
+using Mirror;
 using Sirenix.Utilities;
 using System;
 using System.Diagnostics;
@@ -29,6 +29,8 @@ namespace CosmicHorrorFishingBuddies.Core
 		public UnityEvent PlayerLoaded = new();
 		public UnityEvent<string> SwitchSceneRequested = new();
 
+		public static bool IsHost => NetworkServer.activeHost;
+
 		private bool _restarting;
 
 		public void Awake()
@@ -44,10 +46,8 @@ namespace CosmicHorrorFishingBuddies.Core
 				new Harmony(nameof(CFBCore)).PatchAll();
 
 				gameObject.AddComponent<CFBNetworkManager>();
-				gameObject.AddComponent<AudioClipManager>();
+				gameObject.AddComponent<CFBSceneManager>();
 				gameObject.AddComponent<UIHelper>();
-				gameObject.AddComponent<MainMenuManager>();
-
 				gameObject.AddComponent<DebugController>();
 
 				Application.logMessageReceived += Application_logMessageReceived;

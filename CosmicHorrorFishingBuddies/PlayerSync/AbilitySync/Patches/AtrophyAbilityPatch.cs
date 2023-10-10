@@ -3,9 +3,9 @@ using HarmonyLib;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Patches
 {
-	[HarmonyPatch(typeof(AtrophyAbility))]
-	internal static class AtrophyAbilityPatch
-	{
+    [HarmonyPatch(typeof(AtrophyAbility))]
+    internal static class AtrophyAbilityPatch
+    {
 		[HarmonyPostfix]
 		[HarmonyPatch(nameof(AtrophyAbility.Activate))]
 		public static void AtrophyAbility_Activate()
@@ -17,8 +17,8 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Patches
 			NetworkPlayer.LocalPlayer?.CmdPlayOneShot(AudioSync.AudioEnum.ATROPHY, 1f, 1f);
 		}
 
-		[HarmonyPostfix]
-		[HarmonyPatch(nameof(AtrophyAbility.OnHarvestModeToggled))]
-		public static void AtrophyAbility_OnHarvestModeToggled() => NetworkPlayer.LocalPlayer?.remoteAtrophyAbility?.Deactivate();
-	}
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(AtrophyAbility.OnHarvestModeToggled))]
+        public static void AtrophyAbility_OnHarvestModeToggled() => NetworkPlayer.LocalPlayer?.remoteAtrophyAbility?.Deactivate();
+    }
 }

@@ -1,4 +1,9 @@
 ﻿using HarmonyLib;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Patches
 {
@@ -15,7 +20,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Patches
 				// Reset it
 				GameManager.Instance.SaveData.abilityHistory[abilityData.name] = float.NegativeInfinity;
 				__result = float.PositiveInfinity;
-			}
+			}	
 		}
 	}
 }

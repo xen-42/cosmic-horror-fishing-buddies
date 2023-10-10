@@ -49,6 +49,8 @@ internal class DebugController : MonoBehaviour
 			// Would load directly on startup but wasn't working
 			// Wonder if it's intro skipper's fault
 			Delay.RunWhen(() => SceneManager.GetActiveScene().name == Scenes.Title, DoQuickLoad);
+
+			CFBSceneManager.GameSceneLoaded += OnGameSceneLoaded;
 		}
 	}
 
@@ -88,5 +90,12 @@ internal class DebugController : MonoBehaviour
 				}
 			});
 		}
+	}
+
+	private void OnGameSceneLoaded()
+	{
+		var debugDisplay = new GameObject("DebugDisplay").AddComponent<DebugDisplay>();
+		debugDisplay.transform.parent = GameObject.Find("GameCanvases/GameCanvas").transform;
+		debugDisplay.transform.localPosition = new Vector3(-700, 400, 0);
 	}
 }
