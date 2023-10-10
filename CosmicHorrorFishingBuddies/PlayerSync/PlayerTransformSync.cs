@@ -1,6 +1,5 @@
 ﻿using CosmicHorrorFishingBuddies.BaseSync;
 using CosmicHorrorFishingBuddies.Core;
-using CosmicHorrorFishingBuddies.Debugging;
 using CosmicHorrorFishingBuddies.Extensions;
 using CosmicHorrorFishingBuddies.Util;
 using System;
@@ -18,12 +17,35 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		private static Transform CopyDetail(GameObject parent, Transform detail)
 		{
 			var newDetail = detail.gameObject.InstantiateInactive();
+
 			newDetail.name = detail.name;
 			newDetail.transform.parent = parent.transform;
 			newDetail.transform.localPosition = Vector3.zero;
 			newDetail.transform.localRotation = Quaternion.identity;
-			newDetail.gameObject.SetActive(true);
+
 			return newDetail.transform;
+		}
+
+		private static Transform CopyBoat(GameObject parent, Transform boat)
+		{
+			var boatDetail = GameObject.Instantiate(boat.gameObject);
+
+			// Doesn't work because we have no working rigidbodies also messes with the local player's net
+			// This component resets your net OnDisable, so we can't InstantiateInactive off the player without breaking it
+			foreach (var trawlResetter in boatDetail.GetComponentsInChildren<TrawlResetter>(true))
+			{
+				GameObject.DestroyImmediate(trawlResetter);
+			}
+
+			// Now it can be inactive
+			boatDetail.SetActive(false);
+
+			boatDetail.name = boat.name;
+			boatDetail.transform.parent = parent.transform;
+			boatDetail.transform.localPosition = Vector3.zero;
+			boatDetail.transform.localRotation = Quaternion.identity;
+
+			return boatDetail.transform;
 		}
 
 		private static void CreatePrefab()
@@ -32,10 +54,12 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			{
 				PlayerPrefab = new GameObject("PlayerPrefab");
 
-				var boat1 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat1"));
-				var boat2 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat2"));
-				var boat3 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat3"));
-				var boat4 = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat4"));
+				PlayerPrefab.SetActive(false);
+
+				CopyBoat(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat1"));
+				CopyBoat(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat2"));
+				CopyBoat(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat3"));
+				CopyBoat(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat4"));
 
 				// Attached rigidbodies are really weird. Have to set up some networkrigidbody stuff in the future
 				foreach (var rigidBody in PlayerPrefab.gameObject.GetComponentsInChildren<Rigidbody>(true).Select(x => x.gameObject))
@@ -45,7 +69,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					GameObject.DestroyImmediate(rigidBody.GetComponent<Rigidbody>());
 				}
 
-				var wake = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("BoatTrailParticles"));
+				CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("BoatTrailParticles"));
 
 				var teleportEffect = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Abilities/TeleportAbility/TeleportEffect"));
 				teleportEffect.gameObject.SetActive(false);
@@ -65,7 +89,12 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 					smokeColumn.smokeMaterial = mat;
 				}
 
-				PlayerPrefab.SetActive(false);
+				// Shares animator for TrawlNet, maybe other things
+				foreach (var animator in PlayerPrefab.GetComponentsInChildren<Animator>(true))
+				{
+					animator.runtimeAnimatorController = Instantiate(animator.runtimeAnimatorController);
+				}
+
 				PlayerPrefab.DontDestroyOnLoad();
 			}
 			catch (Exception e)
@@ -78,6 +107,11 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		{
 			CFBCore.LogInfo($"Creating local {nameof(PlayerTransformSync)}");
 
+			name = $"LocalPlayerRoot ({netId})";
+
+			// Might as well make the prefab right away
+			if (PlayerPrefab == null) CreatePrefab();
+
 			LocalInstance = this;
 
 			return transform;
@@ -87,9 +121,12 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		{
 			CFBCore.LogInfo($"Creating remote {nameof(PlayerTransformSync)}");
 
+			name = $"RemotePlayerRoot ({netId})";
+
+			// Just in case a remote player is made before the local player
 			if (PlayerPrefab == null) CreatePrefab();
+
 			var remotePlayer = Instantiate(PlayerPrefab).transform;
-			remotePlayer.gameObject.SetActive(true);
 			remotePlayer.name = "RemotePlayer";
 			remotePlayer.transform.parent = transform;
 			remotePlayer.transform.localPosition = Vector3.zero;
@@ -97,8 +134,8 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 			var networkPlayer = GetComponent<NetworkPlayer>();
 
-			networkPlayer.remotePlayerBoatGraphics.boatSubModelTogglers = remotePlayer.GetComponentsInChildren<BoatSubModelToggler>();
-			networkPlayer.remotePlayerBoatGraphics.boatModelProxies = remotePlayer.GetComponentsInChildren<BoatModelProxy>();
+			networkPlayer.remotePlayerBoatGraphics.boatSubModelTogglers = remotePlayer.GetComponentsInChildren<BoatSubModelToggler>(true);
+			networkPlayer.remotePlayerBoatGraphics.boatModelProxies = remotePlayer.GetComponentsInChildren<BoatModelProxy>(true);
 			networkPlayer.remotePlayerBoatGraphics.wake = remotePlayer.Find("BoatTrailParticles").gameObject;
 
 			networkPlayer.remoteTeleportAbility.teleportEffect = remotePlayer.Find("TeleportEffect").gameObject;
@@ -106,11 +143,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			networkPlayer.remoteBanishAbility.banishEffect = remotePlayer.Find("BanishAbility/BanishEffect").gameObject;
 			networkPlayer.remoteBanishAbility.banishAudioSource = remotePlayer.Find("BanishAbility/BanishLoopSFX").GetComponent<AudioSource>();
 
-			var atrophy = GameManager.Instance.PlayerAbilities.abilityMap["atrophy"] as AtrophyAbility;
+			var atrophy = AbilityHelper.GetAbility<AtrophyAbility>();
 			networkPlayer.remoteAtrophyAbility.playerVfxPrefab = atrophy.playerVfxPrefab;
 			networkPlayer.remoteAtrophyAbility.harvestVfxPrefab = atrophy.spotVfxPrefab;
 			networkPlayer.remoteAtrophyAbility.loopAudio = AudioSourceUtil.MakeSpatialAudio(remotePlayer.gameObject);
 			networkPlayer.remoteAtrophyAbility.loopAudio.clip = atrophy.loopAudioSource.clip;
+
+			remotePlayer.gameObject.SetActive(true);
 
 			return transform;
 		}
