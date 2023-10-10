@@ -47,7 +47,7 @@ jobs:
             - name: Error
               if: ${{ steps.out.outputs.exists != 'false' && (!inputs.bypassCheck) }}
               run: echo "::error file=mod_meta.json,title=Refusing to Release::Your mod was not released because there is already a release with the version in mod_meta.json"
-    release:
+    build:
         needs: pre_job
         if: ${{ (needs.pre_job.outputs.version != '0.0.0') && (needs.pre_job.outputs.exists == 'false') || (inputs.bypassCheck) }}
         name: Create Release
@@ -67,11 +67,23 @@ jobs:
               with:
                 name: "${{ env.PROJ_USERNAME }}.${{ env.PROJ_NAME }}"
                 path: "${{ env.PROJ_NAME }}/bin/Release"
-
-            - name: Zip For Release
+    upload:
+        needs: build
+        name: Upload Release
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download artifact
+              uses: actions/download-artifact@v3
+              with:
+                name: "${{ env.PROJ_USERNAME }}.${{ env.PROJ_NAME }}"
+                path: "${{ env.PROJ_USERNAME }}.${{ env.PROJ_NAME }}"
+        
+            - name: Zip Asset
               run: |
-                  cd ${{ env.PROJ_NAME }}/bin/Release;
-                  7z a ${{ env.PROJ_USERNAME }}.${{ env.PROJ_NAME }}.zip *
+                cd ${{ env.PROJ_USERNAME }}.${{ env.PROJ_NAME }}/
+                zip -r ${{ env.PROJ_USERNAME }}.${{ env.PROJ_NAME }}.zip *
+                mv ${{ env.PROJ_USERNAME }}.${{ env.PROJ_NAME }}.zip ..
+                cd ..
 
             - name: Create Release
               uses: "ncipollo/release-action@v1"
