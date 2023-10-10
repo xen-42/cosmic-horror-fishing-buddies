@@ -107,6 +107,8 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		{
 			CFBCore.LogInfo($"Creating local {nameof(PlayerTransformSync)}");
 
+			name = $"LocalPlayerRoot ({netId})";
+
 			// Might as well make the prefab right away
 			if (PlayerPrefab == null) CreatePrefab();
 
@@ -119,10 +121,10 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		{
 			CFBCore.LogInfo($"Creating remote {nameof(PlayerTransformSync)}");
 
+			name = $"RemotePlayerRoot ({netId})";
+
 			// Just in case a remote player is made before the local player
 			if (PlayerPrefab == null) CreatePrefab();
-
-			name = $"RemotePlayerRoot ({netId})";
 
 			var remotePlayer = Instantiate(PlayerPrefab).transform;
 			remotePlayer.name = "RemotePlayer";

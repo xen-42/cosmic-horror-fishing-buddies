@@ -14,28 +14,40 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 
 		protected override void OnToggleRemote(bool active)
 		{
-			try
-			{
-				_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.TrawlNetAnimator.SetBool("isDeployed", active);
-				var trawlNet = _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.transform.Find("TrawlNet/TrawlArmature/TrawlArm/Net");
-				if (active)
+			// Temporary fix that I will never fix haha
+			// RunWhen bc there's an NRE otherwise idk
+			Delay.RunWhen(
+				() => _networkPlayer?.remotePlayerBoatGraphics?.CurrentBoatModelProxy?.TrawlNetAnimator != null,
+				() =>
 				{
-					_networkPlayer.RemotePlayOneShot(AudioSync.AudioEnum.TRAWL_ACTIVATE, 1f, 1f);
-					_rotationTween?.Kill();
-					_rotationTween = trawlNet.DOLocalRotate(new UnityEngine.Vector3(90, 0, 0), 1f);
+					// Have to wait a frame else initial state isn't properly received
+					Delay.FireOnNextUpdate(() =>
+					{
+						try
+						{
+							_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.TrawlNetAnimator.SetBool("isDeployed", active);
+							var trawlNet = _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.transform.Find("TrawlNet/TrawlArmature/TrawlArm/Net");
+							if (active)
+							{
+								_networkPlayer.RemotePlayOneShot(AudioSync.AudioEnum.TRAWL_ACTIVATE, 1f, 1f);
+								_rotationTween?.Kill();
+								_rotationTween = trawlNet.DOLocalRotate(new UnityEngine.Vector3(90, 0, 0), 1f);
+							}
+							else
+							{
+								_networkPlayer.RemotePlayOneShot(AudioSync.AudioEnum.TRAWL_END, 1f, 1f);
+								_rotationTween?.Kill();
+								_rotationTween = trawlNet.DOLocalRotate(new UnityEngine.Vector3(0, 0, 0), 1f);
+								_rotationTween.SetDelay(2f);
+							}
+						}
+						catch (Exception ex)
+						{
+							CFBCore.LogError(ex);
+						}
+					});
 				}
-				else
-				{
-					_networkPlayer.RemotePlayOneShot(AudioSync.AudioEnum.TRAWL_END, 1f, 1f);
-					_rotationTween?.Kill();
-					_rotationTween = trawlNet.DOLocalRotate(new UnityEngine.Vector3(0, 0, 0), 1f);
-					_rotationTween.SetDelay(2f);
-				}
-			}
-			catch (Exception ex)
-			{
-				CFBCore.LogError(ex);
-			}
+			);
 		}
 	}
 }
