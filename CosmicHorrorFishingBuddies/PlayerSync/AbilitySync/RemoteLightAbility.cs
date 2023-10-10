@@ -1,11 +1,9 @@
-﻿using CommandTerminal;
-using CosmicHorrorFishingBuddies.AudioSync;
+﻿using CosmicHorrorFishingBuddies.AudioSync;
 using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base;
 using CosmicHorrorFishingBuddies.Util;
 using Mirror;
 using System;
-using UnityEngine;
 
 namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 {
@@ -54,15 +52,22 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 
 		public void RefreshLights()
 		{
-			_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.SetLightStrength(IsActive ? 4f : 0f);
+			try
+			{
+				_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.SetLightStrength(IsActive ? 4f : 0f);
 
-			foreach (var light in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.Lights)
-			{
-				light.SetActive(IsActive);
+				foreach (var light in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.Lights)
+				{
+					light.SetActive(IsActive);
+				}
+				foreach (var lightBeam in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.LightBeams)
+				{
+					lightBeam.SetActive(IsActive);
+				}
 			}
-			foreach (var lightBeam in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.LightBeams)
+			catch (Exception e)
 			{
-				lightBeam.SetActive(IsActive);
+				CFBCore.LogError(e);
 			}
 		}
 	}

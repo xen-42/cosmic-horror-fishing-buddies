@@ -17,14 +17,6 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 			_networkPlayer = GetComponent<NetworkPlayer>();
 		}
 
-		public virtual void Start()
-		{
-			if (_networkPlayer.isLocalPlayer)
-			{
-				Toggle(AbilityHelper.GetAbility(AbilityType).IsActive);
-			}
-		}
-
 		[Command]
 		public virtual void Toggle(bool active) { }
 	}

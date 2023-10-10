@@ -1,4 +1,5 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
+using CosmicHorrorFishingBuddies.Util;
 using Mirror;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 
 		public override void OnStartClient()
 		{
+			// Remote - send the initial state
 			_startedOnClient = true;
 			if (_started)
 			{
@@ -25,21 +27,28 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 			}
 		}
 
-		public override void Start()
+		public virtual void Start()
 		{
-			base.Start();
-
-			_started = true;
-			if (_startedOnClient)
+			// Local - set our initial state
+			if (_networkPlayer.isLocalPlayer)
 			{
-				OnToggleRemote(_active);
+				Toggle(AbilityHelper.GetAbility(AbilityType).IsActive);
+			}
+			// Remote - send the initial state
+			else
+			{
+				_started = true;
+				if (_startedOnClient)
+				{
+					OnToggleRemote(_active);
+				}
 			}
 		}
 
 		[Command]
 		public override sealed void Toggle(bool active)
 		{
-			CFBCore.LogInfo($"Command - Player {NetworkPlayer.LocalPlayer.netId} just toggled {AbilityType.Name} to {active}");
+			CFBCore.LogInfo($"Command - Player {NetworkPlayer.LocalPlayer?.netId} just toggled {AbilityType?.Name} to {active}");
 			_active = active;
 
 			// Hook has to be manually called on the server
@@ -48,7 +57,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 
 		private void Hook(bool _, bool current)
 		{
-			CFBCore.LogInfo($"Hook - Player {NetworkPlayer.LocalPlayer.netId} just toggled {AbilityType.Name} to {current}");
+			CFBCore.LogInfo($"Hook - Player {NetworkPlayer.LocalPlayer?.netId} just toggled {AbilityType?.Name} to {current}");
 			if (!_networkPlayer.isLocalPlayer)
 			{
 				OnToggleRemote(current);
