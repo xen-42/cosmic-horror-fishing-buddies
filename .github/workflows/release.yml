@@ -68,7 +68,7 @@ jobs:
                 name: "${{ env.PROJ_USERNAME }}.${{ env.PROJ_NAME }}"
                 path: "${{ env.PROJ_NAME }}/bin/Release"
     upload:
-        needs: build
+        needs: [build, pre_job]
         name: Upload Release
         runs-on: ubuntu-latest
         steps:
