@@ -36,7 +36,7 @@ jobs:
               id: check-tag
               run: echo "exists=$(git ls-remote --exit-code --tags origin ${{ env.TAG }} >/dev/null 2>&1 && echo true || echo false)" >> $GITHUB_OUTPUT
               env:
-                TAG: "v${{fromJson(steps.read-mod_meta.outputs.mod_meta).Version}}"
+                TAG: "${{fromJson(steps.read-mod_meta.outputs.mod_meta).Version}}"
             
             - name: Output Version Info
               id: out
