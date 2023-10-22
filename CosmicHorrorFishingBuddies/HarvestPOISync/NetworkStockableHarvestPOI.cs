@@ -26,13 +26,17 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 		{
 			try
 			{
-				HarvestPOIPatches.disabled = true;
+				// Do not allow syncing of spots which do not restock
+				if (Target.harvestable.GetDoesRestock())
+				{
+					HarvestPOIPatches.disabled = true;
 
-				var dStock = count - Target.Stock;
-				Target.harvestable.AddStock(dStock, false);
-				Target.OnStockUpdated();
+					var dStock = count - Target.Stock;
+					Target.harvestable.AddStock(dStock, false);
+					Target.OnStockUpdated();
 
-				HarvestPOIPatches.disabled = false;
+					HarvestPOIPatches.disabled = false;
+				}
 			}
 			catch (Exception e)
 			{
