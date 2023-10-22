@@ -12,10 +12,6 @@ Huge thanks to JohnCorby for helping me set up Mirror with the mod. And shout-ou
 ## How to Install
 Download the DREDGE Mod Manager from [dredgemods.com](https://dredgemods.com/)!
 
-## Known issues
-If a player dredges up a quest related item, that dredge spot is synced to all other players as being empty. However, this means no other player will be able to get that quest item, even when they switch to single player.
-For now, to correct this, you can install the [Quest Item Unlocker](https://dredgemods.com/mods/quest_item_unlocker/) mod which will reset all the dredge spots when you restart the game.
-
 ## Features (spoilers)
 #### What is synced:
 - Player movement
