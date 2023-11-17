@@ -26,7 +26,9 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 				Instance = this;
 
 				SortedHarvestPOIs = GameManager.Instance.HarvestPOIManager.allHarvestPOIs;
-				SortedHarvestPOIs.Sort((a, b) => a.name.CompareTo(b.name));
+				// Since DREDGE 1.4.0 the POIs can be null
+				// Cant use null coalesecescnencene because its unity objects
+				SortedHarvestPOIs.Sort((a, b) => (a == null ? string.Empty : a.name).CompareTo(b == null ? string.Empty : b.name));
 
 				if (NetworkClient.activeHost)
 				{
@@ -111,7 +113,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			}
 			else
 			{
-				CFBCore.LogError($"Untracked HarvestPOI {harvestPOI?.name} on {NetworkPlayer.LocalPlayer?.netId}");
+				// CFBCore.LogError($"Untracked HarvestPOI {harvestPOI?.name} on {NetworkPlayer.LocalPlayer?.netId}");
 				return null;
 			}
 		}
