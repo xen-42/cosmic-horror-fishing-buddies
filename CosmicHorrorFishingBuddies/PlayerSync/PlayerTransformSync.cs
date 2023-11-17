@@ -71,7 +71,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 				CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("BoatTrailParticles"));
 
-				var teleportEffect = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Abilities/TeleportAbility/TeleportEffect"));
+				var teleportEffect = CopyDetail(PlayerPrefab, GameManager.Instance.Player.GetComponentInChildren<TeleportAbility>(true).effect.transform);
 				teleportEffect.gameObject.SetActive(false);
 
 				var banishAbility = CopyDetail(PlayerPrefab, GameManager.Instance.Player.transform.Find("Abilities/BanishAbility"));

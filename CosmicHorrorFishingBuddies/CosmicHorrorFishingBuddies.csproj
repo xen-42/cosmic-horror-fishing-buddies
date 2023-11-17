@@ -31,8 +31,8 @@
 	<ItemGroup>
 		<Reference Include="..\Mirror\*.dll" />
 		<PackageReference Include="HarmonyX" Version="2.10.2" />
-		<PackageReference Include="DredgeGameLibs" Version="1.3.0" />
-		<PackageReference Include="Winch" Version="0.2.2" />
+		<PackageReference Include="DredgeGameLibs" Version="1.4.0" />
+		<PackageReference Include="Winch" Version="0.2.3" />
 	</ItemGroup>
 
 	<ItemGroup>

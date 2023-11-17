@@ -1,19 +1,16 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Extensions;
 using CosmicHorrorFishingBuddies.Util;
-using Epic.OnlineServices.Platform;
 using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace CosmicHorrorFishingBuddies.UI
 {
-    internal class UIHelper	: MonoBehaviour
+	internal class UIHelper	: MonoBehaviour
 	{
 		public static UIHelper Instance { get; private set; }
 
