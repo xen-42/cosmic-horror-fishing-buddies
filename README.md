@@ -2,6 +2,7 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/xen-42/cosmic-horror-fishing-buddies/total?style=for-the-badge)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/xen-42/cosmic-horror-fishing-buddies/latest/total?style=for-the-badge)
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dxen42%26type%3Dpatrons&style=for-the-badge)](https://patreon.com/xen42)
 
 A WIP multiplayer mod for DREDGE. Currently early alpha and might not work as intended. Installable using the [Dredge Mod Manager](https://github.com/DREDGE-Mods/DredgeModManager).
 
