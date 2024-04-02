@@ -20,9 +20,14 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 		[ClientRpc(includeOwner = false)]
 		protected void OnActivate(NetworkIdentity harvestID)
 		{
+			var harvestPOI = harvestID.GetComponent<NetworkHarvestPOI>().Target;
+
 			_playerVfx = GameObject.Instantiate(playerVfxPrefab, transform.position, Quaternion.identity);
-			_harvestVfx = GameObject.Instantiate(harvestVfxPrefab, (harvestID.GetComponent<NetworkHarvestPOI>()).Target.transform.position, Quaternion.identity);
+			_harvestVfx = GameObject.Instantiate(harvestVfxPrefab, harvestPOI.transform.position, Quaternion.identity);
 			loopAudio.Play();
+
+			harvestPOI.HarvestPOIData.AtrophyStock();
+			harvestPOI.OnStockUpdated();
 		}
 
 		[Command]

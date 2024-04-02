@@ -2,8 +2,9 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/xen-42/cosmic-horror-fishing-buddies/total?style=for-the-badge)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/xen-42/cosmic-horror-fishing-buddies/latest/total?style=for-the-badge)
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dxen42%26type%3Dpatrons&style=for-the-badge)](https://patreon.com/xen42)
 
-A WIP multiplayer mod for DREDGE. Currently early alpha and might not work as intended. Requires the [Winch modloader](https://github.com/Hacktix/Winch).
+A WIP multiplayer mod for DREDGE. Currently early alpha and might not work as intended. Installable using the [Dredge Mod Manager](https://github.com/DREDGE-Mods/DredgeModManager).
 
 ![cosmic horror fishing buddies](https://github.com/xen-42/cosmic-horror-fishing-buddies/assets/22628069/47687a63-0313-41dd-9d79-adcf58372c06)
 
@@ -44,8 +45,8 @@ Download the DREDGE Mod Manager from [dredgemods.com](https://dredgemods.com/)!
 - Waves
 - Collisions?
 
-## Dependencies
-- [Winch](https://github.com/Hacktix/Winch)
+## Dependencies (included)
+- [Winch](https://github.com/DREDGE-Mods/Winch)
 - [Mirror](https://mirror-networking.com/)
   - [kcp2k](https://github.com/vis2k/kcp2k)
   - [EpicOnlineTransport](https://github.com/FakeByte/EpicOnlineTransport)

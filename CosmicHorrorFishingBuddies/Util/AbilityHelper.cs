@@ -20,6 +20,7 @@ public static class AbilityHelper
 		{ typeof(BoostAbility), "haste" },
 		{ typeof(FoghornAbility), "foghorn" },
 		{ typeof(SpyglassAbility), "spyglass" },
+		{ typeof(BanishAbility), "banish" },
 
 	};
 

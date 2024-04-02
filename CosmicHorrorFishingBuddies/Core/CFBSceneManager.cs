@@ -24,7 +24,7 @@ public class CFBSceneManager : MonoBehaviour
 
 	private static void OnSceneChanged(Scene prev, Scene current)
 	{
-		var sceneManagerObject = new GameObject(nameof(CFBSceneManager));
+		var sceneManagerObject = new GameObject(nameof(CFBSceneManager) + "Objects");
 
 		switch (current.name)
 		{

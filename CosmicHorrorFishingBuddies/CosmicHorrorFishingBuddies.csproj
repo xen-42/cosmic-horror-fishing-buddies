@@ -16,8 +16,6 @@
 		<Exec Command=".\MirrorWeaver &quot;$(TargetPath)&quot;" WorkingDirectory="..\MirrorWeaver\bin\$(Configuration)\" />
 	</Target>
 
-
-
 	<ItemGroup>
 		<None Include="Assets/*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -32,15 +30,9 @@
 
 	<ItemGroup>
 		<Reference Include="..\Mirror\*.dll" />
-		<Compile Remove="DebugCheats\**" />
-		<EmbeddedResource Remove="DebugCheats\**" />
-		<None Remove="DebugCheats\**" />
-		<PackageReference Include="HarmonyX" Version="2.10.1" />
-		<PackageReference Include="DredgeGameLibs" Version="1.3.0" />
-		<Reference Include="Winch">
-			<HintPath>$(GameInstall)\Winch.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
+		<PackageReference Include="HarmonyX" Version="2.10.2" />
+		<PackageReference Include="DredgeGameLibs" Version="1.4.0" />
+		<PackageReference Include="Winch" Version="0.2.3" />
 	</ItemGroup>
 
 	<ItemGroup>
