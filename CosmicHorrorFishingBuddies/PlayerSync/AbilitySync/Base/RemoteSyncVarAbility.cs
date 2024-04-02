@@ -15,7 +15,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 
 		public virtual void Start()
 		{
-			if (!isOwned)
+			// Local - set our initial state
+			if (_networkPlayer.isLocalPlayer)
+			{
+				Toggle(AbilityHelper.GetAbility(AbilityType).IsActive);
+			}
+			// Remote - send the initial state
+			else
 			{
 				OnToggleRemote(_active);
 			}
@@ -24,14 +30,15 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync.Base
 		[Command]
 		public override sealed void Toggle(bool active)
 		{
-			CFBCore.LogInfo($"Command - Player {NetworkPlayer.LocalPlayer.netId} just toggled {AbilityType.Name} to {active}");
 			_active = active;
+
+			// Hook has to be manually called on the server
+			Hook(default, active);
 		}
 
 		private void Hook(bool _, bool current)
 		{
-			CFBCore.LogInfo($"Hook - Player {NetworkPlayer.LocalPlayer.netId} just toggled {AbilityType.Name} to {current}");
-			if (!isOwned)
+			if (!_networkPlayer.isLocalPlayer)
 			{
 				OnToggleRemote(current);
 			}

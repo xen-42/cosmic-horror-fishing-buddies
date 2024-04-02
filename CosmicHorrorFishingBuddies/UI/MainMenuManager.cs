@@ -1,20 +1,17 @@
 ﻿using Coffee.UIExtensions;
 using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Util;
-using Epic.OnlineServices;
 using EpicTransport;
 using System;
-using System.Net;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TransportType = CosmicHorrorFishingBuddies.Core.TransportType;
 
 namespace CosmicHorrorFishingBuddies.UI
 {
 	[AddToMainMenuScene]
-    internal class MainMenuManager : MonoBehaviour
+	internal class MainMenuManager : MonoBehaviour
 	{
 		private PopupWindow _popupWindow;
 		private SaveSlotWindow _saveSlotWindow;
@@ -27,76 +24,62 @@ namespace CosmicHorrorFishingBuddies.UI
 		private TextMeshProUGUI _connectionInfo;
 		private TMP_InputField _inputField;
 
-		public void Awake()
-		{
-			SceneManager.activeSceneChanged += OnSceneChanged;
-		}
-
-		public void OnDestroy()
-		{
-			SceneManager.activeSceneChanged -= OnSceneChanged;
-		}
-
-		private void OnSceneChanged(Scene prev, Scene current)
+		public void Start()
 		{
 			try
 			{
-				CFBCore.LogInfo($"Switched from scene [{prev.name}] to [{current.name}]");
-				if (current.name == Scenes.Title)
+				_saveSlotWindow = UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.LOAD).GetComponent<LoadGameButton>().saveSlotWindow;
+
+				_popupWindow = UIHelper.AddMainMenuPopupWindow();
+				var panel = _popupWindow.container.transform.Find("Panel");
+
+				var options = new GameObject("OptionsList");
+				options.SetActive(false);
+				var rectTransform = options.AddComponent<RectTransform>();
+				var grid = options.AddComponent<GridLayoutGroup>();
+				grid.cellSize = new Vector2(500, 80);
+				grid.spacing = new Vector2(100, 20);
+				grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+				grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
+				grid.childAlignment = TextAnchor.MiddleCenter;
+				options.AddComponent<CanvasRenderer>();
+				options.transform.parent = panel;
+				options.transform.localPosition = Vector2.zero;
+				options.transform.localScale = Vector2.one;
+				rectTransform.offsetMax = Vector2.zero;
+				rectTransform.offsetMin = Vector2.zero;
+				rectTransform.sizeDelta = new Vector2(500, 500);
+				options.SetActive(true);
+
+				_connectionTitle = UIHelper.AddLabel(options.transform, "Multiplayer", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
+
+				var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Epic", new (string, Action)[]
 				{
-					_saveSlotWindow = UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.LOAD).GetComponent<LoadGameButton>().saveSlotWindow;
-
-					_popupWindow = UIHelper.AddMainMenuPopupWindow();
-					var panel = _popupWindow.container.transform.Find("Panel");
-					
-					var options = new GameObject("OptionsList");
-					options.SetActive(false);
-					var rectTransform = options.AddComponent<RectTransform>();
-					var grid = options.AddComponent<GridLayoutGroup>();
-					grid.cellSize = new Vector2(500, 80);
-					grid.spacing = new Vector2(100, 20);
-					grid.startAxis = GridLayoutGroup.Axis.Horizontal;
-					grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
-					grid.childAlignment = TextAnchor.MiddleCenter;
-					options.AddComponent<CanvasRenderer>();
-					options.transform.parent = panel;
-					options.transform.localPosition = Vector2.zero;
-					options.transform.localScale = Vector2.one;
-					rectTransform.offsetMax = Vector2.zero;
-					rectTransform.offsetMin = Vector2.zero;
-					rectTransform.sizeDelta = new Vector2(500, 500);
-					options.SetActive(true);
-
-					_connectionTitle = UIHelper.AddLabel(options.transform, "Multiplayer", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
-
-					var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Epic", new (string, Action)[]
-					{
 						("Epic", () => OnSelectTransportOption(TransportType.EPIC)),
 						//("Steam", () => OnSelectOption(CFBNetworkManager.TransportType.STEAM)),
 						("IP Address", () => OnSelectTransportOption(TransportType.KCP))
-					});
-					_transportType = TransportType.EPIC;
+				});
+				_transportType = TransportType.EPIC;
 
-					var dropDownLabel = dropDown.transform.Find("LabelContainer");
-					dropDownLabel.transform.localPosition = new Vector2(20, 60);
-					dropDownLabel.transform.localScale = Vector2.one * 0.8f;
+				var dropDownLabel = dropDown.transform.Find("LabelContainer");
+				dropDownLabel.transform.localPosition = new Vector2(20, 60);
+				dropDownLabel.transform.localScale = Vector2.one * 0.8f;
 
-					_connectionInfo = UIHelper.AddLabel(options.transform, "Info", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
+				_connectionInfo = UIHelper.AddLabel(options.transform, "Info", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
 
-					_inputField = UIHelper.AddInputField(options.transform, _address);
+				_inputField = UIHelper.AddInputField(options.transform, _address);
 
-					var startButton = UIHelper.AddButton(options.transform, "Start", OnClickStart);
-					startButton.GetComponent<UITransitionEffect>().enabled = false;
-					startButton.GetComponent<Button>().colors = _saveSlotWindow.saveSlots[0].selectSlotButton.GetComponent<Button>().colors;
+				var startButton = UIHelper.AddButton(options.transform, "Start", OnClickStart);
+				startButton.GetComponent<UITransitionEffect>().enabled = false;
+				startButton.GetComponent<Button>().colors = _saveSlotWindow.saveSlots[0].selectSlotButton.GetComponent<Button>().colors;
 
-					UIHelper.AddMainMenuButton("Host Game", OnClickHost, 0);
-					UIHelper.AddMainMenuButton("Join Game", OnClickJoin, 1);
+				UIHelper.AddMainMenuButton("Host Game", OnClickHost, 0);
+				UIHelper.AddMainMenuButton("Join Game", OnClickJoin, 1);
 
-					GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.CONTINUE));
-					GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.LOAD));
+				GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.CONTINUE));
+				GameObject.DestroyImmediate(UIHelper.GetMainMenuButton(UIHelper.MainMenuButton.LOAD));
 
-					CFBCore.LogInfo("Altered main menu!");
-				}
+				CFBCore.LogInfo("Altered main menu!");
 			}
 			catch (Exception e)
 			{

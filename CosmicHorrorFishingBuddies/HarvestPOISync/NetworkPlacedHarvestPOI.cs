@@ -10,6 +10,9 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 {
 	internal class NetworkPlacedHarvestPOI : NetworkHarvestPOI
 	{
+		[SyncVar]
+		private uint _activeOwnerID = uint.MaxValue;
+
 		[Command]
 		public void SetCrabPotData(SerializedCrabPotPOIDataWrapper crabPotData, uint senderID)
 		{
@@ -19,7 +22,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 		[ClientRpc]
 		private void RpcSetCrabPotData(SerializedCrabPotPOIDataWrapper crabPotData, uint senderID)
 		{
-			CFBCore.LogInfo($"Player {senderID} requested {NetworkPlayer.LocalPlayer.netId} to make bait");
+			CFBCore.LogInfo($"Player {senderID} requested {NetworkPlayer.LocalPlayer.netId} to make crab pot");
 			if (NetworkPlayer.LocalPlayer.netIdentity.netId != senderID)
 			{
 				InitializeCrabPotData(crabPotData);
@@ -48,6 +51,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 					{
 						GameManager.Instance.CullingBrain.AddCullable(cullable);
 					}
+					harvestable.Init();
 				}
 
 				Target = harvestPOI;

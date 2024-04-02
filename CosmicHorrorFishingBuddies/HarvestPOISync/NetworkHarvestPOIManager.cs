@@ -26,7 +26,9 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 				Instance = this;
 
 				SortedHarvestPOIs = GameManager.Instance.HarvestPOIManager.allHarvestPOIs;
-				SortedHarvestPOIs.Sort((a, b) => a.name.CompareTo(b.name));
+				// Since DREDGE 1.4.0 the POIs can be null
+				// Cant use null coalesecescnencene because its unity objects
+				SortedHarvestPOIs.Sort((a, b) => (a == null ? string.Empty : a.name).CompareTo(b == null ? string.Empty : b.name));
 
 				if (NetworkClient.activeHost)
 				{
@@ -62,15 +64,29 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			_crabLookUp[networkPOI.Target as PlacedHarvestPOI] = networkPOI;
 		}
 
-		public void TryDestroyNetworkBait(BaitHarvestPOI bait)
+		public void DestroyNetworkBait(BaitHarvestPOI bait)
 		{
 			if (_baitLookUp.TryGetValue(bait, out var networkBait))
 			{
 				_baitLookUp.Remove(bait);
-				if (NetworkClient.activeHost)
-				{
-					NetworkServer.Destroy(networkBait.gameObject);
-				}
+				networkBait.DestroyHarvestPOI();
+			}
+			else
+			{
+				CFBCore.LogError($"Failed to find network object for {bait.name}");
+			}
+		}
+
+		public void DestroyCrabPot(PlacedHarvestPOI crabPot)
+		{
+			if (_crabLookUp.TryGetValue(crabPot, out var networkCrabPot))
+			{
+				_crabLookUp.Remove(crabPot);
+				networkCrabPot.DestroyHarvestPOI();
+			}
+			else
+			{
+				CFBCore.LogError($"Failed to find network object for {crabPot.name}");
 			}
 		}
 
@@ -97,7 +113,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			}
 			else
 			{
-				CFBCore.LogError($"Untracked HarvestPOI {harvestPOI?.name} on {NetworkPlayer.LocalPlayer?.netId}");
+				// CFBCore.LogError($"Untracked HarvestPOI {harvestPOI?.name} on {NetworkPlayer.LocalPlayer?.netId}");
 				return null;
 			}
 		}

@@ -9,7 +9,7 @@ namespace CosmicHorrorFishingBuddies.TimeSync
 		public static TimeSyncManager Instance { get; private set; }
 
 		[SyncVar]
-		public float TimeAndDay;
+		public decimal TimeAndDay;
 
 		[SyncVar]
 		public float TimePassageModifier;

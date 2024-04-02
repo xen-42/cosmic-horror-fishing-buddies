@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using CosmicHorrorFishingBuddies.Util;
+using Mirror;
 using System;
 using UnityEngine;
 
