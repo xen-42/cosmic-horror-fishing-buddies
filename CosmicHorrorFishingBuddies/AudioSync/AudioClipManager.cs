@@ -52,8 +52,6 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 
 		private static AudioClip GetClip(AudioEnum audio) => audio switch
 		{
-			AudioEnum.LIGHT_ON => AbilityHelper.GetAbility<LightAbility>().onSFX,
-			AudioEnum.LIGHT_OFF => AbilityHelper.GetAbility<LightAbility>().offSFX,
 			_ => null,
 		};
 
@@ -72,6 +70,9 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 
 			AudioEnum.HASTE => AbilityHelper.GetAbility<BoostAbility>()?.abilityData?.castSFX,
 			AudioEnum.LIGHT_FLICKER => EventHelper.GetWorldEvent<FlickerLightsWorldEvent>()?.flickerSFX,
+
+			AudioEnum.LIGHT_ON => AbilityHelper.GetAbility<LightAbility>().GetActivateSFX(),
+			AudioEnum.LIGHT_OFF => AbilityHelper.GetAbility<LightAbility>().GetDeactivateSFX(),
 			_ => null,
 		};
 

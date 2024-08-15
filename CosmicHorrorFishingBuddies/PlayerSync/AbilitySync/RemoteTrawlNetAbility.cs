@@ -17,7 +17,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 			// Temporary fix that I will never fix haha
 			// RunWhen bc there's an NRE otherwise idk
 			Delay.RunWhen(
-				() => _networkPlayer?.remotePlayerBoatGraphics?.CurrentBoatModelProxy?.TrawlNetAnimator != null,
+				() => _networkPlayer?.remotePlayerBoatGraphics?.CurrentBoatModelProxy?.GetTrawlNetAnimator() != null,
 				() =>
 				{
 					// Have to wait a frame else initial state isn't properly received
@@ -25,7 +25,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 					{
 						try
 						{
-							_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.TrawlNetAnimator.SetBool("isDeployed", active);
+							_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.GetTrawlNetAnimator().SetBool("isDeployed", active);
 							var trawlNet = _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.transform.Find("TrawlNet/TrawlArmature/TrawlArm/Net");
 							if (active)
 							{
