@@ -50,14 +50,12 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 			}
 		}
 
-		private static AudioClip GetClip(AudioEnum audio) => audio switch
-		{
-			AudioEnum.LIGHT_ON => AbilityHelper.GetAbility<LightAbility>().onSFX,
-			AudioEnum.LIGHT_OFF => AbilityHelper.GetAbility<LightAbility>().offSFX,
-			_ => null,
-		};
+        private static AudioClip GetClip(AudioEnum audio) => audio switch
+        {
+            _ => null,
+        };
 
-		private static AssetReference GetAssetReference(AudioEnum audio) => audio switch
+        private static AssetReference GetAssetReference(AudioEnum audio) => audio switch
 		{
 			AudioEnum.PLAYER_COLLISION => _instance?._playerCollisionAudio?.clipRefs?.PickRandom(),
 			// Ability -> Ability Data
@@ -72,7 +70,10 @@ namespace CosmicHorrorFishingBuddies.AudioSync
 
 			AudioEnum.HASTE => AbilityHelper.GetAbility<BoostAbility>()?.abilityData?.castSFX,
 			AudioEnum.LIGHT_FLICKER => EventHelper.GetWorldEvent<FlickerLightsWorldEvent>()?.flickerSFX,
-			_ => null,
+
+            AudioEnum.LIGHT_ON => AbilityHelper.GetAbility<LightAbility>().GetActivateSFX(),
+            AudioEnum.LIGHT_OFF => AbilityHelper.GetAbility<LightAbility>().GetDeactivateSFX(),
+            _ => null,
 		};
 
 		private static void PlayClip(AudioClip clip, AudioSource source, float volume, float pitch)
