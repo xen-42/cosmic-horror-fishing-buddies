@@ -124,7 +124,13 @@ namespace CosmicHorrorFishingBuddies.UI
 		{
 			var newButton = _buttonPrefab.InstantiateInactive();
 			newButton.name = $"{text}_Button";
-			newButton.GetComponentInChildren<TextMeshProUGUI>().text = text;
+			var textUI = newButton.GetComponentInChildren<TextMeshProUGUI>();
+			textUI.text = text;
+			textUI.enabled = true;
+			var fontBypass = textUI.gameObject.GetOrAddComponent<LocalizeFontBypass>();
+			fontBypass.textField = textUI;
+			fontBypass.tableString = "Fonts";
+			fontBypass.tableEntryString = "DefaultFont";
 			newButton.GetComponent<BasicButtonWrapper>().OnClick = onClick;
 
 			newButton.transform.parent = parent;
