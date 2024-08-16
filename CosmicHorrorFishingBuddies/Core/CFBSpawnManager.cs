@@ -70,7 +70,7 @@ namespace CosmicHorrorFishingBuddies.Core
 			}
 			catch (Exception e)
 			{
-				CFBCore.LogError($"Couldn't spawn network bait {e}");
+				CFBCore.LogError($"Couldn't spawn network crab pot {e}");
 			}
 		}
 
