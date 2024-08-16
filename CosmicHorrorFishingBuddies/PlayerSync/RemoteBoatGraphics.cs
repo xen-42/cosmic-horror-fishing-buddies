@@ -48,9 +48,10 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		private readonly SyncList<int> _tier2Children = new();
 		private readonly SyncList<int> _tier3Children = new();
 		private readonly SyncList<int> _tier4Children = new();
+		private readonly SyncList<int> _tier5Children = new();
 
 		[Command]
-		private void SetActiveChildren(int[] tier1, int[] tier2, int[] tier3, int[] tier4)
+		private void SetActiveChildren(int[] tier1, int[] tier2, int[] tier3, int[] tier4, int[] tier5)
 		{
 			_tier1Children.Clear();
 			_tier1Children.AddRange(tier1);
@@ -63,6 +64,9 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 			_tier4Children.Clear();
 			_tier4Children.AddRange(tier4);
+
+			_tier5Children.Clear();
+			_tier5Children.AddRange(tier5);
 
 			RpcRefreshActiveChildren();
 		}
@@ -143,11 +147,12 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			var tier2 = GameManager.Instance.Player._allBoatModelProxies[1].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
 			var tier3 = GameManager.Instance.Player._allBoatModelProxies[2].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
 			var tier4 = GameManager.Instance.Player._allBoatModelProxies[3].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
+			var tier5 = GameManager.Instance.Player._allBoatModelProxies[4].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
 
-			SetActiveChildren(tier1, tier2, tier3, tier4);
+			SetActiveChildren(tier1, tier2, tier3, tier4, tier5);
 		}
 
-		private int GetLocalUpgradeTier() => Mathf.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 3);
+		private int GetLocalUpgradeTier() => Mathf.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 4);
 
 		public void OnDestroy()
 		{
@@ -255,6 +260,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				RefreshChildrenForTier(boatModelProxies[1], _tier2Children);
 				RefreshChildrenForTier(boatModelProxies[2], _tier3Children);
 				RefreshChildrenForTier(boatModelProxies[3], _tier4Children);
+				RefreshChildrenForTier(boatModelProxies[4], _tier5Children);
 			}
 		}
 
