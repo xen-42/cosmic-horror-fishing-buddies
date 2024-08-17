@@ -2,6 +2,7 @@
 using CosmicHorrorFishingBuddies.Extensions;
 using Mirror;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -178,38 +179,47 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		{
 			if (!isOwned)
 			{
-				try
-				{
-					CFBCore.LogInfo($"Player {netId} has ship hull upgrade tier {_upgradeTier}");
+				Delay.RunWhen(
+					() => boatModelProxies != null && boatModelProxies.Length > 0,
+					() => {
+						try
+						{
+							CFBCore.LogInfo($"Player {netId} has ship hull upgrade tier {_upgradeTier + 1}");
 
-					foreach (var boatModel in boatModelProxies)
-					{
-						boatModel.gameObject.SetActive(false);
-						boatModel.enabled = false;
+							int index = 0;
+							CFBCore.LogInfo($"Searching {boatModelProxies} && {(boatModelProxies != null ? boatModelProxies.Length.ToString() : "null")}");
+							foreach (var boatModel in boatModelProxies)
+							{
+								CFBCore.LogInfo($"{index++} boat model proxy");
+								boatModel.gameObject.SetActive(false);
+								boatModel.enabled = false;
 
-						boatModel.GetComponentInChildren<SteeringAnimator>(true).enabled = false;
+								boatModel.GetComponentInChildren<SteeringAnimator>(true).enabled = false;
+							}
+							CFBCore.LogInfo($"Grabbing {_upgradeTier} boat model proxy");
+							CurrentBoatModelProxy = boatModelProxies[_upgradeTier];
+							CurrentBoatModelProxy.gameObject.SetActive(true);
+
+							foreach (var boatSubModelToggler in boatSubModelTogglers)
+							{
+								boatSubModelToggler.gameObject.SetActive(false);
+								boatSubModelToggler.enabled = false;
+							}
+							CurrentBoatSubModelToggler = boatSubModelTogglers[_upgradeTier];
+							CurrentBoatSubModelToggler.gameObject.SetActive(true);
+
+							RefreshBoatModel?.Invoke();
+
+							RefreshActiveChildren();
+							OnRemotePlayerDamageChanged();
+							OnRemoteFillPercentChanged();
+						}
+						catch (Exception e)
+						{
+							CFBCore.LogError($"Failed to refresh upgrade tier {e}");
+						}
 					}
-					CurrentBoatModelProxy = boatModelProxies[_upgradeTier];
-					CurrentBoatModelProxy.gameObject.SetActive(true);
-
-					foreach (var boatSubModelToggler in boatSubModelTogglers)
-					{
-						boatSubModelToggler.gameObject.SetActive(false);
-						boatSubModelToggler.enabled = false;
-					}
-					CurrentBoatSubModelToggler = boatSubModelTogglers[_upgradeTier];
-					CurrentBoatSubModelToggler.gameObject.SetActive(true);
-
-					RefreshBoatModel?.Invoke();
-
-					RefreshActiveChildren();
-					OnRemotePlayerDamageChanged();
-					OnRemoteFillPercentChanged();
-				}
-				catch (Exception e)
-				{
-					CFBCore.LogError($"Failed to refresh upgrade tier {e}");
-				}
+				);
 			}
 		}
 
