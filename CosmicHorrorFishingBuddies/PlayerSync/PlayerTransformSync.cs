@@ -85,7 +85,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				// SmokeColumn shares a material between all players and gets weird because of it
 				foreach (var smokeColumn in PlayerPrefab.GetComponentsInChildren<SmokeColumn>(true))
 				{
-					var mat = new Material(smokeColumn.smokeMaterial);
+					var mat = new Material(smokeColumn.line.material);
 					smokeColumn.line.material = mat;
 					smokeColumn.smokeMaterial = mat;
 				}
