@@ -45,6 +45,9 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		[SyncVar(hook = nameof(UpgradeTierHook))]
 		private int _upgradeTier;
 
+		[SyncVar(hook = nameof(NetTypeHook))]
+		private int _netType;
+
 		private readonly SyncList<int> _tier1Children = new();
 		private readonly SyncList<int> _tier2Children = new();
 		private readonly SyncList<int> _tier3Children = new();
@@ -86,10 +89,14 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		[Command]
 		public void SetFillPercent(float fillPercent) => _fillPercent = fillPercent;
 
+		[Command]
+		public void SetNetType(int netType) => _netType = netType;
+
 		public void UpgradeTierHook(int prev, int current) => RefreshUpgradeTier();
 		public void DamageHook(int prev, int current) => OnRemotePlayerDamageChanged();
 		public void CriticalDamageHook(bool prev, bool current) => OnRemotePlayerDamageChanged();
 		public void FillPercentHook(float prev, float current) => OnRemoteFillPercentChanged();
+		public void NetTypeHook(int prev, int current) => RefreshNetType();
 
 		public UnityEvent RefreshBoatModel = new();
 
@@ -153,6 +160,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			SetActiveChildren(tier1, tier2, tier3, tier4, tier5);
 		}
 
+		private int GetLocalNetType() => GameManager.Instance.SaveData.EquippedTrawlNetInstance() != null ? (int)GameManager.Instance.SaveData.EquippedTrawlNetInstance().GetItemData<DeployableItemData>().GetNetTypeFromItemData() : -1;
 		private int GetLocalUpgradeTier() => Mathf.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 4);
 
 		public void OnDestroy()
@@ -173,6 +181,35 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				SetUpgradeTier(upgradeData.tier);
 			}
 			CheckLocalActiveChildren();
+		}
+
+		public void RefreshNetType()
+		{
+			if (!isOwned)
+			{
+				Delay.RunWhen(
+					() => CurrentBoatSubModelToggler != null,
+					() => {
+						try
+						{
+							var nets = CurrentBoatSubModelToggler.GetComponentsInChildren<Net>(includeInactive: true).ToList();
+							if (_netType != -1)
+							{
+								NetType netType = (NetType)_netType;
+								nets.ForEach(n => n.gameObject.SetActive(n.NetType == netType));
+							}
+							else
+							{
+								nets.ForEach(n => n.gameObject.SetActive(false));
+							}
+						}
+						catch (Exception e)
+						{
+							CFBCore.LogError($"Failed to refresh net type {e}");
+						}
+					}
+				);
+			}
 		}
 
 		public void RefreshUpgradeTier()
@@ -211,6 +248,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 							RefreshBoatModel?.Invoke();
 
 							RefreshActiveChildren();
+							RefreshNetType();
 							OnRemotePlayerDamageChanged();
 							OnRemoteFillPercentChanged();
 						}
@@ -260,6 +298,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		public void OnPlayerStatsChanged()
 		{
 			SetLightUpgrades(GameManager.Instance.PlayerStats.LightLumens, GameManager.Instance.PlayerStats.LightRange);
+			SetNetType(GetLocalNetType());
 		}
 
 		public void RefreshActiveChildren()
