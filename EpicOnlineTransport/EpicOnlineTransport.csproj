@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<RootNamespace>EpicTransport</RootNamespace>
+		<Title>EpicOnlineTransport</Title>
+		<Authors>Nudge Nudge Games</Authors>
+		<Company>Nudge Nudge Games</Company>
+		<Copyright>Copyright © 2021 Nudge Nudge Games</Copyright>
+		<PackageLicenseFile>License.md</PackageLicenseFile>
+		<DefineConstants>EOS_PLATFORM_WINDOWS_32;EOS_UNITY</DefineConstants>
+		<PlatformTarget>x86</PlatformTarget>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="DredgeGameLibs" Version="1.1.0" IncludeAssets="compile" />
+		<Reference Include="../Mirror/*.dll" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="License.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+</Project>
