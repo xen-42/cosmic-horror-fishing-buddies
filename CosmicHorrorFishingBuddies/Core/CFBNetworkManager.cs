@@ -8,6 +8,7 @@ using CosmicHorrorFishingBuddies.WorldEventSync;
 using EpicTransport;
 using kcp2k;
 using Mirror;
+using Mirror.FizzySteam;
 using System;
 using System.IO;
 using UnityEngine;
@@ -188,6 +189,11 @@ namespace CosmicHorrorFishingBuddies.Core
 					break;
 				case TransportType.EPIC:
 					transport = _epicTransport;
+					break;
+				case TransportType.STEAM:
+					var fizzy = gameObject.GetAddComponent<FizzySteamworks>();
+					transport = fizzy;
+					FizzyLogger.LogEvent += (string msg, FizzyMessageType sev) => CFBCore.LogInfo($"[FIZZYSTEAMWORKS] {msg}");
 					break;
 				default:
 					throw new Exception($"Unsupported transport {transportType}");

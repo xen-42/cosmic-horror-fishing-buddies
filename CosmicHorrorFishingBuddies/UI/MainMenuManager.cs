@@ -53,10 +53,10 @@ namespace CosmicHorrorFishingBuddies.UI
 
 				_connectionTitle = UIHelper.AddLabel(options.transform, "Multiplayer", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
 
-				var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Epic", new (string, Action)[]
+				var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Steam", new (string, Action)[]
 				{
-						("Epic", () => OnSelectTransportOption(TransportType.EPIC)),
-						//("Steam", () => OnSelectOption(CFBNetworkManager.TransportType.STEAM)),
+						("EOS", () => OnSelectTransportOption(TransportType.EPIC)),
+						("FizzySteamworks", () => OnSelectTransportOption(TransportType.STEAM)),
 						("IP Address", () => OnSelectTransportOption(TransportType.KCP))
 				});
 				_transportType = TransportType.EPIC;

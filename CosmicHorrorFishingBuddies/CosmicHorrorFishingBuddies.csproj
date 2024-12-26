@@ -36,6 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\FizzyFacepunch\FizzySteamworks.csproj" />
 		<ProjectReference Include="..\MirrorWeaver\MirrorWeaver.csproj" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\EpicOnlineTransport\EpicOnlineTransport.csproj" />
 	</ItemGroup>
