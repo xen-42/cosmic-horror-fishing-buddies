@@ -6,7 +6,7 @@
 
 A WIP multiplayer mod for DREDGE. Currently early alpha and might not work as intended. Installable using the [Dredge Mod Manager](https://github.com/DREDGE-Mods/DredgeModManager).
 
-Unfortunately does **NOT** work with the Epic Games store version.
+Unfortunately connecting via EOS does **NOT** work with the Epic Games store version. This means you will have to manually set up port forwarding or use a VPN connection service.
 
 ![cosmic horror fishing buddies](https://github.com/xen-42/cosmic-horror-fishing-buddies/assets/22628069/47687a63-0313-41dd-9d79-adcf58372c06)
 
