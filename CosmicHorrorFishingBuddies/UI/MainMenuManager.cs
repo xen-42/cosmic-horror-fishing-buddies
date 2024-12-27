@@ -2,6 +2,7 @@
 using CosmicHorrorFishingBuddies.Core;
 using CosmicHorrorFishingBuddies.Util;
 using EpicTransport;
+using Steamworks;
 using System;
 using TMPro;
 using UnityEngine;
@@ -141,8 +142,21 @@ namespace CosmicHorrorFishingBuddies.UI
 
 				if (_transportType == TransportType.EPIC)
 				{
-					_connectionInfo.text = $"Connection code (copied to clipboard):\n{EOSSDKComponent.LocalUserProductIdString}";
-					GUIUtility.systemCopyBuffer = EOSSDKComponent.LocalUserProductIdString;
+					if (string.IsNullOrEmpty(EOSSDKComponent.LocalUserProductIdString))
+					{
+						_connectionInfo.text = "ERROR! EOS not functioning\nLikely you are playing the Epic Games version";
+					}
+					else
+					{
+						_connectionInfo.text = $"Connection code (copied to clipboard):\n{EOSSDKComponent.LocalUserProductIdString}";
+						GUIUtility.systemCopyBuffer = EOSSDKComponent.LocalUserProductIdString;
+					}
+				}
+				else if (_transportType == TransportType.STEAM)
+				{
+					var steamId = SteamUser.GetSteamID().ToString();
+					_connectionInfo.text = $"Connection code (copied to clipboard):\n{steamId}";
+					GUIUtility.systemCopyBuffer = steamId;
 				}
 				else
 				{
@@ -156,7 +170,7 @@ namespace CosmicHorrorFishingBuddies.UI
 				{
 					_connectionInfo.text = "Type the IP address below.";
 				}
-				else if (_transportType == TransportType.EPIC)
+				else
 				{
 					_connectionInfo.text = "Type the connection code below.";
 				}

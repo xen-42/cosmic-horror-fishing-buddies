@@ -29,6 +29,7 @@ namespace CosmicHorrorFishingBuddies.Core
 		private KcpTransport _kcpTransport;
 		private EosTransport _epicTransport;
 		private EosApiKey _epicApiKey;
+		private FizzySteamworks _fizzyTransport;
 
 		public static GameObject GlobalSyncPrefab { get; private set; }
 		public static GameObject IndexedHarvestPOIPrefab { get; private set; }
@@ -44,6 +45,9 @@ namespace CosmicHorrorFishingBuddies.Core
 				gameObject.SetActive(false);
 
 				_kcpTransport = gameObject.AddComponent<KcpTransport>();
+
+				_fizzyTransport = gameObject.AddComponent<FizzySteamworks>();
+				FizzyLogger.LogEvent += (string msg, FizzyMessageType sev) => CFBCore.LogInfo($"[FIZZYSTEAMWORKS] {msg}");
 
 				// EPIC
 				_epicApiKey = ScriptableObject.CreateInstance<EosApiKey>();
@@ -191,9 +195,7 @@ namespace CosmicHorrorFishingBuddies.Core
 					transport = _epicTransport;
 					break;
 				case TransportType.STEAM:
-					var fizzy = gameObject.GetAddComponent<FizzySteamworks>();
-					transport = fizzy;
-					FizzyLogger.LogEvent += (string msg, FizzyMessageType sev) => CFBCore.LogInfo($"[FIZZYSTEAMWORKS] {msg}");
+					transport = _fizzyTransport;
 					break;
 				default:
 					throw new Exception($"Unsupported transport {transportType}");
