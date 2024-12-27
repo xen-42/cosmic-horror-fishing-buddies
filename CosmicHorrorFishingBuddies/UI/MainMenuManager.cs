@@ -53,9 +53,9 @@ namespace CosmicHorrorFishingBuddies.UI
 
 				_connectionTitle = UIHelper.AddLabel(options.transform, "Multiplayer", TextAlignmentOptions.Center).GetComponent<TextMeshProUGUI>();
 
-				var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick Epic", new (string, Action)[]
+				var dropDown = UIHelper.AddDropDown(options.transform, "Server Type", "Pick EOS", new (string, Action)[]
 				{
-						("Epic", () => OnSelectTransportOption(TransportType.EPIC)),
+						("EOS", () => OnSelectTransportOption(TransportType.EPIC)),
 						//("Steam", () => OnSelectOption(CFBNetworkManager.TransportType.STEAM)),
 						("IP Address", () => OnSelectTransportOption(TransportType.KCP))
 				});
@@ -141,8 +141,15 @@ namespace CosmicHorrorFishingBuddies.UI
 
 				if (_transportType == TransportType.EPIC)
 				{
-					_connectionInfo.text = $"Connection code (copied to clipboard):\n{EOSSDKComponent.LocalUserProductIdString}";
-					GUIUtility.systemCopyBuffer = EOSSDKComponent.LocalUserProductIdString;
+					if (string.IsNullOrEmpty(EOSSDKComponent.LocalUserProductIdString))
+					{
+						_connectionInfo.text = $"EOS isn't working (unsupported on Epic Games)\nUse IP address instead";
+					}
+					else
+					{
+						_connectionInfo.text = $"Connection code (copied to clipboard):\n{EOSSDKComponent.LocalUserProductIdString}";
+						GUIUtility.systemCopyBuffer = EOSSDKComponent.LocalUserProductIdString;
+					}
 				}
 				else
 				{
