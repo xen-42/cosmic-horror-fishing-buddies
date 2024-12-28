@@ -2,6 +2,7 @@
 using CosmicHorrorFishingBuddies.Extensions;
 using Mirror;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -44,13 +45,17 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		[SyncVar(hook = nameof(UpgradeTierHook))]
 		private int _upgradeTier;
 
+		[SyncVar(hook = nameof(NetTypeHook))]
+		private int _netType;
+
 		private readonly SyncList<int> _tier1Children = new();
 		private readonly SyncList<int> _tier2Children = new();
 		private readonly SyncList<int> _tier3Children = new();
 		private readonly SyncList<int> _tier4Children = new();
+		private readonly SyncList<int> _tier5Children = new();
 
 		[Command]
-		private void SetActiveChildren(int[] tier1, int[] tier2, int[] tier3, int[] tier4)
+		private void SetActiveChildren(int[] tier1, int[] tier2, int[] tier3, int[] tier4, int[] tier5)
 		{
 			_tier1Children.Clear();
 			_tier1Children.AddRange(tier1);
@@ -63,6 +68,9 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 			_tier4Children.Clear();
 			_tier4Children.AddRange(tier4);
+
+			_tier5Children.Clear();
+			_tier5Children.AddRange(tier5);
 
 			RpcRefreshActiveChildren();
 		}
@@ -81,10 +89,14 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		[Command]
 		public void SetFillPercent(float fillPercent) => _fillPercent = fillPercent;
 
+		[Command]
+		public void SetNetType(int netType) => _netType = netType;
+
 		public void UpgradeTierHook(int prev, int current) => RefreshUpgradeTier();
 		public void DamageHook(int prev, int current) => OnRemotePlayerDamageChanged();
 		public void CriticalDamageHook(bool prev, bool current) => OnRemotePlayerDamageChanged();
 		public void FillPercentHook(float prev, float current) => OnRemoteFillPercentChanged();
+		public void NetTypeHook(int prev, int current) => RefreshNetType();
 
 		public UnityEvent RefreshBoatModel = new();
 
@@ -143,11 +155,13 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			var tier2 = GameManager.Instance.Player._allBoatModelProxies[1].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
 			var tier3 = GameManager.Instance.Player._allBoatModelProxies[2].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
 			var tier4 = GameManager.Instance.Player._allBoatModelProxies[3].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
+			var tier5 = GameManager.Instance.Player._allBoatModelProxies[4].gameObject.GetChildren().FindIndices(x => x.activeInHierarchy).ToArray();
 
-			SetActiveChildren(tier1, tier2, tier3, tier4);
+			SetActiveChildren(tier1, tier2, tier3, tier4, tier5);
 		}
 
-		private int GetLocalUpgradeTier() => Mathf.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 3);
+		private int GetLocalNetType() => GameManager.Instance.SaveData.EquippedTrawlNetInstance() != null ? (int)GameManager.Instance.SaveData.EquippedTrawlNetInstance().GetItemData<DeployableItemData>().GetNetTypeFromItemData() : -1;
+		private int GetLocalUpgradeTier() => Mathf.Clamp(GameManager.Instance.Player._allBoatModelProxies.IndexOf(GameManager.Instance.Player.BoatModelProxy), 0, 4);
 
 		public void OnDestroy()
 		{
@@ -169,42 +183,81 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 			CheckLocalActiveChildren();
 		}
 
+		public void RefreshNetType()
+		{
+			if (!isOwned)
+			{
+				Delay.RunWhen(
+					() => CurrentBoatSubModelToggler != null,
+					() => {
+						try
+						{
+							var nets = CurrentBoatSubModelToggler.GetComponentsInChildren<Net>(includeInactive: true).ToList();
+							if (_netType != -1)
+							{
+								NetType netType = (NetType)_netType;
+								nets.ForEach(n => n.gameObject.SetActive(n.NetType == netType));
+							}
+							else
+							{
+								nets.ForEach(n => n.gameObject.SetActive(false));
+							}
+						}
+						catch (Exception e)
+						{
+							CFBCore.LogError($"Failed to refresh net type {e}");
+						}
+					}
+				);
+			}
+		}
+
 		public void RefreshUpgradeTier()
 		{
 			if (!isOwned)
 			{
-				try
-				{
-					CFBCore.LogInfo($"Player {netId} has ship hull upgrade tier {_upgradeTier}");
+				Delay.RunWhen(
+					() => boatModelProxies != null && boatModelProxies.Length > 0,
+					() => {
+						try
+						{
+							CFBCore.LogInfo($"Player {netId} has ship hull upgrade tier {_upgradeTier + 1}");
 
-					foreach (var boatModel in boatModelProxies)
-					{
-						boatModel.gameObject.SetActive(false);
-						boatModel.enabled = false;
+							int index = 0;
+							CFBCore.LogInfo($"Searching {boatModelProxies} && {(boatModelProxies != null ? boatModelProxies.Length.ToString() : "null")}");
+							foreach (var boatModel in boatModelProxies)
+							{
+								CFBCore.LogInfo($"{index++} boat model proxy");
+								boatModel.gameObject.SetActive(false);
+								boatModel.enabled = false;
 
-						boatModel.GetComponentInChildren<SteeringAnimator>(true).enabled = false;
+								boatModel.GetComponentInChildren<SteeringAnimator>(true).enabled = false;
+							}
+							CFBCore.LogInfo($"Grabbing {_upgradeTier} boat model proxy");
+							CurrentBoatModelProxy = boatModelProxies[_upgradeTier];
+							CurrentBoatModelProxy.gameObject.SetActive(true);
+
+							foreach (var boatSubModelToggler in boatSubModelTogglers)
+							{
+								boatSubModelToggler.gameObject.SetActive(false);
+								boatSubModelToggler.enabled = false;
+							}
+							CurrentBoatSubModelToggler = boatSubModelTogglers[_upgradeTier];
+							CurrentBoatSubModelToggler.gameObject.SetActive(true);
+
+							RefreshBoatModel?.Invoke();
+
+							RefreshActiveChildren();
+							RefreshNetType();
+							OnRemotePlayerDamageChanged();
+							OnRemoteFillPercentChanged();
+						}
+						catch (Exception e)
+						{
+							CFBCore.LogError($"Failed to refresh upgrade tier {e}");
+						}
 					}
-					CurrentBoatModelProxy = boatModelProxies[_upgradeTier];
-					CurrentBoatModelProxy.gameObject.SetActive(true);
-
-					foreach (var boatSubModelToggler in boatSubModelTogglers)
-					{
-						boatSubModelToggler.gameObject.SetActive(false);
-						boatSubModelToggler.enabled = false;
-					}
-					CurrentBoatSubModelToggler = boatSubModelTogglers[_upgradeTier];
-					CurrentBoatSubModelToggler.gameObject.SetActive(true);
-
-					RefreshBoatModel?.Invoke();
-
-					RefreshActiveChildren();
-					OnRemotePlayerDamageChanged();
-					OnRemoteFillPercentChanged();
-				}
-				catch (Exception e)
-				{
-					CFBCore.LogError($"Failed to refresh upgrade tier {e}");
-				}
+				);
 			}
 		}
 
@@ -245,6 +298,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		public void OnPlayerStatsChanged()
 		{
 			SetLightUpgrades(GameManager.Instance.PlayerStats.LightLumens, GameManager.Instance.PlayerStats.LightRange);
+			SetNetType(GetLocalNetType());
 		}
 
 		public void RefreshActiveChildren()
@@ -255,6 +309,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				RefreshChildrenForTier(boatModelProxies[1], _tier2Children);
 				RefreshChildrenForTier(boatModelProxies[2], _tier3Children);
 				RefreshChildrenForTier(boatModelProxies[3], _tier4Children);
+				RefreshChildrenForTier(boatModelProxies[4], _tier5Children);
 			}
 		}
 

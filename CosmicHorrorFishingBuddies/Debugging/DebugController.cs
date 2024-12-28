@@ -23,6 +23,9 @@ internal class DebugController : MonoBehaviour
 	public bool QuickLoad = false;
 	private bool _hasQuickLoaded = false;
 
+	[JsonProperty]
+	public int Timeout = 25;
+
 	public void Awake()
 	{
 		Instance = this;

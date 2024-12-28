@@ -60,6 +60,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				CopyBoat(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat2"));
 				CopyBoat(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat3"));
 				CopyBoat(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat4"));
+				CopyBoat(PlayerPrefab, GameManager.Instance.Player.transform.Find("Boat5"));
 
 				// Attached rigidbodies are really weird. Have to set up some networkrigidbody stuff in the future
 				foreach (var rigidBody in PlayerPrefab.gameObject.GetComponentsInChildren<Rigidbody>(true).Select(x => x.gameObject))
@@ -84,7 +85,7 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 				// SmokeColumn shares a material between all players and gets weird because of it
 				foreach (var smokeColumn in PlayerPrefab.GetComponentsInChildren<SmokeColumn>(true))
 				{
-					var mat = new Material(smokeColumn.smokeMaterial);
+					var mat = new Material(smokeColumn.line.material);
 					smokeColumn.line.material = mat;
 					smokeColumn.smokeMaterial = mat;
 				}

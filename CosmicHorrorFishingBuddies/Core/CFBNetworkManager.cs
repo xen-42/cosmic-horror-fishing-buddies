@@ -1,4 +1,5 @@
-﻿using CosmicHorrorFishingBuddies.Extensions;
+﻿using CosmicHorrorFishingBuddies.Debugging;
+using CosmicHorrorFishingBuddies.Extensions;
 using CosmicHorrorFishingBuddies.HarvestPOISync;
 using CosmicHorrorFishingBuddies.PlayerSync;
 using CosmicHorrorFishingBuddies.PlayerSync.AbilitySync;
@@ -43,6 +44,8 @@ namespace CosmicHorrorFishingBuddies.Core
 				gameObject.SetActive(false);
 
 				_kcpTransport = gameObject.AddComponent<KcpTransport>();
+				// KCP uses milliseconds
+				_kcpTransport.Timeout = DebugController.Instance.Timeout * 1000;
 
 				// EPIC
 				_epicApiKey = ScriptableObject.CreateInstance<EosApiKey>();
@@ -59,6 +62,7 @@ namespace CosmicHorrorFishingBuddies.Core
 				eosSdkComponent.epicLoggerLevel = Epic.OnlineServices.Logging.LogLevel.VeryVerbose;
 
 				var eosTransport = gameObject.AddComponent<EosTransport>();
+				eosTransport.timeout = DebugController.Instance.Timeout;
 				_epicTransport = eosTransport;
 
 				// PREFABS

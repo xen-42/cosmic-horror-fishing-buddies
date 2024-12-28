@@ -35,7 +35,7 @@ namespace CosmicHorrorFishingBuddies.HarvestPOISync
 			{
 				var yRotation = crabPotData.yRotation;
 				var position = new Vector3(crabPotData.x, 0f, crabPotData.z);
-				var gameObject = GameSceneInitializer.Instance.placedPOIPrefab.InstantiateInactive();
+				var gameObject = GameSceneInitializer.Instance.GetPlacedHarvestPOIPrefabFromPotItemData(crabPotData.deployableItemId).InstantiateInactive();
 				gameObject.transform.parent = GameSceneInitializer.Instance.harvestPoiContainer.transform;
 				gameObject.transform.position = position;
 				gameObject.transform.eulerAngles = new Vector3(0f, yRotation, 0f);
