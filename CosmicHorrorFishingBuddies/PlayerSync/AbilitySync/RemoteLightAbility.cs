@@ -52,23 +52,28 @@ namespace CosmicHorrorFishingBuddies.PlayerSync.AbilitySync
 
 		public void RefreshLights()
 		{
-			try
-			{
-				_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.SetLightStrength(IsActive ? 4f : 0f);
+			Delay.RunWhen(
+				() => _networkPlayer.remotePlayerBoatGraphics.boatModelProxies != null && _networkPlayer.remotePlayerBoatGraphics.boatModelProxies.Length > 0, 
+				() => {
+					try
+					{
+						_networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.SetLightStrength(IsActive ? 4f : 0f);
 
-				foreach (var light in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.Lights)
-				{
-					light.SetActive(IsActive);
+						foreach (var light in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.Lights)
+						{
+							light.SetActive(IsActive);
+						}
+						foreach (var lightBeam in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.LightBeams)
+						{
+							lightBeam.SetActive(IsActive);
+						}
+					}
+					catch (Exception e)
+					{
+						CFBCore.LogError($"Failed to refresh lights {e}");
+					}
 				}
-				foreach (var lightBeam in _networkPlayer.remotePlayerBoatGraphics.CurrentBoatModelProxy.LightBeams)
-				{
-					lightBeam.SetActive(IsActive);
-				}
-			}
-			catch (Exception e)
-			{
-				CFBCore.LogError(e);
-			}
+			);
 		}
 	}
 }
