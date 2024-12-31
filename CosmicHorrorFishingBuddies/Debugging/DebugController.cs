@@ -1,6 +1,6 @@
 ﻿using CosmicHorrorFishingBuddies.Core;
-using CosmicHorrorFishingBuddies.UI;
 using CosmicHorrorFishingBuddies.Util;
+using CosmicHorrorFishingBuddies.Util.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
