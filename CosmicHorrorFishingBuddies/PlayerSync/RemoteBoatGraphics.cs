@@ -19,6 +19,8 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		private float _lightRange;
 		public float LightRange { get => _lightRange; }	
 
+		private static bool _suppressLocalStatsNetworkSync;
+
 		[Command]
 		public void SetLightUpgrades(float lightLumens, float lightRange)
 		{
@@ -30,7 +32,16 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 		[ClientRpc(includeOwner = false)]
 		private void RpcLightUpgrades()
 		{
-			GameEvents.Instance.TriggerPlayerStatsChanged();
+			var wasSuppressed = _suppressLocalStatsNetworkSync;
+			_suppressLocalStatsNetworkSync = true;
+			try
+			{
+				GameEvents.Instance.TriggerPlayerStatsChanged();
+			}
+			finally
+			{
+				_suppressLocalStatsNetworkSync = wasSuppressed;
+			}
 		}
 
 		[SyncVar(hook = nameof(FillPercentHook))]
@@ -297,6 +308,11 @@ namespace CosmicHorrorFishingBuddies.PlayerSync
 
 		public void OnPlayerStatsChanged()
 		{
+			if (_suppressLocalStatsNetworkSync)
+			{
+				return;
+			}
+
 			SetLightUpgrades(GameManager.Instance.PlayerStats.LightLumens, GameManager.Instance.PlayerStats.LightRange);
 			SetNetType(GetLocalNetType());
 		}
